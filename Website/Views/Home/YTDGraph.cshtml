@@ -1,0 +1,182 @@
+﻿
+<div class="row">
+    <div class="col-xl-12 col-md-9 col-sm-12 my-2  order-12">
+
+        <div class="row ">
+
+            <div class="col-xl-12 ml-1 mx-2">
+                <div class="ytd-count">
+
+
+                    <h3 class="card-title my-2 ">YTD Sale</h3>
+                    <div class="row my-2 ytd-form">
+                        <div class="col-md-3 col-xl-3 my-2">
+                            <label>Financial Year</label>
+                            <select class="applyselect" id="ddFinyear">
+                                @if (ViewBag.FinancialYearList != null)
+                                {
+
+                                    foreach (var item in ViewBag.FinancialYearList)
+                                    {
+                                        <option value="@item.ID">@item.Name</option>
+                                    }
+                                }
+                            </select>
+
+                        </div>
+                        <div class="col-md-3 col-xl-3 my-2">
+                            <label>Region</label>
+                            <select class="applyselect" id="ddRegion" multiple="multiple">
+                                @if (ViewBag.RegionList != null)
+                                {
+                                    foreach (var item in ViewBag.RegionList)
+                                    {
+                                        <option value="@item.ID">@item.Name</option>
+                                    }
+                                }
+                            </select>
+
+                        </div>
+                        <div class="col-md-3 col-xl-3 my-2">
+                            <label>Branch</label>
+                            <select class="applyselect" id="ddBranch" multiple="multiple">
+                                @if (ViewBag.BranchList != null)
+                                {
+                                    foreach (var item in ViewBag.BranchList)
+                                    {
+                                        <option value="@item.ID">@item.Name</option>
+                                    }
+                                }
+                            </select>
+
+                        </div>
+                        <div class="col-md-3 col-xl-3 d-flex align-items-end mb-2 justify-content-start ">
+                            <a class="btn btn-successnew btn-indigo" onclick="BindYTDGraph()"><i class="fa fa-paper-plane mr-2" aria-hidden="true"></i>Load</a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="col-xl-12 ">
+                <div class="card p-2 mt-5">
+                    <div class="card-body">
+                        <div class="chartjs-wrapper-demo">
+                            <div id="YTDChart" class="h-300 mh-300">
+                                <img src="/assets/design/images/loader.gif" class="imgloader" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+@section scripts    {
+    <script>
+
+        $(document).ready(function () {
+            BindYTDGraph();
+        });
+        function GetSales_GraphJson() {
+            var FinID = $("#ddFinyear").find("option:selected").val();
+            var Region = $('#ddRegion option:selected')
+                .toArray().map(item => item.text).join();
+            var Branch = $('#ddBranch option:selected')
+                .toArray().map(item => item.text).join();
+
+            var dataObject = JSON.stringify({
+                'ID': FinID,
+                'Param1': Region,
+                'Param2': Branch
+            });
+            var data = $.parseJSON($.ajax({
+                url: '/CommonAjax/GetSales_GraphJson',
+                dataType: "json",
+                contentType: 'application/json',
+                type: "Post",
+                data: dataObject,
+                async: false
+            }).responseText);
+            return data;
+        }
+
+
+        function BindYTDGraph() {
+
+            $("#YTDChart").html('');
+            $("#YTDChart").html('<img src="/assets/design/images/loader.gif" class="imgloader" />');
+            seriesjsonObj = [];
+            ColorsObj = [];
+            $(GetSales_GraphJson()).each(function () {
+                data = [];
+                data.push(this.Apr);
+                data.push(this.May);
+                data.push(this.Jun);
+                data.push(this.Jul);
+                data.push(this.Aug);
+                data.push(this.Sep);
+                data.push(this.Oct);
+                data.push(this.Nov);
+                data.push(this.Dec);
+                data.push(this.Jan);
+                data.push(this.Feb);
+                data.push(this.Mar);
+                series = {}
+                series["name"] = this.ProductCode;
+                series["data"] = data;
+                seriesjsonObj.push(series);
+
+                ColorsObj.push(this.colors);
+            });
+
+
+            var options1 = {
+                series: seriesjsonObj,
+                colors: ColorsObj,
+                chart: {
+                    height: 300,
+                    type: 'area'
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth'
+                },
+                xaxis: {
+                    categories: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"]
+                },
+                tooltip: {
+                    x: {
+                        format: 'dd/MM/yy'
+                    },
+                },
+                legend: {
+                    show: true,
+                }
+            };
+            $("#YTDChart").html('');
+            var chart = new ApexCharts(document.querySelector("#YTDChart"), options1);
+
+            logChart = () => console.log(chart),
+                destroyChart = () => {
+                    if (chart.ohYeahThisChartHasBeenRendered) {
+                        chart.destroy();
+                        chart.ohYeahThisChartHasBeenRendered = false;
+                    }
+                };
+
+            chart.render().then(() => chart.ohYeahThisChartHasBeenRendered = true);
+
+        }
+
+
+
+    </script>
+}

@@ -1,0 +1,236 @@
+Delivered-To: it@thrivera.in
+Received: by 2002:a05:7000:14f9:b0:3cf:701c:4c06 with SMTP id a25csp284985mas;
+        Wed, 16 Nov 2022 19:06:26 -0800 (PST)
+X-Received: by 2002:a0d:ce87:0:b0:381:9e48:cc64 with SMTP id q129-20020a0dce87000000b003819e48cc64mr289086ywd.498.1668654385855;
+        Wed, 16 Nov 2022 19:06:25 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1668654385; cv=none;
+        d=google.com; s=arc-20160816;
+        b=N4GPdTIFi2gofSy0prA40IGQYgwfdJSEwJSDGghtja7X0j125+JhDR/MqMed689DNm
+         1R1Y6fc0Wt79D9eZ5gZ4XTDcKQqlv/IjyduOwqxF2heMMZAI5NfVyGeSl187rkC9mm7t
+         4kJzpcI9hcqP8ftJZX79RDuN+OpPNcasaaHV7neW2+PleJDSVOIzsEII4/iQ5kqNg4s9
+         DNb342DjTCoz6IrY+ESLYYWGH9KBiCtKq3+7PWXkRvjF51TFEcPgpw5uZsYPzy6YXq8l
+         zqDIXVC4m8zKFw3ZpBzf5tRC2nqI6DpJLk83AfnDbFpFCRm3h5ftP43PWtZ7r5dGstY8
+         x0AA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=to:from:subject:date:message-id:in-reply-to:mime-version
+         :dkim-signature;
+        bh=CFLaGgmTo0Z6mqk0TEtOEiUskn9LxhjoNAckzz3ZazE=;
+        b=Zuv/0qHk5rf3hMI/c72vP0n52oA/2NcuytOMQUi8fuZ6EVpG6sVVUrQvdDqMoqk59T
+         lnbvQ8/7pp2BLThqOMYVPWvhBhcIM+ARZZEaZpBUg0dFoVWR1Yq+yUmyvpiH1A1CU0i6
+         130IkWS7W8Mliz01OuGREk7ruxivfnIOw9zy3SlFRX16G3v96Ixt16t3ZYIgjsuoist6
+         L2xwXdjbDvwtnE/LFOllhMtnWARa1cIKjRvF7EUvZD1Ruj9qKyB9t1R4Nx74OXYhDlWu
+         KFcBAPx/6Bi9w+6+o+cJe6v5x/BMmoDIHLe7YO0zj8eS+LwwgwPoVmqoZXieMSM3y149
+         ARZw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@google.com header.s=20210112 header.b=PNEbQoAF;
+       spf=pass (google.com: domain of 3mav1yxwkanqyggydwhdsq-vwnwdghwj-kmhhgjlyggydw.ugeallzjanwjs.af@cases-outbound-prod.bounces.google.com designates 209.85.220.75 as permitted sender) smtp.mailfrom=3MaV1YxwKAnQYggYdWhdSq-VWnWdghWj-kmhhgjlYggYdW.UgeallZjanWjS.af@cases-outbound-prod.bounces.google.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=google.com
+Return-Path: <3MaV1YxwKAnQYggYdWhdSq-VWnWdghWj-kmhhgjlYggYdW.UgeallZjanWjS.af@cases-outbound-prod.bounces.google.com>
+Received: from mail-sor-f75.google.com (mail-sor-f75.google.com. [209.85.220.75])
+        by mx.google.com with SMTPS id 197-20020a8117ce000000b003513a53d703sor6129060ywx.91.2022.11.16.19.06.25
+        for <it@thrivera.in>
+        (Google Transport Security);
+        Wed, 16 Nov 2022 19:06:25 -0800 (PST)
+Received-SPF: pass (google.com: domain of 3mav1yxwkanqyggydwhdsq-vwnwdghwj-kmhhgjlyggydw.ugeallzjanwjs.af@cases-outbound-prod.bounces.google.com designates 209.85.220.75 as permitted sender) client-ip=209.85.220.75;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@google.com header.s=20210112 header.b=PNEbQoAF;
+       spf=pass (google.com: domain of 3mav1yxwkanqyggydwhdsq-vwnwdghwj-kmhhgjlyggydw.ugeallzjanwjs.af@cases-outbound-prod.bounces.google.com designates 209.85.220.75 as permitted sender) smtp.mailfrom=3MaV1YxwKAnQYggYdWhdSq-VWnWdghWj-kmhhgjlYggYdW.UgeallZjanWjS.af@cases-outbound-prod.bounces.google.com;
+       dmarc=pass (p=REJECT sp=REJECT dis=NONE) header.from=google.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=to:from:subject:date:message-id:in-reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CFLaGgmTo0Z6mqk0TEtOEiUskn9LxhjoNAckzz3ZazE=;
+        b=PNEbQoAF9emsMjJFl8M7Bu+LhX3fl7DC8ZGEMoROFTHaK4Gnk5Jh1hbbi3T8Fmi3F1
+         vi1G1bgQbIOv2SlEknAKbTGiZZwE0Nmabnk5j8tGm0PypETQGpfqQ7MbQpIQ1VhOzpfO
+         hkcy8y4CQ6jQ44rhUwY0PigohgSYHBg0lXFh5wVXEI1rB+7IDFRpjUSGIzjjWT2vcQsb
+         MvSXvX9H+zTDqldfLW5mE1cttkPyJK12B5jFje6PwlyTYiJeDJPMU2uSU+KYMAL0tFvY
+         AvsdwNP+1pUvn7E/6LfDA6NYVi2Ox1WH8EDarcXg1cXNQ56Ew8gjSC2LAn9Boi6jsKeq
+         VTIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:from:subject:date:message-id:in-reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CFLaGgmTo0Z6mqk0TEtOEiUskn9LxhjoNAckzz3ZazE=;
+        b=TmEkiXH3n5LvLgKsaLKeXimdzBfEAvEM+5VIS/KU4ubgBaJZvG8pqG1KwVGHXnclYQ
+         s/L+qVN77tK1ju85yV/RaPVRnnaGfThM0PDyl3T7BEWmXNEp0P3oJlEVsu6XDkiu+pGu
+         AA0Rn4qQ06/1d6nUyDYvo8VBWVa6HyRuIKIsTfd2joDWR0mRUh/pq4tX1dd4F6+BoUtF
+         H1+dQYLwlKLZ4ot6gd5vS084wpb7FxssvmFwqUIRC9HHDdcf9FyYGQZpflxPV9oD63Vl
+         NiHTT36TzA1fSKsiuP0WySLGsaLTscwi3D88RuYbiAvLVLsPTvJjZaQaJlV3f9TqAJn4
+         8Qdg==
+X-Gm-Message-State: ANoB5plcerLB3WQcKOJdWHUNOc2j1TfPi/NhH/M+rTk6BGSy1mUmx/N4
+	2qawHLG2Dp4Hk2fuOuv6L1CtSzH6kRmZ8iMCUDrT+gkpIhUV4hCZyVqY0tkmUZP0K6yt136ZN/Z
+	soEaABqG6Gdf9+NtJ76W+Mq8XBJsq5Zvq
+X-Google-Smtp-Source: AA0mqf42x1LU6QMKPSGAiSkIKycAcgR0ofXySqvV+BkT1N2E0LBCma5FvDp+K2irnZyD7K+RqcysMPQ5crCxzWjvicsOwkOo5NLdaoxcukiC6sg=
+MIME-Version: 1.0
+X-Received: by 2002:a81:5a83:0:b0:367:7d5a:3403 with SMTP id
+ o125-20020a815a83000000b003677d5a3403mr362263ywb.148.1668654385511; Wed, 16
+ Nov 2022 19:06:25 -0800 (PST)
+In-Reply-To: <00d12jqqr8000001gf3voc0009phf4w6smj8c1h70o30c1g6cpjad1p@mail.gmail.com>
+Message-ID: <08p11g0000000003g579bk00243vdgz6smj8c1h70o30c1g6cpjad1p@mail.gmail.com>
+Date: Thu, 17 Nov 2022 03:06:25 +0000
+Subject: Re: Appeals Confirmation [7-4018000033549]
+From: googleplay-developer-support@google.com
+To: it@thrivera.in
+Content-Type: multipart/alternative; boundary="000000000000e720db05eda1df51"
+
+--000000000000e720db05eda1df51
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: base64
+
+DQoNCkhpIGRldmVsb3BlcnMgYXQgVGhyaXZlcmEgRGV2ZWxvcGVyLA0KDQpUaGFua3MgZm9yIGNv
+bnRhY3RpbmcgdGhlIEdvb2dsZSBQbGF5IHRlYW0uDQoNCipTdGF0dXMgb2YgYXBwczogU3VzcGVu
+ZGVkIGZyb20gR29vZ2xlIFBsYXkgZHVlIHRvIHBvbGljeSB2aW9sYXRpb24qDQoNCknigJl2ZSBy
+ZXZpZXdlZCB5b3VyIGFwcGVhbCByZXF1ZXN0IGFuZCBjb25maXJtZWQgdGhhdCB5b3VyIGFwcHMg
+YXJlDQpub3QgY29tcGxpYW50IHdpdGggR29vZ2xlIFBsYXkgUG9saWN5LiBJ4oCZdmUgYWxzbyBy
+ZWNlaXZlZCB5b3VyIGFwcGVhbA0KdGlja2V0ICowLTU0ODUwMDAwMzM1ODcqIGZvciB5b3VyIG90
+aGVyIGFwcCwgY29tLkJ1c2luZXNzLnRocml2ZXJhcmVkLg0KDQpEdXJpbmcgcmV2aWV3LCB3ZSBm
+b3VuZCB0aGF0IHlvdXIgYXBwcyBsaXN0ZWQgYmVsb3cgdmlvbGF0ZSB0aGUgKlJlcGV0aXRpdmUN
+CkNvbnRlbioqdCogcG9saWN5Lg0KDQoNCiAgICAtIFRocml2ZXJhIEJsdWUgKGNvbS5Qcm9kdWN0
+aXZpdHkudGhyaXZlcmFibHVlKQ0KICAgIC0gVGhyaXZlcmFSZWQgKGNvbS5CdXNpbmVzcy50aHJp
+dmVyYXJlZCkNCg0KV2UgZG9uJ3QgYWxsb3cgYXBwcyB0aGF0IG1lcmVseSBwcm92aWRlIHRoZSBz
+YW1lIGV4cGVyaWVuY2UgYXMgb3RoZXIgYXBwcw0KYWxyZWFkeSBvbiBHb29nbGUgUGxheS4gQXBw
+cyBzaG91bGQgcHJvdmlkZSB2YWx1ZSB0byB1c2VycyB0aHJvdWdoIHRoZQ0KY3JlYXRpb24gb2Yg
+dW5pcXVlIGNvbnRlbnQgb3Igc2VydmljZXMuDQoNCipGb3IgZXhhbXBsZSwgeW91ciBhcHBzIGFw
+cGVhciB0byBwcm92aWRlIHNpbWlsYXIgb3IgaWRlbnRpY2FsIGNvbnRlbnQgYXMNCmVhY2ggb3Ro
+ZXIuICoNCg0KWW91IGNhbiByZWFkIHRocm91Z2ggdGhlDQo8aHR0cHM6Ly9wbGF5Lmdvb2dsZS5j
+b20vYWJvdXQvc3RvcmVsaXN0aW5nLXByb21vdGlvbmFsL21ldGFkYXRhPlJlcGV0aXRpdmUNCkNv
+bnRlbnQNCjxodHRwczovL3BsYXkuZ29vZ2xlLmNvbS9pbnRsL2VuLVVTL2Fib3V0L3NwYW0tbWlu
+LWZ1bmN0aW9uYWxpdHkvIyE/emlwcHlfYWN0aXZlRWw9cmVwZXRpdGl2ZS1jb250ZW50JTIzcmVw
+ZXRpdGl2ZS1jb250ZW50Pg0KcG9saWN5IHBhZ2UgZm9yIG1vcmUgZGV0YWlscyBhbmQgZXhhbXBs
+ZXMgb2YgY29tbW9uIHZpb2xhdGlvbnMuDQoNClBsZWFzZSBub3RlIHRoYXQ6DQoNCiAgICAtIFdl
+IGRvbuKAmXQgYWxsb3cgY3JlYXRpbmcgbXVsdGlwbGUgYXBwcyB3aXRoIGhpZ2hseSBzaW1pbGFy
+DQogICAgZnVuY3Rpb25hbGl0eSwgY29udGVudCwgYW5kIHVzZXIgZXhwZXJpZW5jZS4gSWYgdGhl
+c2UgKmFwcHMgYXJlIGVhY2gNCiAgICBzbWFsbCBpbiBjb250ZW50IHZvbHVtZSosIGRldmVsb3Bl
+cnMgc2hvdWxkIGNvbnNpZGVyICpjcmVhdGluZyBhIHNpbmdsZQ0KICAgIGFwcCB0aGF0IGFnZ3Jl
+Z2F0ZXMgYWxsIHRoZSBjb250ZW50Ki4NCiAgICAtIFB1Ymxpc2hpbmcgaWRlbnRpY2FsIGNvbnRl
+bnQgdGFyZ2V0aW5nIHRoZSAqc2FtZSBsb2NhbGVzKiBpcyBpbg0KICAgIHZpb2xhdGlvbiBvZiB0
+aGUgUmVwZXRpdGl2ZSBDb250ZW50IHBvbGljeS4NCiAgICAtIFJlbW92YWwgb3IgYWRtaW5pc3Ry
+YXRpdmUgbm90aWNlcyBtYXkgbm90IGluZGljYXRlIGVhY2ggYW5kIGV2ZXJ5DQogICAgcG9saWN5
+IHZpb2xhdGlvbiBwcmVzZW50IGluIHlvdXIgYXBwIG9yIGJyb2FkZXIgYXBwIGNhdGFsb2cuIERl
+dmVsb3BlcnMgIA0KYXJlDQogICAgcmVzcG9uc2libGUgZm9yIGFkZHJlc3NpbmcgYW55IHBvbGlj
+eSBpc3N1ZSBhbmQgY29uZHVjdGluZyBleHRyYSBkdWUNCiAgICBkaWxpZ2VuY2UgdG8gZW5zdXJl
+IHRoYXQgdGhlIHJlbWFpbmRlciBvZiB0aGVpciBhcHBzIGFyZSBmdWxseSBwb2xpY3kNCiAgICBj
+b21wbGlhbnQuIEZhaWx1cmUgdG8gYWRkcmVzcyBwb2xpY3kgdmlvbGF0aW9ucyBpbiBhbGwgb2Yg
+eW91ciBhcHBzIG1heQ0KICAgIHJlc3VsdCBpbiBhZGRpdGlvbmFsIGVuZm9yY2VtZW50IGFjdGlv
+bnMsIHNvICp3ZSBzdWdnZXN0IHRoYXQgeW91IHJldmlldw0KICAgIHlvdXIgY2F0YWxvZyBhbmQg
+dGFrZSBuZWNlc3NhcnkgYWN0aW9ucyB0byBwcmV2ZW50IGZ1cnRoZXIgZW5mb3JjZW1lbnQqLg0K
+DQogICpUbyBoZWxwIHVzIHByb2Nlc3MgdGhlIGFwcGVhbCwga2luZGx5IHByb3ZpZGUgdXMgd2l0
+aDoqDQoNCiAgICAtICpTY3JlZW5zaG90cyBvciBvdGhlciBzdXBwb3J0aW5nIG1hdGVyaWFscyB0
+aGF0IGV4cGxhaW5zIHRoZQ0KICAgIGRpZmZlcmVuY2VzIGJldHdlZW4vYW1vbmcgdGhlIGFib3Zl
+IGFwcHMuKg0KDQpEZXZlbG9wZXJzIGFyZSBpbXBvcnRhbnQgcGFydG5lcnMgaW4gbWFpbnRhaW5p
+bmcgYSBncmVhdCB1c2VyIGV4cGVyaWVuY2Ugb24NCkdvb2dsZSBQbGF5IGFuZCB3ZSBhcHByZWNp
+YXRlIHlvdXIgY29vcGVyYXRpb24uIFBsZWFzZSBub3RlIHRoYXQNCnN1c3BlbnNpb25zIGNvdW50
+IGFzIHN0cmlrZXMgYWdhaW5zdCB0aGUgZ29vZCBzdGFuZGluZyBvZiB5b3VyIEdvb2dsZSBQbGF5
+DQpEZXZlbG9wZXIgYWNjb3VudC4gRWdyZWdpb3VzIG9yIG11bHRpcGxlIHBvbGljeSB2aW9sYXRp
+b25zIGNhbiByZXN1bHQgaW4NCnN1c3BlbnNpb24sIGFzIGNhbiByZXBlYXRlZCBhcHAgcmVqZWN0
+aW9ucyBvciByZW1vdmFscy4NCg0KV2UgbG9vayBmb3J3YXJkIHRvIHlvdXIgcmVwbHkuIFRoYW5r
+cyBmb3IgeW91ciB1bmRlcnN0YW5kaW5nIGFuZCBjb250aW51ZWQNCnN1cHBvcnQgb2YgR29vZ2xl
+IFBsYXkuDQpSZWdhcmRzLA0KRGlkaQ0KVGhlIEdvb2dsZSBQbGF5IFRlYW0NCg0KUGxlYXNlIHZp
+c2l0IHRoZSBHb29nbGUgUGxheSAqRGV2ZWxvcGVyIFBvbGljeSBDZW50ZXIqDQo8aHR0cHM6Ly9w
+bGF5Lmdvb2dsZS5jb20vYWJvdXQvZGV2ZWxvcGVyLWNvbnRlbnQtcG9saWN5Lz4gYW5kIEdvb2ds
+ZSBQbGF5J3MgIA0KKkFjYWRlbXkNCmZvciBBcHAgU3VjY2VzcyoNCjxodHRwczovL3d3dy5nb29n
+bGUuY29tL3VybD9xPWh0dHBzJTNBJTJGJTJGcGxheWFjYWRlbXkuZXhjZWVkbG1zLmNvbSUyRnN0
+dWRlbnQlMkZjYXRhbG9nJTNGdXRtX3NvdXJjZSUzRHNob3J0bGluayUyNnV0bV9tZWRpdW0lM0Rn
+Y28lMjZ1dG1fY2FtcGFpZ24lM0RnZW5lcmljJnNhPUQmc250ej0xJnVzZz1BT3ZWYXczVFU1OHo5
+c2ZhWnM2YXVBQXg5STRXPg0KdG8gbGVhcm4gbW9yZSBhYm91dCBidWlsZGluZyBwb2xpY3kgY29t
+cGxpYW50IGFuZCBoaWdoIHF1YWxpdHkgYXBwcy4gWW91DQpjYW4gYWxzbyB2aXNpdCB0aGUgKkFu
+ZHJvaWQgRGV2ZWxvcGVycyBCbG9nKg0KPGh0dHBzOi8vYW5kcm9pZC1kZXZlbG9wZXJzLmdvb2ds
+ZWJsb2cuY29tLz4gZm9yIHRoZSBsYXRlc3QgQW5kcm9pZCBhbmQNCkdvb2dsZSBQbGF5IG5ld3Mg
+Zm9yIGFwcCBhbmQgZ2FtZSBkZXZlbG9wZXJzLg0KDQoNCk9uIFdlZCwgTm92IDE2LCAyMDIyIGF0
+IDE2OjIyIFVUQyBnb29nbGVwbGF5LWRldmVsb3Blci1zdXBwb3J0QGdvb2dsZS5jb20NCndyb3Rl
+Og0KDQpEZWFyIEdvb2dsZSBQbGF5IERldmVsb3BlciwNCg0KVGhhbmtzIGZvciBjb250YWN0aW5n
+IEdvb2dsZSBQbGF5LiBZb3VyIGFwcGVhbCBoYXMgYmVlbiBzdWJtaXR0ZWQNCnN1Y2Nlc3NmdWxs
+eSBhbmQgd2lsbCBiZSByZXZpZXdlZCBieSBhIHNwZWNpYWxpc3QuIFRoZSB0aWNrZXQgbnVtYmVy
+IGZvcg0KeW91ciBhcHBlYWwgaXMgcmVmZXJlbmNlZCBpbiB0aGUgc3ViamVjdCBvZiB0aGlzIG1l
+c3NhZ2UuIEN1cnJlbnRseSwgd2UgYXJlDQpleHBlcmllbmNpbmcgYSBoaWdoIHZvbHVtZXMgc28g
+dGhlcmUgbWF5IGJlIGEgZGVsYXkgaW4gb3VyIHJlc3BvbnNlcy4NCg0KVGhhbmsgeW91IGZvciB5
+b3VyIHBhdGllbmNlIGFuZCB1bmRlcnN0YW5kaW5nIHdoaWxlIHdlIHdvcmsgb24gZ2V0dGluZyBh
+DQpyZXNwb25zZSBiYWNrIHRvIHlvdSBhcyBzb29uIGFzIHBvc3NpYmxlLg0KDQoNCg0KVGhhbmtz
+LA0KVGhlIEdvb2dsZSBQbGF5IFRlYW0NCg0K
+--000000000000e720db05eda1df51
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div id=3D"cases-header" dir=3D"auto"><p dir=3D"auto">Hi developers at Thri=
+vera Developer,</p><p>Thanks for contacting the Google Play team.</p><p dir=
+=3D"auto"><strong>Status of apps: Suspended from Google Play due to policy =
+violation</strong></p><p dir=3D"auto">I=E2=80=99ve reviewed your appeal req=
+uest and confirmed&nbsp;that your apps are not&nbsp;compliant with Google P=
+lay Policy. I=E2=80=99ve also received your appeal ticket <b>0-548500003358=
+7</b>&nbsp;for your other app,&nbsp;<span style=3D"font-weight: bold;">com.=
+Business.thriverared</span>.</p><p dir=3D"auto">During review, we found tha=
+t your apps listed below&nbsp;violate the <strong>Repetitive Conten</strong=
+><b>t</b> policy.&nbsp;</p><p dir=3D"auto"><ul><li><span style=3D"font-weig=
+ht: bold;">Thrivera Blue (</span><span style=3D"font-weight: bold;">com.Pro=
+ductivity.thriverablue</span><span style=3D"font-weight: bold;">)</span></l=
+i><li><span style=3D"font-weight: bold;">ThriveraRed (</span><span style=3D=
+"font-weight: bold;">com.Business.thriverared</span><span style=3D"font-wei=
+ght: bold;">)</span></li></ul></p><p dir=3D"auto">We don't allow apps that =
+merely provide the same experience as other apps already on Google Play. Ap=
+ps should provide value to users through the creation of unique content or =
+services.</p><p dir=3D"auto"><b>For example, your apps appear to provide si=
+milar or identical content as each other.&nbsp;</b><br></p><p dir=3D"auto">=
+You can read through the<a href=3D"https://play.google.com/about/storelisti=
+ng-promotional/metadata" class=3D"ignore-globals" style=3D"color: rgb(26, 1=
+15, 232); text-decoration-line: none;"> </a><a href=3D"https://play.google.=
+com/intl/en-US/about/spam-min-functionality/#!?zippy_activeEl=3Drepetitive-=
+content%23repetitive-content" rel=3D"noopener" target=3D"_blank" class=3D"i=
+gnore-globals" style=3D"color: rgb(26, 115, 232); text-decoration-line: non=
+e;">Repetitive Content</a> policy page for more details and examples of com=
+mon violations.</p><p dir=3D"auto">Please note that:</p><ul dir=3D"auto"><l=
+i>We don=E2=80=99t allow creating multiple apps with highly similar functio=
+nality, content, and user experience. If these <u>apps are each small in co=
+ntent volume</u>, developers should consider <u>creating a single app that =
+aggregates all the content</u>.</li><li>Publishing identical content target=
+ing the <u>same locales</u> is in violation of the Repetitive Content polic=
+y.</li><li>Removal or administrative notices may not indicate each and ever=
+y policy violation present in your app or broader app catalog. Developers a=
+re responsible for addressing any policy issue and conducting extra due dil=
+igence to ensure that the remainder of their apps are fully policy complian=
+t. Failure to address policy violations in all of your apps may result in a=
+dditional enforcement actions, so <u>we suggest that you&nbsp;review your c=
+atalog and take necessary actions to prevent further enforcement</u>.</li><=
+/ul><p dir=3D"auto">&nbsp;<b>To help us process the appeal, kindly provide =
+us with:</b></p><ul dir=3D"auto"><li><b>Screenshots or other supporting mat=
+erials that&nbsp;explains the differences&nbsp;between/among the above apps=
+.</b></li></ul><p dir=3D"auto">Developers are important partners in maintai=
+ning a great user experience on Google Play and we appreciate your cooperat=
+ion. Please note that suspensions count as strikes against the good standin=
+g of your Google Play Developer account. Egregious or multiple policy viola=
+tions can result in suspension, as can repeated app rejections or removals.=
+</p><p dir=3D"auto">We look forward to your reply. Thanks for your understa=
+nding and continued support of Google Play.</p></div><div id=3D"cases-foote=
+r" dir=3D"auto">Regards,<br>
+Didi<br>
+The Google Play Team
+<p dir=3D"auto">Please visit the Google Play <a href=3D"https://play.google=
+.com/about/developer-content-policy/" target=3D"_blank"><u>Developer Policy=
+ Center</u></a> and Google Play's <a href=3D"https://www.google.com/url?q=
+=3Dhttps%3A%2F%2Fplayacademy.exceedlms.com%2Fstudent%2Fcatalog%3Futm_source=
+%3Dshortlink%26utm_medium%3Dgco%26utm_campaign%3Dgeneric&amp;sa=3DD&amp;snt=
+z=3D1&amp;usg=3DAOvVaw3TU58z9sfaZs6auAAx9I4W" target=3D"_blank"><u>Academy =
+for App Success</u></a> to learn more about building policy compliant and h=
+igh quality apps. You can also visit the <a href=3D"https://android-develop=
+ers.googleblog.com/" target=3D"_blank"><u>Android Developers Blog</u></a> f=
+or the latest Android and Google Play news for app and game developers.</p>
+
+<p dir=3D"auto">&nbsp;</p></div><div class=3D"gcqtc">On Wed, Nov 16, 2022 a=
+t 16:22 UTC <a>googleplay-developer-support@google.com</a> wrote:<br><block=
+quote style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1e=
+x"><p dir=3D"ltr">Dear Google Play Developer,</p>
+
+<p dir=3D"ltr">Thanks for contacting Google Play. Your appeal has been subm=
+itted successfully and will be reviewed by a specialist. The ticket number =
+for your appeal is referenced in the subject of this message. Currently, we=
+ are experiencing a high volumes so there may be a delay in our responses.<=
+/p>
+
+<p dir=3D"ltr">Thank you for your patience and understanding while we work =
+on getting a response back to you as soon as possible.&nbsp;&nbsp;</p>
+
+<p dir=3D"ltr">&nbsp;</p>
+
+<p dir=3D"ltr">Thanks,<br>
+  The Google Play Team</p></blockquote></div>
+--000000000000e720db05eda1df51--

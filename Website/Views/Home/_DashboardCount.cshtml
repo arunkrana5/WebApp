@@ -1,0 +1,136 @@
+﻿@model IList<DashboardItems.HeaderCount>
+
+@section style{
+    @Html.IncludeVersionedCss(Url.Content("~/assets/design/css/counter.css"))
+
+}
+
+
+<div class="row mat-cards mt-4">
+    <div class="col-xl-3 col-lg-3  col-md-12  col-sm-12 col-xs-12">
+        <div class=" d-flex flex-xl-column flex-lg-column align-content-between">
+
+            <div class="col-xl-12 column1">
+                <div class=" card mat-clr-stat-card text-white green mx-1">
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col-3 text-center bg-c-green">
+                                <i class="fa fa-star mat-icon f-24"></i>
+                            </div>
+                            <div class="col-9 cst-cont">
+                                <h5>@Model.Where(x => x.Doctype == "Sale").OrderBy(x => x.Priority).Select(x => x.Count).FirstOrDefault()</h5>
+                                <p class="m-b-0">@Model.Where(x => x.Doctype == "Sale").OrderBy(x => x.Priority).Select(x => x.Name).FirstOrDefault()</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-12 ">
+                <div class="mx-1 card mat-clr-stat-card text-white blue ">
+                    <div class="card-block ">
+                        <div class="row blocki">
+                            <div class="col-3 text-center bg-c-blue">
+                                <i class="fas fa-trophy mat-icon f-24"></i>
+                            </div>
+                            <div class="col-9 cst-cont ">
+                                <a title="Click To view List" onclick="ShowSSRList(this,'Total SSR')">
+                                    <h5>@Model.Where(x => x.Doctype == "Total").OrderBy(x => x.Priority).Select(x => x.Count).FirstOrDefault()</h5>
+                                    <p class="m-b-0">@Model.Where(x => x.Doctype == "Total").OrderBy(x => x.Priority).Select(x => x.Name).FirstOrDefault()</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-xs-12 ">
+        <div class="count-card1 ">
+            <div class=" p-0">
+                <div class="cc1  d-flex  flex-wrap justify-content-around">
+                    @{ int count = 0; string Icon = "";}
+                    @foreach (var item in Model.Where(x => x.Doctype == "Attendance").OrderBy(x => x.Priority))
+                    {
+                        count++;
+                        Icon = (count % 2 == 0 ? "far fa-file-alt f-24" : "far fa-file-alt  f-24");
+
+                        <div class="py-2 px-2  count-cards  @("dh_"+item.Name.ToLower().Replace(" ","").Replace(".",""))">
+                            <a title="Click To view List" onclick="ShowSSRList(this,'@item.Name')">
+                                <div class="  text-center">
+                                    <h5>@item.Count</h5>
+                                    <p class="text-muted m-b-0 pb-2">@item.Name</p>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-12 p-0 m-0">
+            <div class=" d-flex lower-count justify-content-between flex-sm-wrap flex-md-wrap  flex-lg-wrap">
+                @if (Model.Where(x => x.Doctype == "3DaysAbsent").Count() > 0)
+                {
+                    <div class="">
+                        <div class="card-block  lc1 lc">
+                            <div class="row">
+                                <div class="col-12 cst-cont text-behance">
+                                    <a title="Click To view List" onclick="ShowSSRList(this,'3DaysAbsent')">
+                                        <h5>@Model.Where(x => x.Doctype == "3DaysAbsent").OrderBy(x => x.Priority).Select(x => x.Count).FirstOrDefault()</h5>
+                                        <p class="m-b-0">@Model.Where(x => x.Doctype == "3DaysAbsent").OrderBy(x => x.Priority).Select(x => x.Name).FirstOrDefault()</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Model.Where(x => x.Doctype == "5DaysAbsent").Count() > 0)
+                {
+                    <div class="">
+                        <div class="card-block  lc1 lc">
+                            <div class="row">
+                                <div class="col-12 cst-cont text-green">
+                                    <a title="Click To view List" onclick="ShowSSRList(this,'5DaysAbsent')">
+                                        <h5>@Model.Where(x => x.Doctype == "5DaysAbsent").OrderBy(x => x.Priority).Select(x => x.Count).FirstOrDefault()</h5>
+                                        <p class="m-b-0">@Model.Where(x => x.Doctype == "5DaysAbsent").OrderBy(x => x.Priority).Select(x => x.Name).FirstOrDefault()</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Model.Where(x => x.Doctype == "RFC").Count() > 0)
+                {
+                    <div class="">
+                        <div class="card-block  lc1 lc">
+                            <div class="row">
+                                <div class="col-12 cst-cont text-c-red">
+                                    <h5>@Model.Where(x => x.Doctype == "RFC").OrderBy(x => x.Priority).Select(x => x.Count).FirstOrDefault()</h5>
+                                    <p class="m-b-0">@Model.Where(x => x.Doctype == "RFC").OrderBy(x => x.Priority).Select(x => x.Name).FirstOrDefault()</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Model.Where(x => x.Doctype == "PendingLeave").Count() > 0)
+                {
+                    <div class="">
+                        <div class="card-block  lc1 lc px-sm-1">
+                            <div class="row">
+                                <div class="col-12 cst-cont text-azure">
+                                    <h5>@Model.Where(x => x.Doctype == "PendingLeave").OrderBy(x => x.Priority).Select(x => x.Count).FirstOrDefault()</h5>
+                                    <p class="m-b-0">@Model.Where(x => x.Doctype == "PendingLeave").OrderBy(x => x.Priority).Select(x => x.Name).FirstOrDefault()</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+
+    </div>
+</div>

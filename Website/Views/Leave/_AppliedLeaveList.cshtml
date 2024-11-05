@@ -1,0 +1,56 @@
+﻿<div class="table-section">
+    @model IList<LeaveLog.List>
+    <div class="table-responsive">
+        <table id="example" class="table table-bordered table-hover table-wrapper-scroll-y my-custom-scrollbar  table-striped text-nowrap key-buttons">
+            <thead>
+                <tr>
+                    <th>S.no.</th>
+                    @if (ViewBag.Approved == 0)
+                    {
+                        <th>Action</th>
+                    }
+                    <th>Doc No</th>
+                    <th>Doc Date</th>
+                    <th>Financial Year</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Total Days</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @{ int count = 0;}
+                @foreach (LeaveLog.List item in Model)
+                {
+                    count++;
+                    <tr>
+                        <td>@count</td>
+                        @if (ViewBag.Approved == 0)
+                        {
+                            <td>
+                                @if (item.Approved == 0)
+                                {
+                                    <a onclick="DeleteLeave(this)" title="Delete Request" data-toggle='tooltip' data-original-title="Delete Request" class="remove"><i class="fa fa-trash red-clr" aria-hidden="true"></i></a>
+                                }
+                            </td>
+                        }
+                        <td>
+                            <input type="hidden" name="I" value="@item.LogID" />
+                            <input type="hidden" name="N" value="@item.DocNo" />
+                            <a title="View Request" data-toggle='tooltip' data-original-title="View Request" onclick="ViewLeaveLog(this)"> @item.DocNo</a>
+                        </td>
+                        <td>@item.DocDate</td>
+                        <td>@item.FinYear</td>
+                        <td>@item.StartDate</td>
+                        <td>@item.EndDate</td>
+                        <td>@item.TotalDays</td>
+                        <td>@item.Reason</td>
+                        <td> @item.Status</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    </div>

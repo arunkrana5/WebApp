@@ -1,0 +1,72 @@
+﻿@using System.Data
+@model  DataSet
+
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="table-section">
+    <div class="page-header">
+        <div class="page-leftheader">
+            <h4 class="page-title px-3 pt-2">
+                SSR Mapping Reports
+            </h4>
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="x_panel">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="example" class="table table-bordered text-nowrap key-buttons inoutrpt">
+                        <thead>
+                            <tr role="row">
+                                @foreach (DataColumn item in Model.Tables[0].Columns)
+                                {
+                                    if (!item.ColumnName.Contains("_"))
+                                    {
+                                        <th>@item.ColumnName</th>
+
+                                    }
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @{ int Rowcount = 0;}
+                            @foreach (DataRow dtRow in Model.Tables[0].Rows)
+                            {
+                                Rowcount++;
+
+                                <tr role="row" class="@(Rowcount%2==0?"even":"odd")">
+
+                                    @foreach (DataColumn dc in Model.Tables[0].Columns)
+                                    {
+                                        if (!dc.ColumnName.Contains("_"))
+                                        {
+                                            <td>@dtRow[dc.ColumnName]</td>
+                                        }
+                                    }
+                                </tr>
+                            }
+
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+        <script>
+        </script>
+    }

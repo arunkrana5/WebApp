@@ -1,0 +1,88 @@
+﻿
+<div class="table-section">
+
+    <div class="page-header">
+        <div class="page-leftheader">
+            <h4 class="page-title">Execute Actions</h4>
+        </div>
+
+    </div>
+    @using (Ajax.BeginForm("ExecuteAction", "Tools",
+            new { src = ViewBag.src },
+             new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+                new { @id = "ExecuteActionForm", @enctype = "multipart/form-data" })
+        )
+    {
+        <div class="row">
+            <div class="col-lg-12 ">
+                <div class="card">
+                    <div class="card-body">
+
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered text-nowrap key-buttons inoutrpt table-hover table-responsive-md table-responsive-md">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Attendence</td>
+                                        <td>
+                                            <input type="date" id="txtDate" name="txtDate" value="@DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")" />
+                                        </td>
+                                        <td>
+                                            <button name="Command" value="Attendence" class="btn btn-indigo" type="submit">Generate Attendence</button>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Leave Accrual</td>
+                                        <td>
+                                            <input type="Month" id="txtLeaveDate" name="txtLeaveDate" value="@DateTime.Now.ToString("yyyy-MM")" />
+                                        </td>
+                                        <td>
+                                            <button name="Command" value="Accrual" class="btn btn-indigo" type="submit">Accrual</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>PJP Plan</td>
+                                        <td>
+                                            <button name="Command" value="PJPPlan" class="btn btn-indigo" type="submit">Generate</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    }
+    </div>
+
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+        <script>
+
+
+            function OnSuccess(obj) {
+                CloseLoadingDialog();
+                if (obj.Status) {
+                    SuccessToaster(obj.SuccessMessage);
+                }
+                else {
+                    CloseLoadingDialog();
+                    FailToaster(obj.SuccessMessage);
+
+                }
+            }
+
+        </script>
+    }

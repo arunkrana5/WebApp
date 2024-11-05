@@ -1,0 +1,60 @@
+﻿@model IList<PJPPlan.List>
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+
+@Html.Partial("ListHeader_Partial", "PJP List")
+
+<div class="row">
+    <div class="col-lg-12 ">
+        <div class="card">
+            <div class="card-body">
+                <div class="">
+                    <div class="table-responsive">
+                        <table id="example" class="table table-bordered text-nowrap key-buttons">
+                            <thead>
+                                <tr>
+                                    <th>S.no.</th>
+                                    
+                                    <th>Dealer</th>
+                                    <th>EMP</th>
+                                    <th>Visit Date</th>
+                                    
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                @{ int count = 0;}
+                                @foreach (PJPPlan.List item in Model)
+                                {
+                                    count++;
+                                <tr>
+                                    <td>@count</td>
+                                  
+                                    <td>@item.DealerName (@item.DealerCode)</td>
+                                    <td>@item.EMPName (@item.EMPCode)</td>
+                                    <td>@item.VisitDate</td>
+                                </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+@section scripts    {
+    @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+    
+
+}

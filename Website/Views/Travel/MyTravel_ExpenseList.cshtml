@@ -1,0 +1,141 @@
+﻿@model Tab.Approval
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="table-section">
+    @Html.Partial("ListHeader_Partial", "Expense Requests List")
+
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+
+                        @using (Ajax.BeginForm("_MyTravel_ExpenseList", "Travel",
+                                new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Travel/_MyTravel_ExpenseList") },
+                                 new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "OnBegin()" },
+                                    new { @id = "_MyTravel_ExpenseListForm" })
+                            )
+                        {
+                            <div class="row">
+
+                                <div class="col-md-4 col-lg-4 form-group">
+                                    <label>Month <sup>*</sup></label>
+                                    @Html.TextBoxFor(model => model.Month, new { @class = "form-control", @type = "Month" })
+                                    @Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })
+                                </div>
+
+
+                                <div class="col-sm-2 form-group d-flex align-items-end">
+                                    <label class="small">&nbsp;</label>
+                                    <button type="submit" id="btnSearch" name="Command" value="Add" class="button ">
+                                        <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="tabmargin">
+                                @Html.HiddenFor(x => x.Approved)
+                                <ul id="tabs" class="nav nav-tabs d-flex" role="tablist">
+                                    <li class="nav-item"> <a tabvalue="0" class="nav-link ripplelink AnchorApproval @(Model.Approved == 0 ? "active" : "")" data-toggle="tab" role="tab">Pending</a> </li>
+                                    <li class="nav-item"> <a tabvalue="1" class="nav-link ripplelink AnchorApproval @(Model.Approved == 1 ? "active" : "") " data-toggle="tab" role="tab">In Process</a></li>
+                                    <li class="nav-item"> <a tabvalue="2" class="nav-link ripplelink AnchorApproval @(Model.Approved == 2 ? "active" : "") " data-toggle="tab" role="tab">Resubmit</a></li>
+                                    <li class="nav-item"> <a tabvalue="3" class="nav-link ripplelink AnchorApproval @(Model.Approved == 3 ? "active" : "") " data-toggle="tab" role="tab">Rejected</a></li>
+                                    <li class="nav-item"> <a tabvalue="4" class="nav-link ripplelink AnchorApproval @(Model.Approved == 4 ? "active" : "") " data-toggle="tab" role="tab">Approved</a></li>
+                                </ul>
+
+                            </div>
+                        }
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="TargetDiv">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal fade pop-dgn" id="ViewModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header blk-gdn-btn">
+                    <h4 class="modal-title"><i class="fas fa-print"></i>View <span class="spnhead"></span> </h4>
+                    <div class="close" data-dismiss="modal">&times;</div>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div id="VisitTagetDiv"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+        <script>
+
+
+        $(document).ready(function () {
+            $("#btnSearch").click();
+        });
+
+        function OnBegin() {
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html('<img src="/assets/design/images/loader.gif" class="imgloader" />');
+        }
+
+        $('.AnchorApproval').on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var att = $(this).attr("tabvalue");
+            $(".AnchorApproval.active").removeClass("active");
+            $(this).addClass("active");
+            $("#Approved").val(att);
+            $("#btnSearch").click();
+        });
+        function OnSuccess(obj) {
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html(obj);
+            DatatableScripts();
+        }
+
+
+
+    function Expense_ApprovalSummary(obj) {
+        var TRID = $(obj).closest("tr").find("input:hidden[name=I]").val();
+        var DocNo = $(obj).closest("tr").find("input:hidden[name=N]").val();
+        $(".spnhead").html(DocNo);
+			$.ajax({
+                url: "/Travel/_ViewExpense_ApprovalSummary",
+                type: "Get",
+                data: { src: EncryptJSON(@ViewBag.MenuID+"*" + "/Travel/_ViewExpense_ApprovalSummary*" + TRID + "*" + DocNo) },
+                success: function (data)
+                {
+                    $("#VisitTagetDiv").empty();
+                    $("#VisitTagetDiv").html(data);
+                    $('#ViewModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+				},
+				error: function (er) {
+					alert(er);
+
+				}
+			});
+            }
+
+        </script>
+
+    }

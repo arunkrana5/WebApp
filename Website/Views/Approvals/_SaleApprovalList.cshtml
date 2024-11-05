@@ -1,0 +1,133 @@
+﻿
+@model IList<SaleEntry.ApprovalList>
+
+<div class="table-responsive">
+    <table id="example" class="table table-bordered text-nowrap key-buttons">
+        <thead>
+            <tr>
+                <th>S.no.</th>
+                @if (ViewBag.Approved == 0 && ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                {
+                    <th>Action</th>
+                }
+                <th>Image</th>
+                <th>Doc No</th>
+                <th>Remarks</th>
+                <th>Emp Name</th>
+                <th>Emp Code</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Area</th>
+                <th>Dealer Code</th>
+                <th>Dealer Name</th>
+                <th>Invoice No</th>
+                <th>Invoice Date</th>
+                <th>Branch Code</th>
+                <th>Branch Name</th>
+                <th>Customer Name</th>
+                <th>Customer Mobile</th>
+                <th>Customer Email</th>
+                <th>Product Type</th>
+                <th>Product</th>
+                <th>Sub Product</th>
+                <th>Item</th>
+                <th>Qty</th>
+                <th>Price</th>
+                @if (ViewBag.Approved > 0)
+                {
+                    <th>Status</th>
+                    <th>Approver Remarks</th>
+                }
+                <th>Inserted Date</th>
+                <th>Inserted by</th>
+                <th>Updated Date</th>
+                <th>Updated by</th>
+                <th>IP Address</th>
+            </tr>
+
+
+        </thead>
+        <tbody>
+            @{ int Count = 0;}
+            @foreach (SaleEntry.ApprovalList item in Model)
+            {
+                Count++;
+                <tr class="@(item.IsActive == true?"": "trrowred")">
+                    <td>
+                        @Count
+                        <input type="hidden" name="ImgPath" value="@item.AttachmentPath" />
+                        <input type="hidden" name="I" value="@item.SaleEntryID" />
+                        <input type="hidden" name="N" value="@item.DocNo" />
+                        <input type="hidden" name="Ap" value="@item.Approved" />
+                    </td>
+
+                    @if (ViewBag.Approved == 0 && ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                    {
+                        <td>
+                           
+                            <input type="checkbox" class="newwidth" id="checkAll_@item.SaleEntryID" name="Chksingle" onclick="ClickCheck(this);" value="@item.SaleEntryID" />
+                            <label for="checkAll_@item.SaleEntryID"></label>
+                        </td>
+                    }
+
+                    <td><a href="@item.AttachmentPath" target="_blank"><img src="@item.AttachmentPath" class="img-responsive listimage" /> </a></td>
+                    <td>
+                        
+                        <a onclick="VerfiySales(this)" title="Click to verify Sales">
+                            @item.DocNo
+                        </a>
+                    </td>
+                    <td>@item.Remarks</td>
+                    <td>@item.EMPName</td>
+                    <td>@item.EMPCode</td>
+
+
+                    <td>@item.CityName</td>
+                    <td>@item.StateName</td>
+                    <td>@item.AreaName</td>
+                    <td>@item.DealerCode</td>
+                    <td>@item.DealerName</td>
+                    <td>@item.InvoiceNo</td>
+                    <td>@item.InvoiceDate</td>
+                    <td>@item.BranchCode</td>
+                    <td>@item.BranchName</td>
+
+                    <td> @item.CustomerName</td>
+                    <td> @item.CustomerPhone</td>
+                    <td> @item.CustomerEmail</td>
+                    <td> @item.ProductTypeName</td>
+                    <td> @item.ProductName</td>
+                    <td>@item.TranName</td>
+                    <td>@item.ItemName</td>
+                    <td>@item.Qty</td>
+                    <td>@item.Price</td>
+                    @if (ViewBag.Approved > 0)
+                    {
+                        <td>@item.Status</td>
+                        <td>@item.ApprovedRemarks</td>
+                    }
+                    <td>@item.CreatedDate</td>
+                    <td>@item.CreatedBy</td>
+                    <td>@item.ModifiedDate</td>
+                    <td>@item.ModifiedBy</td>
+                    <td>@item.IPAddress</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+        @if (ClsApplicationSetting.GetSessionValue("Modify") == "True" && Model.Count > 0 && Model.Any(x => x.Approved == 0))
+        {
+            <div class="col-md-12 d-flex justify-content-end  my-3">
+                <button type="button" class="btn apr-btn btnProcess pull-right" onclick="ShowApprovalBox(this)" name="Command" value="1">
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                    Approve
+                </button>
+                <button type="button" class="btn rct-btn btnProcess pull-right" onclick="ShowApprovalBox(this)" name="Command" value="2">
+                    <i class="fa fa-ban" aria-hidden="true"></i>
+                    Reject
+                </button>
+            </div>
+        }
+    
+</div>

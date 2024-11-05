@@ -1,0 +1,58 @@
+﻿@model List<Attendance_Log.Daily>
+<div class="table-responsive">
+    <table id="ExportTable" style="border-color:black">
+        <thead>
+            <tr>
+                <th>S No.</th>
+                <th style="width:100px">Code</th>
+                <th style="width:100px">DOJ</th>
+                <th style="width:100px">Dealer Name</th>
+                <th style="width:100px">Dealer Code</th>
+                <th style="width:100px">Branch Name</th>
+                <th style="width:100px">Title</th>
+                <th style="width:100px">Working</th>
+                <th style="width:100px">In Time</th>
+                <th style="width:100px">In Selfy</th>
+                <th style="width:100px">In Distance</th>
+                <th style="width:100px">Out Time</th>
+                <th style="width:100px">Out Selfy</th>
+                <th style="width:100px">Out Distance</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ int Rowcount = 0;}
+            @foreach (var item in Model)
+            {
+                Rowcount++;
+                <tr>
+                    <td>@Rowcount</td>
+                    <td style="width:100px">@item.EMPCode</td>
+                   
+                    <td style="width:100px">@item.DOJ</td>
+                    <td style="width:100px">@item.DealerName</td>
+                    <td style="width:100px">@item.DealerCode</td>
+                    
+                    <td style="width:100px">@item.BranchName</td>
+                    <td style="width:100px">@item.Title</td>
+                    <td style="width:100px">@item.Working</td>
+                    <td style="width:100px">@item.In_Time</td>
+                    <td style="width:100px">
+                        @if (!string.IsNullOrEmpty(item.EMPImageURL))
+                        {
+                            <img class="img-responsive listimage" src="@item.EMPImageURL" />
+                        }
+                    </td>
+                    <td style="width:100px">@item.In_PunchDistance</td>
+                    <td style="width:100px">@item.Out_Time</td>
+                    <td style="width:100px">
+                        @if (!string.IsNullOrEmpty(item.EMPImageURL))
+                        {
+                            <img class="img-responsive listimage" src="@item.EMPImageURL" />
+                        }
+                    </td>
+                    <td style="width:100px">@item.Out_PunchDistance</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

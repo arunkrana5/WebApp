@@ -1,0 +1,176 @@
+﻿@model Tab.Approval
+
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="table-section">
+    @Html.Partial("ListHeader_Partial", "Attendance Final")
+
+
+
+    <div class="card">
+
+        <div class="x_panel">
+            <div class="card-body">
+
+                @using (Ajax.BeginForm("_Attendance_Final", "Reports",
+                   new { src = ClsCommon.Encrypt(ViewBag.MenuID.ToString() + "*/Reports/_Attendance_Final") },
+                     new AjaxOptions { HttpMethod = "POST", OnSuccess = "BindTarget", OnBegin = "OnBegin()", OnFailure = "CloseLoadingDialog()" },
+               new { @id = "_Attendance_FinalFrom" })
+               )
+                {
+                <div class="row">
+                    <div class="col-sm-3 form-group">
+                        <label>Month <sup>*</sup></label>
+                        @Html.TextBoxFor(model => model.Month, new { @class = "form-control", @type = "Month" })
+                        @Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-sm-3 form-group">
+                        <label>User Type <sup>*</sup></label>
+                        @Html.DropDownListFor(x => Model.RoleID, new SelectList(ViewBag.RoleDropdownList, "ID", "Name", Model.RoleID), "Select",
+  new { @class = "form-control  applyselect  ddleaveType" })
+                    </div>
+                    <div class="col-sm-2 form-group ">
+                        <label class="small">&nbsp;</label>
+                        <button type="submit" id="btnSearch" name="Command" value="Add" class="btn btndefault pull-right form-control">
+                            <i class="fa fa-search"></i>  Search
+                        </button>
+                    </div>
+
+
+                </div>
+
+                    <div class="tabmargin">
+                        @Html.HiddenFor(x => x.Approved)
+                        <ul id="tabs" class="nav nav-tabs " role="tablist">
+                            <li class="nav-item"> <a tabvalue="0" class="nav-link ripplelink AnchorApproval @(Model.Approved == 0 ? "active" : "")" data-toggle="tab" role="tab"> Pending</a> </li>
+                            <li class="nav-item"> <a tabvalue="1" class="nav-link ripplelink AnchorApproval @(Model.Approved == 1 ? "active" : "") " data-toggle="tab" role="tab">Approved</a></li>
+                            <li class="nav-item"> <a tabvalue="2" class="nav-link ripplelink AnchorApproval @(Model.Approved == 2 ? "active" : "") " data-toggle="tab" role="tab">Rejected</a></li>
+                        </ul>
+
+                    </div>
+                }
+
+                <div class="row">
+                    <div class="col-lg-12 ">
+                        <div id="TargetDiv"></div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+    <div class="modal fade pop-dgn" id="UFAModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header blk-gdn-btn">
+                    <h4 class="modal-title"><i class="fas fa-print"></i>Update Final Attendence</h4>
+                    <div class="close" data-dismiss="modal">&times;</div>
+                </div>
+                <div class="modal-body">
+                    <div id="UFATagetDiv"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+        <script>
+
+        function ListHeaderExport() {
+            var RoleID = $("#RoleID").find("option:selected").val();
+            var url = "/Export/Attendance_Final_Export";
+            var src = EncryptJSON(@ViewBag.MenuID+"*" + "/Export/Attendance_Final_Export*" + $('#Month').val() + "*" + RoleID)
+            window.location.href = url + "?src=" + src;
+    }
+
+        function OnBegin() {
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html('<img src="/assets/design/images/loader.gif" class="imgloader" />');
+        }
+
+
+        function BindTarget(args) {
+
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html(args);
+            ExportTableDatatableScripts();
+
+        }
+
+        $('#Month').bind("change", function () {
+            $("#btnSearch").click();
+        });
+
+        $('#Doctype').bind("change", function () {
+            $("#btnSearch").click();
+        });
+
+        $('.AnchorApproval').on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var att = $(this).attr("tabvalue");
+            $(".AnchorApproval.active").removeClass("active");
+            $(this).addClass("active");
+            $("#Approved").val(att);
+            $("#btnSearch").click();
+        });
+
+
+
+    function GetUpdateFAttd(obj) {
+        ShowLoadingDialog();
+        var EMPID = $(obj).closest("tr").find("input:hidden[name=I]").val();
+        var Code = $(obj).closest("tr").find("input:hidden[name=N]").val();
+
+        var Date = $('#Month').val();
+			$.ajax({
+                url: "/Reports/_UpdateFinalAttendence",
+                type: "Get",
+                data: { src: EncryptJSON(@ViewBag.MenuID+"*" + "/Reports/_UpdateFinalAttendence*" + EMPID + "*" + Date ) },
+                success: function (data)
+                {
+                    $("#UFATagetDiv").empty();
+                    $("#UFATagetDiv").html(data);
+                    $('#UFAModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    })
+                    CloseLoadingDialog();
+                    $(".applyselect").select2();
+                     var form = $("form")
+                .removeData("validator")
+                .removeData("unobtrusiveValidation");
+                    $.validator.unobtrusive.parse(form);
+				},
+				error: function (er) {
+                    alert(er);
+                    CloseLoadingDialog();
+
+				}
+			});
+        }
+
+        function UFASuccess(obj) {
+            CloseLoadingDialog();
+            if (obj.Status) {
+                SuccessToaster(obj.SuccessMessage);
+                $('#UFAModal').modal('hide');
+                $("#btnSearch").click();
+            }
+            else {
+
+                FailToaster(obj.SuccessMessage);
+
+            }
+        }
+        </script>
+    }

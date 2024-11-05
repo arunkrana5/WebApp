@@ -1,0 +1,188 @@
+﻿
+.client-save {
+    border-radius: 4px;
+    font-size: 16px;
+    width: 150px;
+    height: 37px;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+
+    .client-save:hover a {
+        color: black;
+    }
+
+
+.client-close {
+    border-radius: 4px;
+    font-size: 16px;
+    width: 150px;
+    height: 37px;
+    background-color: #6c757d;
+    color: #fff !important;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+
+    .client-close:hover {
+        background-color: #888 !important;
+    }
+
+
+#client-table table th {
+    background-color: #fafafa !important;
+    color: #000;
+}
+.request-btn a{
+    text-decoration:none;
+    color:inherit;
+}
+/*section {
+    background-color: #fff;
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 5%;
+    border-radius: 20px;
+    padding: 5px 20px 10px 20px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}*/
+#client-form .modal-header {
+    padding: 10px !important;
+    background-color: #3e3b92;
+    color: #fff;
+}
+
+#client-form p {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+#client-form .client-add, .employee-add {
+    border-bottom: 3px solid #3e3b92;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #888;
+    width: 150px;
+    height: 37px;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+
+    #client-form .client-add:hover, .employee-add:hover {
+        border-radius: 4px;
+        font-size: 16px;
+        color: #fff;
+        width: 150px;
+        height: 37px;
+        background-color: #3e3b92;
+        box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    }
+
+#employee-add .delete {
+    color: #e63946;
+}
+
+    #employee-add .delete:hover {
+        color: #d00000;
+    }
+
+#client-form table {
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    font-size: 14px;
+    padding-top: 0px;
+    margin-top: 0px;
+}
+
+#client-form th {
+    background-color: #005f73 !important;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+#client-form .ccp {
+    font-weight: 500;
+    color: #3c096c;
+}
+
+#client-form .pending {
+    font-weight: 500;
+    color: #a4161a;
+}
+
+#client-form .onboarding {
+    font-weight: 500;
+    color: #ff7b00;
+}
+
+#client-form .rejected {
+    font-weight: 500;
+    color: #ba181b;
+}
+
+#client-form .on-board {
+    font-weight: 500;
+    color: #006400;
+}
+
+#client-form a {
+    color: #fff;
+    font-size:14px;
+    font-weight: 600;
+}
+
+#client-form .modal-dialog {
+    width: 100% !important;
+}
+
+#client-form .client-save {
+    border-radius: 4px;
+    font-size: 16px;
+    width: 150px;
+    height: 37px;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+
+#client-form .client-close {
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight:400;
+    width: 150px;
+    height: 37px;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+
+#employee-add th {
+    padding: 5px !important;
+    background-color: #006d77;
+    color: #fff;
+}
+
+#employee-add table td, .table th {
+    padding: 5px !important;
+}
+
+#employee-add p {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.client-form .form-control {
+    border-radius: 4px;
+}
+.client-form  .select2-container--default .select2-selection--single{
+    border-radius:4px;
+}
+#client-form .client-tb-title p{
+    margin-bottom:0px;
+    font-size:16px;
+  
+}
+.client-header{
+
+}
+.client-form .page-title {
+    font-size: 18px;
+    font-weight: 600;
+}

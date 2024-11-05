@@ -1,0 +1,54 @@
+﻿
+@model IList<TargetAchieved>
+<div class="table-responsive">
+    <table class="table mb-0 mt-0 hmtd table-vcenter table-hover text-nowrap border">
+        <thead>
+            <tr>
+                <th class="border-bottom-0">Product </th>
+                <th>Target </th>
+                <th>Achivement </th>
+                <th>Balance </th>
+                <th>Progress </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-left">
+                        <strong>@item.TargetFor_Name</strong>
+                    </td>
+                    <td class="text-right">
+                        @item.TargetQty
+                    </td>
+                    <td class="text-right">
+                        @item.AchivedQty
+                    </td>
+
+                    <td class="text-right">
+                        @( item.TargetQty- item.AchivedQty)
+                    </td>
+                    <td>
+                        @{
+                            var names = new List<string> { "bg-primary", "bg-success", "bg-warning", "bg-secondary", "bg-ac", "bg-ap" };
+                            System.Random rnd = new System.Random();
+                            int index = rnd.Next(names.Count);
+                            var Classnames = names[index];
+                            int Percent = 0;
+                            if (item.TargetQty != 0)
+                            {
+                                Percent = ((item.AchivedQty *100) /item.TargetQty);
+                            }
+                        }
+                        <div class="progress progress-sm mb-1  mt-2 bg-primary-transparent">
+                            <div class="progress-bar @Classnames" style="width: @Percent%"></div>
+                        </div>
+                        <span class="prct-clr text-right"><strong>@Percent %</strong> </span>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>

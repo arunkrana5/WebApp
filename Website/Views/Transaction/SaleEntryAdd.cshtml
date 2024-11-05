@@ -1,0 +1,383 @@
+﻿@model SaleEntry.Add
+@section style{
+
+    @Html.IncludeVersionedCss(Url.Content("/assets/design/plugins/fileupload/css/fileupload.css"))
+
+}
+<div class="table-section">
+    <div class="page-header">
+        <div class="page-leftheader">
+            <h4 class="page-title pt-2 px-3 mx-1 my-1">Sale Entry</h4>
+        </div>
+
+    </div>
+    @using (Ajax.BeginForm("SaleEntryAdd", "Transaction",
+            new { src = ViewBag.src },
+             new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+                new { @id = "SaleEntryAddForm", @enctype = "multipart/form-data" })
+        )
+    {
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        <div class="row p-2 sales-entry">
+            <div class="col-lg-12 ">
+
+                <div class="card">
+                    <div class="card-header-sales ">
+                        <h4 class=" ">Product Deatils </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+                                <label>Date <sup>*</sup></label>
+                                @Html.TextBoxFor(model => model.Date, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+                                <label>Brand  </label>
+                                @Html.TextBoxFor(model => model.SaleFor, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.SaleFor, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+                                <label>Invoice No <sup>*</sup></label>
+                                @Html.TextBoxFor(model => model.InvoiceNo, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.InvoiceNo, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+                                <label>Invoice Date <sup>*</sup></label>
+                                @Html.TextBoxFor(model => model.InvoiceDate, new { @class = "form-control", @type = "date" })
+                                @Html.ValidationMessageFor(model => model.InvoiceDate, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+                                <label>Product Type</label>
+                                @Html.DropDownListFor(n => n.ProductTypeID, new SelectList(Model.ProductTypeList, "ID", "Name", Model.ProductTypeID), "Select Product Type",
+                new { @class = "form-control applyselect", @OnChange = "FillProduct()" })
+                                @Html.ValidationMessageFor(model => model.ProductTypeID, "", new { @class = "text-danger" })
+                            </div>
+
+
+                            <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+                                <label>Product </label>
+                                <input type="hidden" value="@Model.ProductID" id="hdnProductID" />
+                                @Html.DropDownListFor(n => n.ProductID, new SelectList(Model.ProductList, "ID", "Name", Model.ProductID), "Select Product",
+                new { @class = "form-control applyselect", @OnChange = "FillProductTran()" })
+                                @Html.ValidationMessageFor(model => model.ProductID, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+                                <label>Sub Product  </label>
+                                <input type="hidden" value="@Model.PDTranID" id="hdnPDTranID" />
+                                @Html.DropDownListFor(n => n.PDTranID, new SelectList(Model.ProductTranList, "ID", "Name", Model.PDTranID), "Select Tran",
+               new { @class = "form-control applyselect", @OnChange = "FillItems()" })
+                                @Html.ValidationMessageFor(model => model.PDTranID, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+                                <input type="hidden" value="@Model.ItemID" id="hdnItemID" />
+                                <label>Item  <sup>*</sup></label>
+                                @Html.DropDownListFor(n => n.ItemID, new SelectList(Model.ItemsList, "ID", "Name", Model.ItemID), "Select Item",
+            new { @class = "form-control applyselect" })
+                                @Html.ValidationMessageFor(model => model.ItemID, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+                                <label>Qty <sup>*</sup></label>
+                                @Html.DropDownListFor(n => n.Qty, new SelectList(Model.QtyList, "ID", "Name", Model.ItemID), "Select Qty",
+           new { @class = "form-control applyselect" })
+                                @Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+                                <label>Price <sup>*</sup></label>
+                                @Html.TextBoxFor(model => model.Price, new { @class = "form-control", @type = "number" })
+                                @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+                                <label>Serial No </label>
+                                @Html.TextBoxFor(model => model.SerialNo, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.SerialNo, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+                                <label>Installation No  </label>
+                                @Html.TextBoxFor(model => model.InstallationNo, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.InstallationNo, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+                                <label>Mode of Paymnet <sup>*</sup></label>
+                                @Html.DropDownListFor(n => n.PaymentMode, new SelectList(Model.PaymentModeList, "Name", "Name", Model.PaymentMode), "Select Mode",
+            new { @class = "form-control applyselect" })
+                                @Html.ValidationMessageFor(model => model.PaymentMode, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-lg-1 col-md-4 col-sm-12 form-group">
+                                <label>Exchange  <sup>*</sup></label>
+                                @Html.HiddenFor(model => model.IsExchange)
+                                <div class="can-toggle">
+                                    <input type="checkbox" onclick="fnIsExchange();" id="chk_IsExchange" @(Model.IsExchange == 1 ? "checked" : "")>
+                                    <label for="chk_IsExchange"></label>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-9 col-md-8 col-sm-12  form-group">
+                                <label>Remarks   <sup>*</sup></label>
+                                @Html.TextAreaFor(model => model.Remarks, new { @class = "form-control h-45" })
+                                @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <!---->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header-sales">
+                        <h4 class="">Customer Details </h4>
+                    </div>
+                    <div class="card-body">
+                        <!---->
+                        <div class="row">
+                            <div class="col-lg-2 form-group">
+                                <label>Customer Name <sup>*</sup></label>
+                                @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-lg-2 form-group">
+                                <label>Phone  <sup>*</sup></label>
+                                @Html.TextBoxFor(model => model.Phone, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-lg-2 form-group">
+                                <label>Email <sup>*</sup></label>
+                                @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-lg-2 form-group">
+                                <label>State <sup>*</sup></label>
+                                @Html.DropDownListFor(n => n.StateID, new SelectList(Model.StateList, "ID", "Name", Model.StateID), "Select",
+                         new { @class = "form-control  applyselect", @onchange = "FillCity(this)" })
+                                @Html.ValidationMessageFor(model => model.StateID, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-lg-2 form-group">
+                                <label>City  <sup>*</sup></label>
+                                <input type="hidden" value="@Model.CityID" id="hdnCityID" />
+                                @Html.DropDownListFor(n => n.CityID, new SelectList(Model.CityList, "ID", "Name", Model.CityID), "Select",
+                          new { @class = "form-control  applyselect" })
+                                @Html.ValidationMessageFor(model => model.CityID, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-lg-2 col-md-3 form-group">
+                                <label>Pincode <sup>*</sup></label>
+                                @Html.TextBoxFor(model => model.Zipcode, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Zipcode, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-lg-6 form-group">
+                                <label>Location <sup>*</sup></label>
+                                @Html.TextBoxFor(model => model.Location, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger" })
+                            </div>
+
+
+
+
+                            <div class="col-lg-6  col-md-9 form-group">
+                                <label>Address</label>
+                                @Html.TextAreaFor(model => model.Address1, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Address1, "", new { @class = "text-danger" })
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4">
+                    <h4 class="card-title">Image Uplaod </h4>
+                    <div class="col-lg-12 form-group camerabtn">
+                        @Html.HiddenFor(x => x.AttachmentID)
+                        @Html.TextBoxFor(x => x.Upload, new { @class = "dropify", @type = "file", @accept = "image/jpeg,image/png,image/jpg,jpeg|png|jpg" })
+                        @Html.ValidationMessageFor(model => model.Upload, "", new { @class = "text-danger" })
+
+                        @if (Model.AttachmentID > 0)
+                        {
+                            <img class="mx-auto img-responsive avatar-crop" alt="img" src="@Model.AttachmentPath?V=@DateTime.Now.ToString("mm:ss")">
+                        }
+
+                        @Html.ValidationMessageFor(model => model.Upload, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-12">
+                        @if (Model.Approved != 1)
+                        {<button name="Command" value="Add" class="client-save btn btn-primary  " type="submit">Save changes</button>
+                        }
+                        <a href="@Url.Action("SaleEntryList",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*/Transaction/SaleEntryList") })" type="button" class="btn  client-save  btn-danger">cancel</a>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    }
+    </div>
+
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+        @Html.IncludeVersionedJs(Url.Content("/assets/design/plugins/fileupload/js/dropify.js"))
+        @Html.IncludeVersionedJs(Url.Content("/assets/design/js/filupload.js"))
+
+        <script>
+
+            $.validator.methods.number = function (value, element) {
+                return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:[\s\.,]\d{3})+)(?:[\.,]\d+)?$/.test(value);
+            }
+
+            function fnIsExchange() {
+                var checkAll = $("#chk_IsExchange").is(":checked");
+                if (checkAll) {
+                    $("#IsExchange").val(1);
+                }
+                else {
+                    $("#IsExchange").val(0);
+                }
+            }
+
+            $(document).ready(function () {
+                FillCity();
+                FillProductTran();
+
+            });
+
+            function FillCity() {
+                var StateID = $("#StateID").find("option:selected").val();
+                if (StateID != '') {
+                    var data = GetDropDownList(StateID, "City");
+                    if (data != '') {
+                        $("#CityID").empty();
+                        $("#CityID").append($("<option />").val("").text("Select"));
+                        $(data).each(function () {
+                            $("#CityID").append($("<option />").val(this.ID).text(this.Name));
+                            $("#CityID").select2();
+
+                        });
+                        if ($("#hdnCityID").val() != 0) {
+                            $("#CityID").val($("#hdnCityID").val()).change();
+                        }
+                        CloseLoadingDialog();
+                    } else {
+                        $("#CityID").empty();
+                        $("#CityID").append($("<option />").val("").text("Select"));
+                    }
+                }
+                else {
+                    $("#CityID").empty();
+                    $("#CityID").append($("<option />").val("").text("Select"));
+
+                }
+
+
+            }
+
+
+
+            function FillProductTran() {
+                var ID = $("#ProductID").find("option:selected").val();
+                if (ID != '') {
+                    var data = GetDropDownList(ID, "ProductTran");
+                    if (data != '') {
+                        $("#PDTranID").empty();
+                        $("#PDTranID").append($("<option />").val("").text("Select"));
+                        $(data).each(function () {
+                            $("#PDTranID").append($("<option />").val(this.ID).text(this.Name));
+                            $("#PDTranID").select2();
+
+                        });
+                        if ($("#hdnPDTranID").val() != 0) {
+                            $("#PDTranID").val($("#hdnPDTranID").val()).change();
+                        }
+                        CloseLoadingDialog();
+                    } else {
+                        $("#PDTranID").empty();
+                        $("#PDTranID").append($("<option />").val("").text("Select"));
+                    }
+                }
+                else {
+                    $("#PDTranID").empty();
+                    $("#PDTranID").append($("<option />").val("").text("Select"));
+
+                }
+            }
+
+
+            function FillItems() {
+                var PDTranID = $("#PDTranID").find("option:selected").val();
+                if (PDTranID != '') {
+                    var data = GetDropDownList(PDTranID, "Items");
+                    if (data != '') {
+                        $("#ItemID").empty();
+                        $("#ItemID").append($("<option />").val("").text("Select"));
+                        $(data).each(function () {
+                            $("#ItemID").append($("<option />").val(this.ID).text(this.Name));
+                            $("#ItemID").select2();
+
+                        });
+                        if ($("#hdnItemID").val() != 0) {
+                            $("#ItemID").val($("#hdnItemID").val()).change();
+                        }
+                        CloseLoadingDialog();
+                    } else {
+                        $("#ItemID").empty();
+                        $("#ItemID").append($("<option />").val("").text("Select"));
+                    }
+                }
+                else {
+                    $("#ItemID").empty();
+                    $("#ItemID").append($("<option />").val("").text("Select"));
+
+                }
+            }
+
+
+            function FillProduct() {
+                var ID = $("#ProductTypeID").find("option:selected").val();
+                if (ID != '') {
+                    var data = GetDropDownList(ID, "Product");
+                    if (data != '') {
+                        $("#ProductID").empty();
+                        $("#ProductID").append($("<option />").val("").text("Select"));
+                        $(data).each(function () {
+                            $("#ProductID").append($("<option />").val(this.ID).text(this.Name));
+                            $("#ProductID").select2();
+
+                        });
+                        if ($("#hdnProductID").val() != 0) {
+                            $("#ProductID").val($("#hdnProductID").val()).change();
+                        }
+                        CloseLoadingDialog();
+                    } else {
+                        $("#ProductID").empty();
+                        $("#ProductID").append($("<option />").val("").text("Select"));
+                    }
+                }
+                else {
+                    $("#ProductID").empty();
+                    $("#ProductID").append($("<option />").val("").text("Select"));
+
+                }
+            }
+
+            function OnSuccess(obj) {
+                if (obj.Status) {
+                    SuccessToaster(obj.SuccessMessage);
+                    window.location.href = obj.RedirectURL;
+                }
+                else {
+                    CloseLoadingDialog();
+                    FailToaster(obj.SuccessMessage);
+
+                }
+            }
+
+        </script>
+    }

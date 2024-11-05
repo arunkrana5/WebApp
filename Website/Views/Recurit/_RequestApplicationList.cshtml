@@ -1,0 +1,46 @@
+﻿@model List<Requirement.Application.List>
+<div class="table-section">
+    <div class="row">
+        <div class="col-xl-12">
+            <table id="example" class="table table-bordered text-nowrap key-buttons">
+                <thead>
+                    <tr>
+                        <th>SNo.</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>EmailID</th>
+                        <th>Qualification</th>
+                        <th>Experience</th>
+                        <th>Salary</th>
+                        <th>Resume</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int count = 0;}
+                    @foreach (var item in Model)
+                    {
+                        count++;
+        <tr>
+            <td>@count</td>
+            <td>@item.Name</td>
+            <td>@item.Phone</td>
+            <td>@item.EmailID</td>
+            <td>@item.Qualification</td>
+            <td>@item.Experience</td>
+            <td>@item.Salary</td>
+            <td>
+                @if (!string.IsNullOrEmpty(@item.AttachmentURL))
+                {
+                    <a target="_blank" href="@item.AttachmentURL">Resume</a>
+                }
+            </td>
+
+        </tr>
+}
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

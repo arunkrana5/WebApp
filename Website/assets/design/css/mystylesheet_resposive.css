@@ -1,0 +1,222 @@
+﻿@media(max-width:900px) and (min-width:200px){
+    .welcomePage{
+        height:auto;
+    }
+}
+
+#profile-section .dropdown-profile2 {
+    position: absolute;
+   
+    top: 10px !important;
+    left: 0px;
+   
+}
+
+@media  (min-width:800px){
+    #profile-section .dropdown-profile2 {
+        position: absolute;
+        transform: translate3d(-13px, 43px, 0px);
+        top: 10px ;
+        left: 0px;
+        will-change: transform;
+    }
+}
+
+@media screen and (max-width:450px) {
+    #TargetDiv .imgloader {
+        max-width: 250px;
+    }
+}
+
+@media (max-width:767px) and (min-width:451px){
+    .fa-angle-right{
+        float:right;
+    }
+    .app.sidebar-mini.sidenav-toggled .side-menu_item {
+        display: inline;
+        
+    }
+
+    #profile-section {
+        background-color: #fff;
+       padding-top:3px;
+        border-top-left-radius: 0px;
+        /* padding: 4px 0; */
+        border-bottom-left-radius: 0px;
+    }
+}
+@media (max-width:452px) {
+    .fa-angle-right {
+        float: right;
+    }
+
+    .app.sidebar-mini.sidenav-toggled .side-menu_item {
+        display: inline;
+    }
+
+    #profile-section {
+        background-color: #fff;
+        padding-top: 3px;
+        border-top-left-radius: 0px;
+        /* padding: 4px 0; */
+        border-bottom-left-radius: 0px;
+    }
+}
+
+@media (max-width:1150px) and (min-width:992px){
+    .count-cards{
+        width:auto;
+        box-shadow:none;
+        margin-bottom:10px;
+    }
+    .cc1{
+        background-color:#fff;
+        margin:4px 0px 10px 0px;
+        border-radius:8px;
+        padding:3px 0px;
+    }
+    .lower-count .card-block {
+        padding: 13px;
+        width: 150px;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: none;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 20px 0 rgb(69 90 100 / 8%);
+    }
+
+    .lower-count {
+       margin-top:25px;
+    }
+}
+@media (max-width:964px) and (min-width:678px) {
+    .count-cards {
+        width: auto;
+        box-shadow: none;
+        margin-bottom: 10px;
+    }
+
+.cc1 {
+    background-color: #fff;
+    margin: 4px 0px 10px 0px;
+    border-radius: 8px;
+    padding: 3px 0px;
+}
+
+.lower-count .card-block {
+    padding: 13px;
+    width: 150px;
+    height:95px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: none;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 20px 0 rgb(69 90 100 / 8%);
+}
+
+.lower-count {
+    margin-top: 25px;
+}
+}
+
+@media (max-width:678px) and (min-width:530px) {
+    .count-cards {
+        width: auto;
+        box-shadow: none;
+        margin-bottom: 10px;
+    }
+
+    .cc1 {
+        background-color: #fff;
+        margin: 4px 0px 10px 0px;
+        border-radius: 8px;
+        padding: 3px 0px;
+    }
+
+    .lower-count .card-block {
+        padding: 13px;
+        width: 120px;
+        height: 100px;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: none;
+        margin-bottom: 20px;
+        box-shadow: none;
+        box-shadow: 0 1px 20px 0 rgb(69 90 100 / 8%);
+    }
+
+    .lower-count {
+        margin-top: 25px;
+        /*background-color: #fff;
+  */     /* box-shadow: 0 1px 20px 0 rgb(69 90 100 / 8%);
+*/    }
+}
+
+
+@media (max-width:480px) and (min-width:280px) {
+    .mat-cards .mat-clr-stat-card {
+        height:92px;
+    }
+    .blocki{
+        height:92px;
+    }
+    .lower-count .card-block {
+        padding: 13px;
+        width: 84px;
+        height: 100px;
+        border-radius: 8px;
+        background-color: inherit;
+        box-shadow: none;
+        margin-bottom: 20px;
+        box-shadow: none;
+    }
+
+    .lower-count {
+        margin-top: 25px;
+        background-color: #fff;
+        box-shadow: 0 1px 20px 0 rgb(69 90 100 / 8%);
+    }
+    .count-cards{
+        width:87px;
+    }
+}
+
+
+
+@media(max-width:280px){
+    cst-cont{
+        padding:10px 0px;
+    }
+
+}
+@media (max-width:507px) {
+    .column1 {
+        padding: 0px 0px;
+    }
+}
+@media (max-width:472px){
+    .count-cards {
+        margin-bottom:5px;
+    }
+}
+
+
+
+@media (max-width:280px){
+    .lower-count .card-block {
+        padding: 13px;
+        width: 84px;
+        height: 100px;
+        border-radius: 8px;
+        background-color: inherit;
+        box-shadow: none;
+        margin-bottom: 20px;
+        box-shadow: none;
+    }
+}
+
+
+/*-----------------------form control overflow--------------------*/
+.tmScroll .select2-container--default .select2-selection--multiple {
+    height: auto;
+}

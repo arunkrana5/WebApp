@@ -1,0 +1,77 @@
+﻿
+
+<table id="example" class="table table-bordered table-hover text-nowrap key-buttons">
+    <thead>
+        <tr>
+            <th>S.no.</th>
+            <th>Action</th>
+            <th>Name</th>
+            <th>Code</th>
+            <th>Dealer Type</th>
+            <th>Dealer Category</th>
+            <th>Branch</th>
+            <th>State</th>
+            <th>City</th>
+            <th>Area</th>
+            <th>Region</th>
+            <th>Address</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Billing Name</th>
+            <th>Billing Code</th>
+            <th>Inserted Date</th>
+            <th>Inserted by</th>
+            <th>Updated Date</th>
+            <th>Updated by</th>
+            <th>IP Address</th>
+
+        </tr>
+
+
+    </thead>
+    <tbody>
+        @{ int Count = 0;}
+        @foreach (Dealer.List item in Model)
+        {
+            Count++;
+            <tr class="@(item.IsActive == true?"": "trrowred")">
+                <td>@Count</td>
+                <td>
+                    <input type="hidden" name="I" value="@item.DealerID" />
+                    <input type="hidden" name="N" value="@item.DealerName" />
+
+                    @if (ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                    {
+                        @Html.Raw(item.IsActive == true
+         ? "<a  data-toggle='tooltip' data-original-title='Click to DeActivate' list='Dealer_IsActive' OP='0' class='IsActive_Confirm' > <i class='fa fa-circle-check' aria-hidden='true'></i></a>"
+         : "<a data-toggle='tooltip' data-original-title='Click to Activate' list='Dealer_IsActive' OP='1'  class='IsActive_Confirm' > <i class='fa fa-circle-xmark' aria-hidden='true'></i></a>")
+
+
+                        <a title="Edit" href="@Url.Action("DealerAdd", new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Masters/DealerAdd" + "*" + item.DealerID) })" data-toggle='tooltip'><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i> </a>
+                    }
+                </td>
+
+                <td> @item.DealerName</td>
+                <td> @item.DealerCode</td>
+                <td>@item.DealerType</td>
+                <td>@item.DealerCategory</td>
+                <td>@item.BranchName</td>
+                <td>@item.StateName</td>
+                <td>@item.CityName</td>
+                <td>@item.AreaName</td>
+                <td>@item.RegionName</td>
+                <td>@item.Address</td>
+                <td>@item.Latitude</td>
+                <td>@item.Longitude</td>
+
+                <td>@item.BillingName</td>
+                <td>@item.BillingCode</td>
+                <td>@item.CreatedDate</td>
+                <td>@item.CreatedBy</td>
+                <td>@item.ModifiedDate</td>
+                <td>@item.ModifiedBy</td>
+                <td>@item.IPAddress</td>
+            </tr>
+        }
+    </tbody>
+</table>

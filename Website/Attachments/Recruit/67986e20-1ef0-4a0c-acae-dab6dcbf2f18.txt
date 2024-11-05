@@ -1,0 +1,15 @@
+ALTER DATABASE Thai_live SET EMERGENCY;
+
+GO
+
+ALTER DATABASE Thai_live set single_user
+
+GO
+
+DBCC CHECKDB (Thai_live, REPAIR_ALLOW_DATA_LOSS) WITH ALL_ERRORMSGS;
+
+GO
+
+ALTER DATABASE Thai_live set multi_user
+
+GO

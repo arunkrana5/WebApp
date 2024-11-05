@@ -1,0 +1,52 @@
+﻿<div class="table-section">
+    @model IList<LeaveLog.ApproverList>
+    <div class="table-responsive">
+        <table id="example" class="table table-bordered table-hover table-wrapper-scroll-y my-custom-scrollbar table-striped text-nowrap key-buttons">
+            <thead>
+                <tr>
+                    <th>S.no.</th>
+                    <th>Doc No</th>
+                    <th>Doc Date</th>
+                    <th>Financial Year</th>
+                    <th>Name</th>
+                    <th>Code</th>
+
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Days</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @{ int count = 0;}
+                @foreach (LeaveLog.ApproverList item in Model)
+                {
+                    count++;
+                    <tr>
+                        <td>
+                            @count
+                        </td>
+                        <td>
+                            <input type="hidden" name="I" value="@item.LogID" />
+                            <input type="hidden" name="N" value="@item.DocNo" />
+                            <a title="View Request" data-toggle='tooltip' data-original-title="View Request" onclick="ViewLeaveLog(this)"> @item.DocNo</a>
+                        </td>
+                        <td>@item.DocDate</td>
+                        <td>@item.FinYear</td>
+                        <td>@item.EMPName</td>
+                        <td>@item.EMPCode</td>
+                        <td>@item.StartDate</td>
+                        <td>@item.EndDate</td>
+                        <td>@item.TotalDays</td>
+                        <td>@item.Reason</td>
+                        <td>@item.Status</td>
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+    </div>

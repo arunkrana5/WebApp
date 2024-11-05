@@ -1,0 +1,162 @@
+﻿@model MarkAttendence
+
+
+@Html.IncludeVersionedCss(Url.Content("/assets/design/plugins/fileupload/css/fileupload.css"))
+
+    @using (Ajax.BeginForm("MarkAttendence", "Home",
+    new { src = ViewBag.src },
+    new AjaxOptions { HttpMethod = "POST", OnSuccess = "MarkAttendenceOnSuccess", OnBegin = "ShowLoadingDialog()" },
+    new { @id = "MarkAttendenceForm", enctype = "multipart/form-data" })
+    )
+    {
+        <div class="modal-content modal-content-demo">
+            <div class="modal-header">
+                <h6 class="modal-title">Clock In  </h6>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="MyClockDisplay" class="clock">
+                            <span class="spnlivedate"></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label>
+                            Attendence <sup>*</sup>
+                        </label>
+                        @if (Model.AttendenceStatusList.Count == 1)
+                        {
+                            @Html.DropDownListFor(n => n.StatusID, new SelectList(Model.AttendenceStatusList, "ID", "Name", Model.StatusID),
+                        new { @class = "form-control applyselect" })
+                            @Html.ValidationMessageFor(model => model.StatusID, "", new { @class = "text-danger" })
+
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(n => n.StatusID, new SelectList(Model.AttendenceStatusList, "ID", "Name", Model.StatusID), "Select",
+                          new { @class = "form-control applyselect" })
+                            @Html.ValidationMessageFor(model => model.StatusID, "", new { @class = "text-danger" })
+                        }
+
+                    </div>
+
+                    <div class="col-lg-6 form-group" style="display:none;">
+                        <label>Location  <sup>*</sup></label>
+                        @Html.TextBoxFor(model => model.Location, new { @class = "form-control", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.Latitude, "", new { @class = "text-danger" })
+                        @Html.HiddenFor(model => model.Latitude)
+                        @Html.HiddenFor(model => model.Longitude)
+                        @Html.HiddenFor(model => model.Error)
+
+                    </div>
+
+
+                    <div class="col-lg-12 form-group">
+                        <label>Note </label>
+                        @Html.TextAreaFor(model => model.Notes, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                    </div>
+
+
+
+                    <div class="col-lg-12 form-group camerabtn">
+                        <a title="click here for open camera" onclick="OpenCamera(this)" style="color: #fff">
+                            <i class="fa fa-camera" aria-hidden="true"></i>
+                        </a>
+                        <input type="hidden" name="@Html.NameFor(x => x.ImageBase64String)" value="" />
+                        <img src="~/assets/design/images/NoImage.jpeg" />
+                    </div>
+
+                    <!--<div class="col-lg-12 form-group" id="flagDiv" style="display:none">
+                        <label id="spnFlag"></label>
+                        @Html.HiddenFor(model => model.Flag_Doctype)
+                        <!--@Html.TextAreaFor(model => model.Flag_Reason, new { @class = "form-control bgred", @placeholder = "Reason" })
+                        <!--@Html.ValidationMessageFor(model => model.Flag_Reason, "", new { @class = "text-danger"style="display:none" })-->
+                    </div>-->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a onclick="getLocation();" class="btn btn-indigo">Refresh Location</a>
+                <button class="btn btn-indigo" type="submit">Submit</button>
+                <button class="btn btn-danger" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+
+    }
+
+
+@System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+@Html.IncludeVersionedJs(Url.Content("/assets/design/plugins/fileupload/js/dropify.js"))
+@Html.IncludeVersionedJs(Url.Content("/assets/design/js/filupload.js"))
+<script>
+    $(document).ready(function () {
+        setInterval(function () {
+            GetLiveTime();
+        }, 1000);
+
+        $(".applyselect").select2();
+        getLocation();
+    });
+
+    function GetLiveTime() {
+        $.ajax({
+            url: "/CommonAjax/GetDateTimeJson",
+            type: "Post",
+            async: true,
+            success: function (data) {
+                $(".spnlivedate").html(data);
+            }
+        });
+    }
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+            //FailToaster("Geolocation is not supported by this browser.");
+            //$("#Error").val("Geolocation is not supported by this browser.");
+            $("#MTargetDiv").empty();
+            $("#MTargetDiv").html("Please turn on the Location by setting");
+
+        }
+    }
+
+    function showPosition(position) {
+        $("#Latitude").val(position.coords.latitude);
+        $("#Longitude").val(position.coords.longitude);
+        $("#Location").val($("#Latitude").val() + "," + $("#Longitude").val());
+    }
+
+    function showError(error) {
+        var Message = "";
+        switch (error.code) {
+            case error.PERMISSION_DENIED:
+                Message = "User denied the request for Geolocation.";;
+                break;
+            case error.POSITION_UNAVAILABLE:
+                Message = "Location information is unavailable.";
+                break;
+            case error.TIMEOUT:
+                Message = "The request to get user location timed out.";
+                break;
+            case error.UNKNOWN_ERROR:
+                Message = "An unknown error occurred.";
+                break;
+        }
+        $("#Error").val(Message);
+        $("#WarningText").empty();
+        $("#WarningText").html(Message);
+        $('#MarkAttendenceModal').modal('hide');
+        $('#WarningModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        })
+
+    }
+
+</script>

@@ -1,0 +1,37 @@
+﻿@model IList<AutoReport.User>
+
+<div class="table-responsive">
+    <table id="example2" class="table table-bordered text-nowrap key-buttons table-responsive-md table-responsive-sm">
+        <thead>
+            <tr>
+                <th>S.no.</th>
+                <th>Action</th>
+                <th>Email</th>
+                <th>User Type</th>
+                <th>Name</th>
+                <th>User ID</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @{ int count = 0;}
+            @foreach (AutoReport.User item in Model)
+            {
+                count++;
+                <tr>
+                    <td>@count</td>
+                    <td>
+                        <input type="hidden" name="I" value="@item.LoginID" />
+                        <input type="hidden" name="D" value="@ViewBag.Date" />
+                        <button onclick="SendReport(this)">Resend Mail</button>
+                    </td>
+                    <td>@item.EmailID</td>
+                    <td>@item.UserType</td>
+                    <td>@item.EMPName</td>
+                    <td>@item.UserID</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>

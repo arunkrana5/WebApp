@@ -1,0 +1,85 @@
+﻿@model Branch.Add
+
+
+@using (Ajax.BeginForm("_BranchAdd", "Masters",
+        new { src = ViewBag.src },
+         new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+            new { @id = "_BranchAddForm" })
+    )
+{
+
+
+  
+    @Html.HiddenFor(x => Model.BranchID)
+<div class="row p-2">
+    <div class="col-lg-2 col-md-6 col-sm-6 form-group">
+        <label>State<sup>*</sup></label>
+        @Html.DropDownListFor(n => n.StateID, new SelectList(Model.StateList, "ID", "Name", Model.StateID), "Select State",
+            new { @class = "form-control applyselect", @onchange = "FillCity()" })
+        @Html.ValidationMessageFor(model => model.StateID, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-6 form-group">
+        <label>Name<sup>*</sup></label>
+        @Html.TextBoxFor(model => model.BranchName, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.BranchName, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-lg-2 col-md-6 col-sm-6 form-group">
+        <label>Code </label>
+        @Html.TextBoxFor(model => model.BranchCode, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.BranchCode, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-lg-2 col-md-6 col-sm-6 form-group">
+        <label>Maximum Employee  </label>
+        @Html.TextBoxFor(model => model.MaxEMPCount, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.MaxEMPCount, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-2 col-md-6 col-sm-6 form-group">
+        <label>Priority</label>
+        @Html.TextBoxFor(model => model.Priority, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Priority, "", new { @class = "text-danger" })
+    </div>
+
+
+    <div class="col-lg-12 col-md-12 col-sm-12 form-group tmScroll " id='city-col'>
+        <label>City<sup>*</sup></label>
+
+        @Html.HiddenFor(x => Model.CityIDs)
+        <select id="ddCity" onchange="FillCityValues(this)" class="form-control applyselect" multiple="multiple" >
+            @if (Model.CityList != null)
+            {
+                foreach (var item in Model.CityList)
+                {
+                    if (!string.IsNullOrEmpty(Model.CityIDs))
+                    {
+                        <option @(("%" + Model.CityIDs.Replace(",", "%,%") + "%").Contains("%" + item.ID + "%") ? "selected" : "") value="@item.ID">@item.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@item.ID">@item.Name</option>
+                    }
+                }
+            }
+        </select>
+        @Html.ValidationMessageFor(model => model.CityIDs, "", new { @class = "text-danger" })
+    </div>
+
+
+
+
+
+    <div class="col-lg-12 form-group text-right">
+
+        @if (Model.BranchID > 0)
+        {
+            <button type="submit" class="btn client-save btn-primary" name="Command" value="Add"> Update</button>
+        }
+        else
+        {
+            <button type="submit" class="btn client-save btn-primary" name="Command" value="Add">Submit</button>
+        }
+    </div>
+
+</div>
+}

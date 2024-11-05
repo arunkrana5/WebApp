@@ -1,0 +1,88 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Server\\Our Projects\\Thrivera\\Website\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{52F0E018-477B-4FBF-91BD-DDCE43C9D192}|Website.csproj|d:\\server\\our projects\\thrivera\\website\\views\\leave\\_leavelog_view.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{52F0E018-477B-4FBF-91BD-DDCE43C9D192}|Website.csproj|solutionrelative:views\\leave\\_leavelog_view.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52F0E018-477B-4FBF-91BD-DDCE43C9D192}|Website.csproj|d:\\server\\our projects\\thrivera\\website\\controllers\\leavecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{52F0E018-477B-4FBF-91BD-DDCE43C9D192}|Website.csproj|solutionrelative:controllers\\leavecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52F0E018-477B-4FBF-91BD-DDCE43C9D192}|Website.csproj|d:\\server\\our projects\\thrivera\\website\\views\\leave\\_approverleavelist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{52F0E018-477B-4FBF-91BD-DDCE43C9D192}|Website.csproj|solutionrelative:views\\leave\\_approverleavelist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{52F0E018-477B-4FBF-91BD-DDCE43C9D192}|Website.csproj|d:\\server\\our projects\\thrivera\\website\\views\\leave\\approverleavelist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{52F0E018-477B-4FBF-91BD-DDCE43C9D192}|Website.csproj|solutionrelative:views\\leave\\approverleavelist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "_LeaveLog_View.cshtml",
+              "DocumentMoniker": "D:\\Server\\Our Projects\\Thrivera\\Website\\Views\\Leave\\_LeaveLog_View.cshtml",
+              "RelativeDocumentMoniker": "Views\\Leave\\_LeaveLog_View.cshtml",
+              "ToolTip": "D:\\Server\\Our Projects\\Thrivera\\Website\\Views\\Leave\\_LeaveLog_View.cshtml",
+              "RelativeToolTip": "Views\\Leave\\_LeaveLog_View.cshtml",
+              "ViewState": "AQIAAIoAAAAAAAAAAAAAAI8AAACoAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-08-22T06:45:47.181Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "_ApproverLeaveList.cshtml",
+              "DocumentMoniker": "D:\\Server\\Our Projects\\Thrivera\\Website\\Views\\Leave\\_ApproverLeaveList.cshtml",
+              "RelativeDocumentMoniker": "Views\\Leave\\_ApproverLeaveList.cshtml",
+              "ToolTip": "D:\\Server\\Our Projects\\Thrivera\\Website\\Views\\Leave\\_ApproverLeaveList.cshtml",
+              "RelativeToolTip": "Views\\Leave\\_ApproverLeaveList.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-08-22T06:43:31.574Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ApproverLeaveList.cshtml",
+              "DocumentMoniker": "D:\\Server\\Our Projects\\Thrivera\\Website\\Views\\Leave\\ApproverLeaveList.cshtml",
+              "RelativeDocumentMoniker": "Views\\Leave\\ApproverLeaveList.cshtml",
+              "ToolTip": "D:\\Server\\Our Projects\\Thrivera\\Website\\Views\\Leave\\ApproverLeaveList.cshtml",
+              "RelativeToolTip": "Views\\Leave\\ApproverLeaveList.cshtml",
+              "ViewState": "AQIAAEgAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-08-22T06:42:47.169Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "LeaveController.cs",
+              "DocumentMoniker": "D:\\Server\\Our Projects\\Thrivera\\Website\\Controllers\\LeaveController.cs",
+              "RelativeDocumentMoniker": "Controllers\\LeaveController.cs",
+              "ToolTip": "D:\\Server\\Our Projects\\Thrivera\\Website\\Controllers\\LeaveController.cs",
+              "RelativeToolTip": "Controllers\\LeaveController.cs",
+              "ViewState": "AQIAAEMAAAAAAAAAAAAcwFQAAAA3AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-22T06:42:34.369Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

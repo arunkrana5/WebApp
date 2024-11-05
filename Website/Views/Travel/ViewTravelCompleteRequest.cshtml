@@ -1,0 +1,418 @@
+﻿@model TravelCompleteRequest
+
+<div class="table-section">
+    @if (!string.IsNullOrEmpty(ViewBag.Approval))
+    {
+        <div class="page-header">
+            <div class="page-leftheader">
+                <h4 class="page-title">Travel Request (@ViewBag.DocNo) Approval</h4>
+            </div>
+
+        </div>
+    }
+
+
+    <div class="row tablegapdec">
+        <div class="col-lg-12 ">
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Request</h3>
+                </div>
+                <div class="card-body pb-2">
+                    <div class="table-responsive">
+                        <table cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Doc No</th>
+                                    <th>Doc Date</th>
+                                    <th>Name</th>
+                                    <th>Code</th>
+                                    <th>From City</th>
+                                    <th>To City</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Status</th>
+                                    <th>Approved By</th>
+                                    <th>Approved Date</th>
+                                    <th>Approved Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@Model.TravelRequestDetails.DocNo</td>
+                                    <td>@Model.TravelRequestDetails.DocDate</td>
+                                    <td>@Model.TravelRequestDetails.EMPName</td>
+                                    <td>@Model.TravelRequestDetails.EMPCode</td>
+                                    <td>@Model.TravelRequestDetails.FromCity</td>
+                                    <td>@Model.TravelRequestDetails.ToCity</td>
+                                    <td>@Model.TravelRequestDetails.StartDate</td>
+                                    <td>@Model.TravelRequestDetails.EndDate</td>
+                                    <td>@Model.TravelRequestDetails.Status</td>
+                                    <td>@Model.TravelRequestDetails.ApprovedBy</td>
+                                    <td>@Model.TravelRequestDetails.ApprovedDate</td>
+                                    <td>@Model.TravelRequestDetails.ApprovedRemarks</td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            @if (Model.DealersAssignedList.Count > 0)
+            {
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Assigned Dealer </h3>
+                    </div>
+                    <div class="card-body pb-2">
+                        <div class="table-responsive">
+                            <table cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Code</th>
+                                        <th>Type</th>
+                                        <th>Address</th>
+                                        <th>Area</th>
+                                        <th>On Demand</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.DealersAssignedList)
+                                    {
+                                        <tr>
+                                            <td>@item.DealerName</td>
+                                            <td>@item.DealerCode</td>
+                                            <td>@item.DealerType</td>
+                                            <td>@item.Address</td>
+                                            <td>@item.AreaName</td>
+                                            <td>@item.OnDemand</td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (Model.VisitEntryList != null)
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Visit Summary </h3>
+                    </div>
+                    <div class="card-body pb-2">
+                        <div class="table-responsive">
+                            <table cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Dealer Name</th>
+                                        <th>Dealer Code</th>
+                                        <th>SSR Name</th>
+                                        <th>SSR Code</th>
+                                        <th>Gender</th>
+                                        <th>Product Rating</th>
+                                        <th>Product Knw</th>
+                                        <th>Customer Rating</th>
+                                        <th>Customer Knw</th>
+                                        <th>Image</th>
+                                        <th>Expense Amt</th>
+                                        <th>Remarks</th>
+                                        <th>Expense Attachment</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.VisitEntryList)
+                                    {
+                                        <tr>
+                                            <td>@item.VisitDate</td>
+                                            <td>@item.DealerName</td>
+                                            <td>@item.DealerCode</td>
+                                            <td>@item.SSR_Name</td>
+                                            <td>@item.SSR_Code</td>
+                                            <td>@item.SSR_Gender</td>
+                                            <td>@item.ProductRating</td>
+                                            <td>@item.ProductKnw</td>
+                                            <td>@item.CustomerRating</td>
+                                            <td>@item.CustomerKnw</td>
+                                            <td>
+                                                @if (string.IsNullOrEmpty(item.AttachmentPath))
+                                                {
+                                                    <img class="img-responsive imgres" src="~/assets/design/images/NoImage.jpeg" />
+                                                }
+                                                else
+                                                {
+                                                    <a target="_blank" href="@item.AttachmentPath">
+                                                        <img class="img-responsive imgres" src="@item.AttachmentPath" />
+                                                    </a>
+                                                }
+                                            </td>
+                                            <td>@item.ExpenseAmt</td>
+                                            <td>@item.ExpenseRemarks</td>
+                                            <td>
+                                                @if (string.IsNullOrEmpty(item.ExpenseAttachmentPath))
+                                                {
+                                                    <img class="img-responsive imgres" src="~/assets/design/images/NoImage.jpeg" />
+                                                }
+                                                else
+                                                {
+                                                    <a target="_blank" href="@item.ExpenseAttachmentPath">
+                                                        <img class="img-responsive imgres" src="@item.ExpenseAttachmentPath" />
+                                                    </a>
+                                                }
+
+
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (Model.OtherExpenseList.Count > 0)
+            {
+                int Count = 0;
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Other Expense</h3>
+                    </div>
+                    <div class="card-body pb-2">
+                        <div class="table-responsive">
+                            <table id="tableOtherExpense" cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th width="100">Sr. No.</th>
+                                        <th>Amount</th>
+                                        <th>Description</th>
+                                        <th>Attachment</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.OtherExpenseList)
+                                    {
+                                        Count++;
+                                        <tr>
+                                            <td>@Count</td>
+                                            <td>@item.Amt</td>
+                                            <td>@item.Description</td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(item.AttachmentPath))
+                                                {
+                                                    <a target="_blank" href="@item.AttachmentPath">
+                                                        <img class="img-responsive imgres" src="@item.AttachmentPath" />
+                                                    </a>
+                                                }
+
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+
+            }
+
+            @if (Model.AttachmentList.Count > 0)
+            {
+                int Count = 0;
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Attachment</h3>
+                    </div>
+                    <div class="card-body pb-2">
+                        <div class="table-responsive">
+                            <table id="tableAttachment" cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th width="100">Sr. No.</th>
+                                        <th>Attachment</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.AttachmentList)
+                                    {
+                                        Count++;
+                                        <tr>
+                                            <td>@Count</td>
+                                            <td>
+                                                <a target="_blank" href="@item.AttachmentPath">
+                                                    <img class="img-responsive imgres" src="@item.AttachmentPath" />
+                                                </a>
+                                            </td>
+                                            <td>@item.Description</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            }
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">All Expense Summary</h3>
+                </div>
+                <div class="card-body pb-2">
+                    <div class="table-responsive">
+                        <table cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                            <tbody>
+                                <tr>
+                                    <td>Travel Expense</td>
+                                    <td>@Model.TravelExp_Amt</td>
+                                </tr>
+                                <tr>
+                                    <td>Dealer Visit Expense</td>
+                                    <td>@Model.VisitExp_Amt</td>
+
+                                </tr>
+                                <tr>
+                                    <td>Hotel Expense</td>
+                                    <td>@Model.HotelExp_Amt</td>
+
+                                </tr>
+                                <tr>
+                                    <td>Other Expense</td>
+                                    <td>@Model.OtherExp_Amt</td>
+
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td>Total</td>
+                                    <td>@Model.TotalExp_Amt</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            @if (Model.ExpenseApprovedSummaryList.Count > 0)
+            {
+                int Count = 0;
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Expense Approval Summary List</h3>
+                    </div>
+                    <div class="card-body pb-2">
+                        <div class="table-responsive">
+                            <table id="tableAttachment" cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th width="100">Sr. No.</th>
+                                        <th>Approver</th>
+                                        <th>Status</th>
+                                        <th>Remarks</th>
+                                        <th>Approved Date</th>
+                                        <th>Approved By</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.ExpenseApprovedSummaryList)
+                                    {
+                                        Count++;
+                                        <tr>
+                                            <td>@Count</td>
+                                            <td>@item.Doctype</td>
+                                            <td>@item.Status</td>
+                                            <td>@item.ApprovedRemarks</td>
+                                            <td>@item.ApprovedDate</td>
+                                            <td>@item.ApprovedBy</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        @if (ViewBag.Approval == "Approval" && (Model.Approved == 0 || Model.Approved == 2))
+        {
+            using (Ajax.BeginForm("TravelExpense_Approve", "Travel",
+                         new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Travel/TravelExpense_Approve*" + Model.TRID + "*" + ViewBag.Approval) },
+                          new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnTravelExpense_ApproveSuccess", OnBegin = "ShowLoadingDialog()" },
+                             new { @id = "TravelExpense_ApproveForm" })
+                     )
+            {
+                <div class="col-sm-12 form-group ">
+                    <label>Reason</label>
+                    <textarea name="ApproveRemarks" class="form-control" Placeholder="Reason"></textarea>
+                </div>
+                <div class="col-sm-12 text-center mt-3">
+
+                    <button type="submit" name="Command" value="1" class="btn-success pull-left">Approve</button>
+                    <button type="submit" name="Command" value="2" class="btn-danger pull-left">Resubmit</button>
+                    <button type="submit" name="Command" value="3" class="btn-warning pull-left">Rejected</button>
+                    <a href="@Url.Action("Travel_ExpenseList",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Travel/Travel_ExpenseList") })" type="button" class="btn btn-sm  close-btn">Back</a>
+                </div>
+            }
+        }
+        else if (ViewBag.Approval == "OnlyView")
+        {
+            <a href="@Url.Action("TravelExpenseList","Reports",new { src = ClsCommon.Encrypt("-2*"+"/Reports/TravelExpenseList") })" class="btn btn-sm btn btn-primary">Back</a>
+        }
+        else
+        {
+            <a href="@Url.Action("MyTravel_ExpenseList",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Travel/MyTravel_ExpenseList") })" class="btn btn-sm  btn btn-primary">Back</a>
+        }
+    </div>
+</div>
+
+
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+        <script>
+            var acc = document.getElementsByClassName("accordion");
+            var i;
+
+            for (i = 0; i < acc.length; i++) {
+                acc[i].addEventListener("click", function () {
+                    /* Toggle between adding and removing the "active" class,
+                    to highlight the button that controls the panel */
+                    this.classList.toggle("active");
+
+                    /* Toggle between hiding and showing the active panel */
+                    var panel = this.nextElementSibling;
+                    if (panel.style.display === "block") {
+                        panel.style.display = "none";
+                    } else {
+                        panel.style.display = "block";
+                    }
+                });
+            }
+
+            function OnTravelExpense_ApproveSuccess(obj) {
+                if (obj.Status) {
+                    SuccessToaster(obj.SuccessMessage);
+                    window.location.href = obj.RedirectURL;
+                }
+                else {
+                    CloseLoadingDialog();
+                    FailToaster(obj.SuccessMessage);
+
+                }
+            }
+
+        </script>
+    }

@@ -1,0 +1,38 @@
+﻿
+    @model AddLeave
+
+    <div class='table-responsive'>
+        <table id='tblApplyLeave' class='table table-list' style='border:0px'>
+            <tbody>
+                @{int trancount = 0;}
+                @if (Model.LeaveTranList != null)
+                {
+                    for (int i = 0; i < Model.LeaveTranList.Count; i++)
+                    {
+                        trancount++;
+                        <tr>
+                            <td><div class='sno'><label id="lblCount_@trancount">@trancount</label></div></td>
+                            <td>
+                                @Html.TextBoxFor(model => Model.LeaveTranList[i].Date, new { @class = "form-control txtDate", Type = "date" })
+                                @Html.ValidationMessageFor(model => Model.LeaveTranList[i].Date, "", new { @class = "text-danger" })
+                            </td>
+                            <td>
+                                @Html.DropDownListFor(x => Model.LeaveTranList[i].LeaveTypeID, new SelectList(Model.LeaveTypeList, "ID", "Name", Model.LeaveTranList[i].LeaveTypeID), "Select", new { @class = "form-control  applyselect ddleaveType" })
+                                @Html.ValidationMessageFor(model => Model.LeaveTranList[i].LeaveTypeID, "", new { @class = "text-danger" })
+                            </td>
+                            <td>
+                                @Html.DropDownListFor(x => Model.LeaveTranList[i].Hours, new SelectList(Model.LeaveOption, "Hours", "Name", Model.LeaveTranList[i].Hours), "Select", new { @class = "form-control  applyselect txthours" })
+                                @Html.ValidationMessageFor(model => Model.LeaveTranList[i].Hours, "", new { @class = "text-danger" })
+                            </td>
+                            <td>
+                                @if (trancount > 1)
+                                {
+                                    <a class="deleterow"> <span class='close'><i class="fa-solid fa-circle-xmark"></i></span></a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>

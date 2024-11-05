@@ -1,0 +1,50 @@
+﻿@model  Target.Add
+
+@using (Ajax.BeginForm("_AddEMPTarget", "Transaction",
+        new { src = ViewBag.src },
+         new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+            new { @id = "_AddEMPTargetForm" })
+    )
+{
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+            <label>Target Date</label>
+            @Html.TextBoxFor(model => model.TargetDate, new { @class = "form-control", @type = "month" })
+            @Html.ValidationMessageFor(model => model.TargetDate, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+            <label>Employee<sup>*</sup></label>
+            @if (Model.EMPID == 0)
+            {
+                @Html.DropDownListFor(n => n.EMPID, new SelectList(Model.EMPList, "ID", "Name", Model.EMPID), "Select EMP",
+                             new { @class = "form-control applyselect" })
+                @Html.ValidationMessageFor(model => model.EMPID, "", new { @class = "text-danger" })}
+            else
+            {
+                @Html.HiddenFor(model => model.EMPID)
+                <select class = "form-control applyselect" disabled>
+                    @foreach (var item in Model.EMPList)
+                    {
+                        <option @(Model.EMPID ==item.ID?"selected":"") value="@item.ID">@item.Name</option>
+                    }
+                </select>
+              
+            }
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+            <label>Target For<sup>*</sup></label>
+            @Html.DropDownListFor(n => n.TargetFor_ID, new SelectList(Model.TargetForList, "ID", "Name", Model.TargetFor_ID), "Select Target",
+                new { @class = "form-control applyselect" })
+            @Html.ValidationMessageFor(model => model.TargetFor_ID, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+            <label>Qty</label>
+            @Html.TextBoxFor(model => model.Qty, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-12 form-group">
+            <button type="submit" class="btn btn-indigo" name="Command" value="Add"><i class="fa fa-paper-plane" aria-hidden="true"></i> Save</button>
+        </div>
+
+    </div>
+}

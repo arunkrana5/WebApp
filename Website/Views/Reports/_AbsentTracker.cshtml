@@ -1,0 +1,58 @@
+﻿@model IList<AbsentTracker>
+    @{ 
+        var departments = Model.Where(x=>!string.IsNullOrEmpty(x.DeptName)).Select(x => x.DeptName).Distinct();
+    }
+<div class="table-responsive">
+    <table id="example" class="table table-bordered table-hover table-wrapper-scroll-y  my-custom-scrollbar  table-striped text-nowrap key-buttons">
+        <thead>
+            <tr class="parentTH">
+                <th></th>
+                <th></th>
+                <th colspan="@departments.Count()">Active Head Count</th>
+                <th colspan="@departments.Count()"> < 3 Days Absent Count</th>
+                <th colspan="@departments.Count()"> > 3 Days Absent Count</th>
+            </tr>
+            <tr role="row" class="childTH">
+                <th>S No.</th>
+                <th>Branch</th>
+                @foreach (var item in departments)
+                {
+                    <th>@item</th>
+                }
+                @foreach (var item in departments)
+                {
+                    <th>@item</th>
+                }
+                @foreach (var item in departments)
+                {
+                    <th>@item</th>
+                }
+            </tr>
+
+        </thead>
+        <tbody>
+            @{ int count = 0;}
+            @foreach (var bitem in Model.Select(x=>x.BranchName).Distinct())
+            {
+                count++;
+            <tr class="noTH bg-white" >
+                <td>@count</td>
+                <td>@bitem</td>
+                @foreach (var item in departments)
+                {
+                    <th>@Model.Where(x => x.BranchName == bitem && x.DeptName == item && x.CurrentStatus == "Active").Count()</th>
+                }
+                @foreach (var item in departments)
+                {
+                    <th>@Model.Where(x => x.BranchName == bitem && x.DeptName == item && x.StatusID == 9 && x.AbsentDays <=3).Count()</th>
+                }
+                @foreach (var item in departments)
+                {
+                    <th>@Model.Where(x => x.BranchName == bitem && x.DeptName == item && x.StatusID == 9 && x.AbsentDays >3).Count()</th>
+                }
+
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

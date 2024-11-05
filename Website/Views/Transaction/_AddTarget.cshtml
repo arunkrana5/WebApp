@@ -1,0 +1,45 @@
+﻿@model  Targets.Add
+
+@using (Ajax.BeginForm("_AddTarget", "Transaction",
+        new { src = ViewBag.src },
+         new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnAddTargetSuccess", OnBegin = "ShowLoadingDialog()" },
+            new { @id = "_AddTargetForm" })
+    )
+{
+<div class="row p-2">
+    <div class="col-lg-2 col-md-4 col-sm-6 form-group" style="@(Model.TID>0?"display:none":"")">
+        <label>Month</label>
+        @Html.TextBoxFor(model => model.TargetDate, new { @class = "form-control", @type = "month" })
+        @Html.ValidationMessageFor(model => model.TargetDate, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-6 form-group" style="@(Model.TID>0?"display:none":"")">
+        <label>Employee<sup>*</sup></label>
+
+        @Html.DropDownListFor(n => n.EMPID, new SelectList(Model.EMPList, "ID", "Name", Model.EMPID), "Select EMP",
+                     new { @class = "form-control applyselect" })
+        @Html.ValidationMessageFor(model => model.EMPID, "", new { @class = "text-danger" })
+
+    </div>
+    <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+        <label>Target</label>
+        @Html.TextBoxFor(model => model.Doctype, new { @class = "form-control",@readonly= "readonly" })
+        @Html.ValidationMessageFor(model => model.Doctype, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+        <label>Target For<sup>*</sup></label>
+        @Html.DropDownListFor(n => n.TargetFor_ID, new SelectList(Model.TargetForList, "ID", "Name", Model.TargetFor_ID), "Select Target",
+            new { @class = "form-control applyselect" })
+        @Html.ValidationMessageFor(model => model.TargetFor_ID, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+        <label>Qty</label>
+        @Html.TextBoxFor(model => model.Qty, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-12 form-group text-right">
+        <button type="submit" class="btn client-save btn-primary" name="Command" value="Add"> Save</button>
+    </div>
+
+</div>
+}
+

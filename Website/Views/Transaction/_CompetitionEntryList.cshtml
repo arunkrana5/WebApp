@@ -1,0 +1,53 @@
+﻿
+<div class="table-section">
+    @model IList<CompetitionEntry.List>
+
+    @{
+        string CompanyCode = ClsApplicationSetting.GetSessionValue("CompanyCode");
+    }
+
+    <div class="table-responsive">
+        <table id="example" class="table table-bordered text-nowrap key-buttons">
+            <thead>
+                <tr>
+                    <th>S.no.</th>
+                    <th>Date</th>
+                    <th>Brand</th>
+                    <th>Product Type</th>
+                    <th>Category</th>
+                    <th>@(CompanyCode=="Ogeneral"?"Tonnage": "Sub Category") </th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Remarks</th>
+                    <th>Inserted Date</th>
+                    <th>Updated Date</th>
+                    <th>IP Address</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @{ int count = 0;}
+                @foreach (CompetitionEntry.List item in Model)
+                {
+                    count++;
+                    <tr>
+                        <td>@count</td>
+
+                        <td>@item.DocDate</td>
+                        <td>@item.BrandName</td>
+                        <td>@item.ProductTypeName</td>
+                        <td>@item.Category</td>
+                        <td>@item.SubCategory</td>
+                        <td>@item.Qty</td>
+                        <td>@item.Price</td>
+                        <td>@item.Remarks</td>
+                        <td>@item.CreatedDate</td>
+                        <td>@item.ModifiedDate</td>
+                        <td>@item.IPAddress</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+    </div>

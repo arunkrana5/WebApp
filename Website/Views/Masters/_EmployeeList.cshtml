@@ -1,0 +1,87 @@
+﻿
+@model IList<Employee.List>
+
+<div class="table-responsive">
+    <table id="example" class="table table-hover table-bordered dt-responsive nowrap tbltick new_width" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+
+        <thead>
+            <tr>
+                <th>S.no.</th>
+
+                <th>Action</th>
+
+                <th>Name</th>
+                <th>Code</th>
+                @if (ViewBag.Approved == 1)
+                {
+                    <th>Date Of Leaving</th>
+                    <th>Leaving Reason</th>
+                }
+                <th>Designation</th>
+                <th>Department</th>
+                <th>Date Of Joining</th>
+
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Inserted Date</th>
+                <th>Inserted by</th>
+                <th>Updated Date</th>
+                <th>Updated by</th>
+                <th>IP Address</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @{ int Count = 0;}
+            @foreach (Employee.List item in Model)
+            {
+                Count++;
+            <tr class="@(item.IsActive == true?"": "trrowred")">
+                <td>@Count</td>
+                <td>
+                    <input type="hidden" name="I" value="@item.EMPID" />
+                    <input type="hidden" name="N" value="@item.EMPName" />
+
+                    @if (ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                    {
+                        @Html.Raw(item.IsActive == true
+         ? "<a  data-toggle='tooltip' data-original-title='Click to DeActivate' list='EMP_IsActive' OP='0' class='IsActive_Confirm' ><i class='fa fa-circle-check' aria-hidden='true'></i></a>"
+         : "<a data-toggle='tooltip' data-original-title='Click to Activate' list='EMP_IsActive' OP='1'  class='IsActive_Confirm' >  <i class='fa fa-circle-xmark' aria-hidden='true'></i></a>")
+
+
+                <a title="Edit" href="@Url.Action("EmployeeAdd", new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Masters/EmployeeAdd" + "*" + item.EMPID) })" data-toggle='tooltip'> @*<i class="fa fa-pencil-square-o checkgreen" aria-hidden="true"></i>*@ <i class="fa-solid fa-pen-to-square checkgreen"></i> </a>
+                    }
+
+                    @if (ViewBag.Approved == 0)
+                    {
+                        <a onclick="AddDOL(this)" data-toggle='tooltip' data-original-title='Click to update DOL' title="Click to update DOL">
+                            <i class="fa fa-bolt" aria-hidden="true"></i>
+                        </a>
+                    }
+                </td>
+
+                <td> @item.EMPName</td>
+                <td> @item.EMPCode</td>
+                @if (ViewBag.Approved == 1)
+                {
+                    <td>@item.DOL</td>
+                    <td>@item.DOLReason</td>
+                }
+                <td>@item.DesignName</td>
+                <td>@item.DeptName</td>
+                <td>@item.DOJ</td>
+
+                <td>@item.EmailID</td>
+                <td>@item.Phone</td>
+
+
+                <td>@item.CreatedDate</td>
+                <td>@item.CreatedBy</td>
+                <td>@item.ModifiedDate</td>
+                <td>@item.ModifiedBy</td>
+                <td>@item.IPAddress</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

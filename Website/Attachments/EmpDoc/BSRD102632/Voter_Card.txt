@@ -1,0 +1,45 @@
+select uv.EMPID,uv.EMPCode,uv.empname,uv.Phone, uv.EmailID,uv.FatherName, uv.dob,uv.Gender,uv.DesignName,uv.DeptName,uv.DOJ,uv.DOL,uv.[DOL Reason],uv.PAN,uv.UAN,uv.ESIC,uv.PaymentMode, 
+ad.CountryName,StateName,ad.CityName,ad.Address1,ad.Address2,ad.Location,ad.Zipcode,mb.BankName,mb.AccountNo,mb.IFSCCode,mb.BranchName
+from UserEMP_View as uv
+left join address_view as ad on ad.TableID= uv.EMPID and ad.TableName='EMP'
+left join Master_Bank as mb on uv.EMPID= mb.EMPID
+
+ where RoleName in ('TL', 'SSR')
+
+
+
+
+
+
+--Updated Code Employee Upload 
+
+Select m.EMPID,m.EMPCode,m.EMPName,m.Phone,m.EmailID,m.FatherName,m.DOB, m.Gender,de.DesignCode,dp.DeptCode,m.DOJ,m.PAN,m.UAN,m.ESIC,m.PaymentMode,i.value as [Country],r.Value as [Region Code],
+ms.Value as [State Code], mc.Value as [City Code],ma.Address1,ma.Address2, ma.Location,ma.Zipcode,mb.BankName,mb.AccountNo,mb.IFSCCode,mb.BranchName,
+(select top 1  DealerID from TourPlan as tv where tv.EMPID = m.EMPID and tv.Isdeleted=0 order by tv.TourPlanID desc) as [DealerID],m.EMPCode, lu.Password, lr.RoleName
+from Master_Emp as m
+inner join Master_Designation as de on m.DesignID = de.DesignID
+inner join Master_Department as dp on m.DepartID = dp.DeptID
+inner join Login_Users as lu on lu.LoginID = m.UserID and lu.Isdeleted = 0
+inner join Login_Roles as lr on lr.RoleID = lu.RoleID
+left join Master_Bank as mb on mb.EMPID = m.EMPID and mb.Isdeleted = 0
+left join Master_Address as ma on ma.TableID = m.EMPID and ma.TableName = 'EMP' and ma.Isdeleted = 0
+left join Masters as ms on ma.StateID = ms.MasterID and ms.TableName = 'State' 
+left join Masters as mc on ma.CityID = mc.MasterID
+left join masters as r on r.MasterID = ms.GroupID
+left join Masters as i on i.MasterID = r.GroupID
+where m.Isdeleted =0 and m.EMPID= 1526
+
+EMPCode	EMPName	Phone	EmailID	FatherName	DOB	Gender	Design	Depart	DOJ	PAN	UAN	ESIC	PaymentMode	Country	Region	State	City	Address1	Address2	Location	Zipcode	BankName	AccountNo	IFSCCode	BankBranch	DealerCode	UserID	Password	RoleName
+
+--Updated code Dealer Upload 
+select d.DealerID, d.DealerCode,d.DealerName,r.Value as [Region code],s.Value as [State Code],b.BranchCode,c.Value as [City Code], a.Value as [Area Code],d.PinCode,d.Address,d.EmailID,d.Phone,
+dt.Code as [Dealer type code],isnull(dc.Code,'') as [ Dealer Category Code], d.Latitude,d.Longitude, d.BillingCode, d.BillingName
+from Master_Dealer as d
+inner join Master_Branch as b on b.BranchID = d.BranchID
+inner join Master_Dealer_Type as  dt on d.DealerTypeID = dt.DealerTypeID
+left join Master_Dealer_Category as dc on d.DealerCategoryID = dc.DealerCategoryID
+left join Masters as r on d.RegionID = r.MasterID
+left join Masters as s on d.StateID = s.MasterID
+left join Masters as c on d.CityID = c.MasterID
+left join Masters as a on d.AreaID = a.MasterID
+where d.isdeleted = 0

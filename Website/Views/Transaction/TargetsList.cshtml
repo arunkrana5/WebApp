@@ -1,0 +1,146 @@
+﻿@model Tab.Approval
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="table-section">
+    @Html.Partial("ListHeader_Partial", "Target List")
+
+
+
+    <div class="card">
+
+        <div class="x_panel">
+            <div class="card-body">
+                <input type="hidden" id="hdnImportUrl" name="hdnImportUrl" value="@Url.Action("TargetImport",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Transaction/TargetImport*0") })" />
+                @using (Ajax.BeginForm("_TargetsList", "Transaction",
+                                 new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Transaction/_TargetsList") },
+                                  new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "OnBegin()" },
+                                     new { @id = "_TargetsListForm" })
+                             )
+                {
+                    <div class="row">
+                        <div class="col-sm-3 form-group">
+                            <label>Month <sup>*</sup></label>
+                            @Html.TextBoxFor(model => model.Month, new { @class = "form-control", @type = "Month" })
+                            @Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-sm-2 form-group">
+                            <label class="small">&nbsp;</label>
+                            <button type="submit" id="btnSearch" name="Command" value="Add" class="btn btndefault pull-right form-control">
+                                <i class="fa fa-search"></i>  Search
+                            </button>
+                        </div>
+
+
+                    </div>
+                }
+
+                <div class="row">
+                    <div class="col-lg-12 ">
+                        <div id="TargetDiv"></div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade pop-dgn" id="ViewModal">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header blk-gdn-btn">
+                    <h4 class="modal-title"><span class="mx-2"><i class="fas fa-print"></i></span>Add Target </h4>
+                    <div class="close" data-dismiss="modal">&times;</div>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div id="TagetAddDiv"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+        <script>
+
+
+
+        function OnBegin() {
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html('<img src="/assets/design/images/loader.gif" class="imgloader" />');
+        }
+
+        $('#Month').bind("change", function () {
+            $("#btnSearch").click();
+        });
+
+
+        $('.AnchorApproval').on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var att = $(this).attr("tabvalue");
+            $(".AnchorApproval.active").removeClass("active");
+            $(this).addClass("active");
+            $("#Approved").val(att);
+            $("#btnSearch").click();
+        });
+        function OnSuccess(obj) {
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html(obj);
+            CloseLoadingDialog();
+            DatatableScripts();
+        }
+
+
+
+         function ListHeaderAdd(ID) {
+			$.ajax({
+                url: "/Transaction/_AddTarget",
+                type: "Get",
+                data: { src: EncryptJSON(@ViewBag.MenuID+"*" + "/Transaction/_AddTarget*0") },
+                success: function (data)
+                {
+                    $("#TagetAddDiv").empty();
+                    $("#TagetAddDiv").html(data);
+                    $('#ViewModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    })
+                    $(".applyselect").select2();
+                     var form = $("form")
+                .removeData("validator")
+                .removeData("unobtrusiveValidation");
+                    $.validator.unobtrusive.parse(form);
+				},
+				error: function (er) {
+					alert(er);
+
+				}
+			});
+            }
+
+    function OnAddTargetSuccess(obj) {
+        if (obj.Status) {
+            SuccessToaster(obj.SuccessMessage);
+            $("#btnSearch").click();
+            $('#ViewModal').modal('hide');
+        }
+        else {
+            CloseLoadingDialog();
+            FailToaster(obj.SuccessMessage);
+
+        }
+    }
+
+
+
+
+        </script>
+
+    }

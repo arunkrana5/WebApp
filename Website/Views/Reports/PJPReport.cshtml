@@ -1,0 +1,130 @@
+﻿@model Tab.Approval
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+@*<style>
+    #tblDataTable {
+        width: 100% !important;
+    }
+</style>*@
+<div class="table-section">
+
+    @Html.Partial("ListHeader_Partial", "PJP Report")
+
+
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+                        <div class="row">
+                            <div class="col-sm-3 form-group">
+                                <label>Date <sup>*</sup></label>
+                                @Html.TextBoxFor(model => model.Month, new { @class = "form-control", @type = "Month", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-2 form-group d-flex align-items-end pt-1">
+                                <label class="small">&nbsp;</label>
+                                <button type="submit" id="btnSubmit" name="Command" value="Add" class="button ">
+                                    <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
+                                </button>
+                            </div>
+
+
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 ">
+                                <div class="table-responsive">
+                                    <table id="tblDataTable" class="table table-bordered table-hover text-nowrap key-buttons">
+                                        <thead>
+                                            <tr>
+                                                <th>Assign Date</th>
+                                                <th>Visit Date</th>
+                                                <th>Branch</th>
+                                                <th>EMP Code</th>
+                                                <th>EMP Name</th>
+                                                <th>Dealer Code</th>
+                                                <th>Dealer Name</th>
+                                                <th>Dealer State</th>
+                                                <th>Dealer City</th>
+                                                <th>Dealer Area</th>  
+                                                <th>Status</th>
+                                                <th>Created Date</th>
+                                                <th>Created By</th> 
+                                                <th>Modified Date</th>
+                                                <th>Modified By</th>
+                                                <th>IP Address</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+@section scripts    {
+    @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+<script>
+        $(document).ready(function () {
+            //hide add button
+            $('.page-leftheader-btn').html(`<a id="anchListExcelReport" onclick="ListHeaderExport();" class="btn-pdf  ripplelink">
+                                                <svg class="svg-inline--fa fa-file-pdf" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="file-pdf" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg=""><path fill="currentColor" d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM64 224H88c30.9 0 56 25.1 56 56s-25.1 56-56 56H80v32c0 8.8-7.2 16-16 16s-16-7.2-16-16V320 240c0-8.8 7.2-16 16-16zm24 80c13.3 0 24-10.7 24-24s-10.7-24-24-24H80v48h8zm72-64c0-8.8 7.2-16 16-16h24c26.5 0 48 21.5 48 48v64c0 26.5-21.5 48-48 48H176c-8.8 0-16-7.2-16-16V240zm32 112h8c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16h-8v96zm96-128h48c8.8 0 16 7.2 16 16s-7.2 16-16 16H304v32h32c8.8 0 16 7.2 16 16s-7.2 16-16 16H304v48c0 8.8-7.2 16-16 16s-16-7.2-16-16V304 240c0-8.8 7.2-16 16-16z"></path></svg><!-- <i class="fa-solid fa-file-pdf"></i> Font Awesome fontawesome.com --> Export
+                                            </a>`)
+
+            $('#btnSubmit').on('click', function () {
+                BindDataTable();
+            });
+        });
+        function ListHeaderExport() {
+            let mon = $('#Month').val();
+            var url = "/Export/PJPReport_Export";
+            var src = EncryptJSON(@ViewBag.MenuID+"*" + "/Export/PJPReport_Export*" + mon)
+            window.location.href = url + "?src=" + src;
+
+        }
+        function BindDataTable() {
+            let mon = $('#Month').val();
+            var src = EncryptJSON(@ViewBag.MenuID+"*/Reports/_PJPReport*" + mon)
+            console.log(@ViewBag.MenuID+"*/Reports/_PJPReport*" + mon);
+            $('#tblDataTable').DataTable({
+                "destroy": true,
+                "processing": true,
+                "serverSide": true,
+
+                "ajax": {
+                    url: "/Reports/_PJPReport?src=" + src,
+                    type: "post"
+                },
+                "columns": [
+                    { "data": "PlanCreatedDate" },
+                    { "data": "VisitDate" },
+                    { "data": "Branch" },
+                    { "data": "EMPCode" },
+                    { "data": "EMPName" },
+                    { "data": "DealerCode" },
+                    { "data": "DealerName" },
+                    { "data": "State" },
+                    { "data": "City" },
+                    { "data": "Area" }, 
+                    { "data": "Status" },
+                    { "data": "CreatedDate" },
+                    { "data": "CreatedBy" },
+                    { "data": "ModifiedDate" },
+                    { "data": "ModifiedBy" },
+                    { "data": "IPAddress" }
+                ]
+            });
+
+        }
+</script>
+
+}

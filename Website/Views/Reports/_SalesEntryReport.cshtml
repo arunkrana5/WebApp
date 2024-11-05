@@ -1,0 +1,60 @@
+﻿@using System.Data
+@model  DataSet
+
+<div class="table-responsive" >
+    <table id="ExportTable" class="table table-hover table-responsive table-bordered text-nowrap key-buttons" style="height:330px; overflow-y:scroll" >
+        <thead>
+            <tr role="row">
+                @foreach (DataColumn item in Model.Tables[0].Columns)
+                {
+
+                    if (!item.ColumnName.Contains("_"))
+                    {
+                        <th>@item.ColumnName</th>
+                    }
+                }
+            </tr>
+        </thead>
+        <tbody>
+
+            @{ int Rowcount = 0; string Val = "";}
+            @foreach (DataRow dtRow in Model.Tables[0].Rows)
+            {
+                Rowcount++;
+
+                <tr role="row" class="@(Rowcount%2==0?"even":"odd")">
+
+                    @foreach (DataColumn dc in Model.Tables[0].Columns)
+                    {
+
+                        if (!dc.ColumnName.Contains("_"))
+                        {
+                            if (dc.ColumnName.ToUpper().Contains("IMAGE"))
+                            {
+                                <td>
+                                    @if (!string.IsNullOrEmpty(dtRow[dc.ColumnName].ToString()))
+                                    {
+                                        <a href="@dtRow[dc.ColumnName]" target="_blank">
+
+                                            @Html.GetImage(dtRow[dc.ColumnName].ToString(), "", "img-responsive listimage")
+                                        </a>
+                                    }
+
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @dtRow[dc.ColumnName].ToString()
+                                </td>
+                            }
+                        }
+                    }
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+</div>
+

@@ -1,0 +1,55 @@
+﻿@model Tab.Approval
+
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="card">
+
+    @Html.Partial("ListHeader_Partial", " Download Salary Slip")
+
+
+
+
+    <div class="x_panel px-2">
+        <div class="card-body px-2">
+
+            @using (Html.BeginForm("SalarySlip", "Home",
+new { ReturnURL = ViewBag.ReturnURL }, FormMethod.Post,
+new
+{
+    name = "SalarySlipForm",
+    id = "SalarySlipForm",
+    @class = "login-form",
+    enctype = "multipart/form-data"
+}))
+            {
+
+                <div class="row">
+                    <div class="col-sm-3 form-group">
+                        <label>Month <sup>*</sup></label>
+                        @Html.TextBoxFor(model => model.Month, new { @class = "form-control", @type = "Month" })
+                        @Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-2 form-group d-flex align-items-end">
+                        @*<label class="small">&nbsp;</label>*@
+                        <button type="submit" @*id="btnSearch"*@ name="Command" value="Add" class="mt-2  downloads-butn btn">
+                            <i class="fa-solid fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section scripts    {
+   
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+
+}

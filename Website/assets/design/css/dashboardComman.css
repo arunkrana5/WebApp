@@ -1,0 +1,123 @@
+﻿
+.aplist .table-section{
+    box-shadow:none;
+}
+#btnSearch {
+    height:37px;
+    width:37px;
+    border-radius:6px;
+    border: none;
+    color: #888;
+  /*  padding-left:5px;
+    text-align: left !important;*/
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+    #btnSearch:hover {
+        color: #888 !important;
+        background-color:#fff;
+    }
+
+#btnSearch img{
+    height:20px;
+    width:20px;
+}
+#btnSubmit {
+    height: 37px;
+    width: 37px;
+    border-radius: 6px;
+    border: none;
+    color: #888;
+    /*  padding-left:5px;
+    text-align: left !important;*/
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+#btnSearch img {
+    height: 20px;
+    width: 20px;
+}
+.SSr-fC .form-control {
+    border: 1px solid #efefef;
+    height: 38px;
+}
+.fc-scrollgrid {
+    border-radius: 15px;
+    background-color: #f8f9fa;
+}
+.fc-theme-standard td, .fc-theme-standard th, .fc .fc-scrollgrid table{
+   /* border:none !important;*/
+}
+.my-custom-scrollbar{
+    border:none !important;
+}
+/*--------------------------------------loader--------------------------------*/
+.loadingdiv1 .imgloader {
+    margin-left: 40% !important;
+}
+.userprofile .card{
+    box-shadow:none;
+}
+
+/*------------------------------birhday section------------------*/
+/*.scrollBday {
+    position: absolute;
+}
+*/
+.hpBday{
+    letter-spacing:1px;
+}
+marquee {
+    padding: 10px;
+}
+.dcode{
+    color:#888;
+}
+
+.box-bday {
+    background-color: #fff;
+    padding: 10px 0;
+    border-top:3px solid #4800ff;
+    border-radius: 10px;
+    box-shadow: 0px 10px 10px 20px rgb(176 184 214 / 9%), 10px 10px 15px -5px #b0b8d6;
+    height: 170px;
+    position: relative;
+    overflow: hidden;
+}
+.bdyBG {
+    background-image: url('../images/birthday/birthday.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 10px;
+    margin:4px;
+}
+    marquee:hover {
+        animation-play-state: paused;
+    }
+    .birthday-section p {
+        margin-bottom: 3px;
+    }
+
+
+    .birthday-section img {
+        border-radius: 50%;
+        height:60px ;
+        width:60px;
+    }
+.bday-name{
+    font-size:16px;
+}
+
+@media (max-width: 900px) and (min-width:200px) {
+    .birthday-section img {
+            border-radius: 50%;
+            height: 80px;
+            width: 88px;
+        }
+        .birthday-section{
+            text-align:left
+        }
+        .birthday-section h4{
+            margin-top:5px;
+        }
+
+
+    }

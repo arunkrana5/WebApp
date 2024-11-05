@@ -1,0 +1,71 @@
+﻿<div class="table-section">
+    @model IList<PJPPlan.List>
+    <div class="table-responsive">
+        <input type="hidden" id="hdnImportUrl" name="hdnImportUrl" value="@Url.Action("PJPPlan_Import",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Transaction/PJPPlan_Import"+"*"+"0") })" />
+        <table id="example" class="table table-bordered text-nowrap key-buttons">
+            <thead>
+                <tr>
+                    <th>S.no.</th>
+                    <th>Action</th>
+                    <th>Visit Date</th>
+                    <th>Dealer</th>
+                    <th>Dealer Code</th>
+                    <th>Dealer Area</th>
+                    <th>Dealer Address</th>
+                    <th>EMP</th>
+                    <th>EMP Code</th>
+                    <th>Inserted Date</th>
+                    <th>Inserted by</th>
+                    <th>Updated Date</th>
+                    <th>Updated by</th>
+                    <th>IP Address</th>
+
+                </tr>
+
+            </thead>
+            <tbody>
+                @{ int count = 0;}
+                @foreach (PJPPlan.List item in Model)
+                {
+                    count++;
+                    <tr>
+                        <td>@count</td>
+                        <td>
+                            <input type="hidden" name="I" value="@item.PJPID" />
+                            <input type="hidden" name="N" value="@item.EMPName" />
+
+
+                            @if (ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                            {
+                                @Html.Raw(item.IsActive == true
+                          ? "<a  data-toggle='tooltip' data-original-title='Click to DeActivate' list='PJP_IsActive' OP='0' class='AIsActive' > <i class='fa fa-check-circle checkgreen' aria-hidden='true'></i></a>"
+                          : "<a data-toggle='tooltip' data-original-title='Click to Activate' list='PJP_IsActive' OP='1'  class='AIsActive' > <i class='fa fa-times-circle crossred' aria-hidden='true'></i></a>")
+
+
+
+                                <a title="Edit" onclick="ListHeaderAdd(@item.PJPID);" data-toggle='tooltip'> <i class="fa-solid fa-pen-to-square checkgreen" aria-hidden="true"></i> </a>
+                            }
+
+                        </td>
+                        <td>@item.VisitDate</td>
+                        <td>@item.DealerName</td>
+                        <td>@item.DealerCode</td>
+                        <td>@item.DealerArea</td>
+                        <td>@item.DealerAddress</td>
+                        <td>@item.EMPName </td>
+                        <td>@item.EMPCode</td>
+
+
+                        <td>@item.CreatedDate</td>
+                        <td>@item.CreatedBy</td>
+                        <td>@item.ModifiedDate</td>
+                        <td>@item.ModifiedBy</td>
+                        <td>@item.IPAddress</td>
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+    </div>

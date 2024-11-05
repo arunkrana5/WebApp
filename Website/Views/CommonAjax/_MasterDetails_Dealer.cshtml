@@ -1,0 +1,49 @@
+﻿@using System.Data
+@model  DataSet
+
+<div class="masterdetails">
+
+    @foreach (DataRow dtRow in Model.Tables[0].Rows)
+    {
+        <div class="row">
+            @foreach (DataColumn dc in Model.Tables[0].Columns)
+            {
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="floatingInput">@dc.ColumnName</label>
+                        <p>@dtRow[dc.ColumnName]</p>
+                    </div>
+                </div>
+
+
+            }
+        </div>
+    }
+    <h4 class="page-title font-sm">Dealer Mapping</h4>
+    <div class="table-responsive">
+        <table class="table mt-0">
+            <thead>
+                <tr role="row">
+                    @foreach (DataColumn item in Model.Tables[1].Columns)
+                    {
+                        <th>@item.ColumnName</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @{ int Rowcount = 0;}
+                @foreach (DataRow dtRow in Model.Tables[1].Rows)
+                {
+                    Rowcount++;
+                    <tr role="row" class="@(Rowcount%2==0?"even":"odd")">
+                        @foreach (DataColumn dc in Model.Tables[1].Columns)
+                        {
+                            <td>@dtRow[dc.ColumnName]</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

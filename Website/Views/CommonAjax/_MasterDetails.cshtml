@@ -1,0 +1,24 @@
+﻿@using System.Data
+@model  DataSet
+
+
+@if (Model.Tables.Count > 0)
+{
+    foreach (DataRow dtRow in Model.Tables[0].Rows)
+    {
+        <div class="row">
+            @foreach (DataColumn dc in Model.Tables[0].Columns)
+            {
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="floatingInput">@dc.ColumnName</label>
+                        <p>@dtRow[dc.ColumnName]</p>
+                    </div>
+                </div>
+
+
+            }
+        </div>
+    }
+}

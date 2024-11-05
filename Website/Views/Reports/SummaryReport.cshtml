@@ -1,0 +1,93 @@
+﻿@model Tab.Approval
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="table-section">
+    @Html.Partial("ListHeader_Partial", "Summary Report")
+
+    <div class="card">
+
+        <div class="x_panel">
+            <div class="card-body">
+
+                @using (Ajax.BeginForm("_SummaryReport", "Reports",
+                               new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Reports/_SummaryReport") },
+                                new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "OnBegin()" },
+                                   new { @id = "_SchedularForm" })
+                           )
+                {
+                <div class="row">
+                    <div class="col-sm-3 form-group">
+                        <label>Month <sup>*</sup></label>
+                        @Html.TextBoxFor(model => model.Month, new { @class = "form-control", @type = "Date" })
+                        @Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-2 form-group d-flex align-items-end pt-1">
+                        <label class="small">&nbsp;</label>
+                        <button type="submit" id="btnSubmit" name="Command" value="Add" class="button ">
+                            <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
+                        </button>
+                    </div>
+
+
+                </div>
+
+                    <div class="tabmargin">
+                        @Html.HiddenFor(x => x.Approved)
+                        <ul id="tabs" class="nav nav-tabs " role="tablist">
+                            <li class="nav-item"> <a tabvalue="0" class="nav-link ripplelink AnchorApproval @(Model.Approved == 0 ? "active" : "")" data-toggle="tab" role="tab"> Region Wise</a> </li>
+                            <li class="nav-item"> <a tabvalue="1" class="nav-link ripplelink AnchorApproval @(Model.Approved == 1 ? "active" : "") " data-toggle="tab" role="tab">Branch Wise</a></li>
+
+                        </ul>
+
+                    </div>
+                }
+
+                <div class="row">
+                    <div class="col-lg-12 ">
+                        <div id="TargetDiv"></div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+
+        <script>
+            function OnBegin() {
+                $("#TargetDiv").empty();
+                $("#TargetDiv").html('<img src="/assets/design/images/loader.gif" class="imgloader" />');
+            }
+
+            $('#Month').bind("change", function () {
+                $("#btnSearch").click();
+            });
+
+
+            $('.AnchorApproval').on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var att = $(this).attr("tabvalue");
+                $(".AnchorApproval.active").removeClass("active");
+                $(this).addClass("active");
+                $("#Approved").val(att);
+                $("#btnSearch").click();
+            });
+            function OnSuccess(obj) {
+                $("#TargetDiv").empty();
+                $("#TargetDiv").html(obj);
+            }
+        </script>
+
+    }

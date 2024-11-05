@@ -1,0 +1,57 @@
+﻿@model ChallanDocuments.Add
+
+
+@using (Ajax.BeginForm("_ChallanDocumentsAdd", "Masters",
+        new { src = ViewBag.src },
+         new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnAddSuccess", OnBegin = "ShowLoadingDialog()" },
+            new { @id = "_ChallanDocumentsAddForm", @enctype = "multipart/form-data" })
+    )
+{
+
+
+    @Html.HiddenFor(x => Model.ChallanID)
+    @Html.HiddenFor(x => Model.AttachmentID)
+    <div class="row p-2">
+        <div class="col-lg-3 col-md-4 col-sm-12 form-group">
+            <label>Month/Year </label>
+            @Html.TextBoxFor(model => model.Date, new { @class = "form-control", @type = "Month" })
+            @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-12 form-group">
+            <label>State</label>
+            @Html.DropDownListFor(n => n.StateID, new SelectList(Model.StateList, "ID", "Name", Model.StateID), "Select State",
+                new { @class = "form-control applyselect" })
+            @Html.ValidationMessageFor(model => model.StateID, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-12  form-group">
+            <label>Challan Type </label>
+            @Html.TextBoxFor(model => model.ChallanType, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ChallanType, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-12  form-group">
+            <label>Priority</label>
+            @Html.TextBoxFor(model => model.Priority, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Priority, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-12 form-group">
+            <label>Upload</label>
+            @Html.TextBoxFor(x => x.Upload, new { @type = "file", @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Upload, "", new { @class = "text-danger" })
+        </div>
+
+
+        <div class="col-lg-12 form-group text-right">
+
+            @if (Model.ChallanID > 0)
+            {
+                <button type="submit" class="btn  client-save btn-primary" name="Command" value="Add"> Update</button>
+            }
+            else
+            {
+
+                <button type="submit" class="btn client-save btn-primary" name="Command" value="Add"> Submit</button>
+            }
+        </div>
+
+    </div>
+}

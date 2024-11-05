@@ -1,0 +1,69 @@
+﻿@model IList<Travel.List>
+<div class="table-responsive">
+    <table id="example" class="table table-bordered table-hover table-wrapper-scroll-y my-custom-scrollbar table-striped text-nowrap key-buttons">
+        <thead>
+            <tr>
+                <th>S.no.</th>
+                @if (ViewBag.Approved == 0 && ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                {
+                    <th>Action</th>
+                }
+                <th>Doc No</th>
+                <th>Doc Date</th>
+                <th>From City</th>
+                <th>To City</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Mode</th>
+                <th>Remarks</th>
+                <th>Inserted Date</th>
+                <th>Inserted by</th>
+                <th>Updated Date</th>
+                <th>Updated by</th>
+                <th>IP Address</th>
+
+            </tr>
+
+        </thead>
+        <tbody>
+            @{ int count = 0;}
+            @foreach (Travel.List item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                        <input type="hidden" name="I" value="@item.TRID" />
+                        <input type="hidden" name="N" value="@item.DocNo" />
+                    </td>
+                    @if (ViewBag.Approved == 0 && ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                    {
+                <td>
+                    <a title="Edit" href="@Url.Action("AddRequest", new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Travel/AddRequest" + "*" + item.TRID) })" data-toggle='tooltip'> <i class="fa fa-pencil-square-o checkgreen" aria-hidden="true"></i> </a>
+
+                    <a onclick="DeleteEntry(this)" title="Delete Request" class="remove"><i class="fa fa-trash red-clr" aria-hidden="true"></i></a>
+                </td>
+                    }
+                    <td>@item.DocNo</td>
+                    <td>@item.DocDate</td>
+                    <td>@item.FromCity</td>
+                    <td>@item.ToCity</td>
+                    <td>@item.StartDate</td>
+                    <td>@item.EndDate</td>
+                    <td>@item.TravelMode</td>
+                    <td>@item.Remarks</td>
+                    <td>@item.CreatedDate</td>
+                    <td>@item.CreatedBy</td>
+                    <td>@item.ModifiedDate</td>
+                    <td>@item.ModifiedBy</td>
+                    <td>@item.IPAddress</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+
+
+

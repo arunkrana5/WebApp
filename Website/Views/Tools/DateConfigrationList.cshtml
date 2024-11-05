@@ -1,0 +1,88 @@
+﻿@model Tab.Approval
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+
+<div class="table-section">
+    @Html.Partial("ListHeader_Partial", "Date Configration")
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+
+                        @using (Ajax.BeginForm("_DateConfigrationList", "Tools",
+                                new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Tools/_DateConfigrationList") },
+                                 new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "OnBegin()" },
+                                    new { @id = "_DateConfigrationListForm" })
+                            )
+                        {
+                        <div class="row">
+
+                            <div class="col-sm-3 form-group">
+                                <label>Financial Year <sup>*</sup></label>
+                                @Html.DropDownListFor(n => n.ID, new SelectList(Model.List, "ID", "Name", Model.ID), "Select",
+           new { @class = "form-control applyselect" })
+                                @Html.ValidationMessageFor(model => model.ID, "", new { @class = "text-danger" })
+                            </div>
+
+
+                            <div class="col-sm-2 form-group d-flex align-items-end pt-1">
+                                <label class="small">&nbsp;</label>
+                                <button type="submit" id="btnSubmit" name="Command" value="Add" class="button ">
+                                    <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
+                                </button>
+                            </div>
+                        </div>
+                        }
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="TargetDiv">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+
+
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+        <script>
+
+            $(document).ready(function () {
+                $("#btnSubmit").click();
+            });
+
+            function OnBegin() {
+                $("#TargetDiv").empty();
+                $("#TargetDiv").html('<img src="/assets/design/images/loader.gif" class="imgloader" />');
+            }
+
+            $('#ID').bind("change", function () {
+                $("#btnSubmit").click();
+            });
+
+
+
+            function OnSuccess(args) {
+                CloseLoadingDialog();
+                $("#TargetDiv").empty();
+                $("#TargetDiv").html(args);
+                DatatableScripts();
+            }
+
+        </script>
+
+    }

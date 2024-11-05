@@ -1,0 +1,114 @@
+﻿@model IList<Target.OuterList>
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="table-section">
+@Html.Partial("ListHeader_Partial", "Target List")
+
+<div class="row">
+    <div class="col-lg-12 ">
+        <div class="card">
+            <div class="card-body">
+                <div class="">
+                    <input type="hidden" id="hdnImportUrl" name="hdnImportUrl" value="@Url.Action("TargetImport",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Transaction/TargetImport"+"*"+"0") })" />
+                    <input type="hidden" id="hdnAddUrl" name="hdnAddUrl" value="@Url.Action("EMPTarget",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Transaction/EMPTarget"+"*"+"0") })" />
+                    <div class="table-responsive">
+                        <table id="example" class="table table-bordered text-nowrap key-buttons">
+                            <thead>
+                                <tr>
+                                    <th>S.no.</th>
+                                    <th>Action</th>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Code</th>
+                                    <th>Gender</th>
+                                    <th>Phone</th>
+                                    <th>Department</th>
+                                    <th>Designation</th>
+                                   
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                @{ int count = 0;}
+                                @foreach (Target.OuterList item in Model)
+                                {
+                                    count++;
+                                <tr>
+                                    <td>@count</td>
+                                    <td>
+                                        <input type="hidden" name="I" value="@item.EMPID" />
+                                        <input type="hidden" name="N" value="@item.EMPCode" />
+
+
+                                        @if (ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                                        {
+
+                                            <a title="Edit" href="@Url.Action("EMPTarget", new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Transaction/EMPTarget" + "*" + item.EMPID) })" data-toggle='tooltip'> <i class="fa-solid fa-pen-to-square checkgreen" aria-hidden="true"></i> </a>
+                                        }
+
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.ImageURL))
+                                        {
+                                            <a href="@item.ImageURL" target="_blank">
+                                                <img class="img-responsive listimage" src="@item.ImageURL" />
+                                            </a>
+                                        }
+
+                                    </td>
+                                    <td>@item.EMPName</td>
+                                    <td>@item.EMPCode</td>
+
+                                    <td>@item.Gender</td>
+                                    <td>@item.Phone</td>
+                                    <td>@item.DeptName</td>
+                                    <td>@item.DesignName</td>
+                                    
+
+
+                                </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<div class="modal fade pop-dgn" id="ViewModal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+
+            <div class="modal-header blk-gdn-btn">
+                <h4 class="modal-title"><span class="mx-2"><i class="fas fa-print"></i></span>Add Target </h4>
+                <div class="close" data-dismiss="modal">&times;</div>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div id="TagetDiv"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+    </div>
+
+@section scripts    {
+    @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+    <script>
+
+       
+
+    </script>
+
+}

@@ -1,0 +1,56 @@
+﻿@model  IList<ClientVisit.List>
+
+<div class="table-responsive">
+    <table id="example" class="table table-bordered table-hover table-wrapper-scroll-y my-custom-scrollbar table-striped text-nowrap key-buttons">
+        <thead>
+            <tr>
+                <th>S.no.</th>
+                <th>Action</th>
+                <th>Sales Count</th>
+
+                <th>Doc No</th>
+                <th>Dealer Name</th>
+
+            </tr>
+
+        </thead>
+        <tbody>
+            @{ int count = 0;}
+            @foreach (ClientVisit.List item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                    </td>
+                    <td>
+                        <input type="hidden" name="CVisitID" value="@item.CVisitID" />
+                        <input type="hidden" name="C_TranID" value="@item.C_TranID" />
+                        <input type="hidden" name="I" value="@item.C_TranID" />
+                        <input type="hidden" name="N" value="@item.DocNo" />
+                        @if (item.IsVisitCompleted == 0)
+                        {
+                            <a title="Edit" onclick="ListHeaderAdd(@item.C_TranID);" data-toggle='tooltip'> Check Out </a>
+                        }
+                    </td>
+                    <td>
+                        <span>@item.SalesCount</span>
+                        @if (item.IsVisitCompleted == 0)
+                        {
+                            <a title="View Request" href="@Url.Action("AddSales","ClientVisit", new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*/ClientVisit/AddSales*" + item.C_TranID + "*" + item.CVisitID+"")})">
+                                <span>Add Sales</span>
+                            </a>
+                        }
+                    </td>
+                    <td>@item.DocNo</td>
+                    <td>
+                        <a title="Show Details" OP="ClientVisitTran" onclick="ShowMasterDetails(this)" data-toggle="tooltip">@item.DealerName</a>
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+

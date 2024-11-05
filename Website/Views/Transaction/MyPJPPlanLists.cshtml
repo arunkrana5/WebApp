@@ -1,0 +1,209 @@
+﻿@model Tab.Approval
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="table-section">
+
+    @Html.Partial("ListHeader_Partial", "My PJP Plan List")
+
+
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+                        @using (Ajax.BeginForm("_MyPJPPlanLists", "Transaction",
+                                new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Transaction/_MyPJPPlanLists") },
+                                 new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "OnBegin()", },
+                                    new { @id = "_MyPJPPlanListsForm" })
+                        )
+                        {
+                            <div class="row">
+                                <div class="col-sm-3 form-group">
+                                    <label>Date <sup>*</sup></label>
+                                    @Html.TextBoxFor(model => model.Month, new { @class = "form-control", @type = "date" })
+                                    @Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-sm-2 form-group d-flex align-items-end">
+                                    <label class="small">&nbsp;</label>
+                                    <button type="submit" id="btnSubmit" name="Command" value="Add" class="button">
+                                        <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="tabmargin">
+                                <input type="hidden" id="Approved" name="Approved" value="0" />
+                                <ul id="tabs" class="nav nav-tabs " role="tablist">
+                                    <li class="nav-item"> <a tabvalue="0" class="nav-link ripplelink AnchorApproval @(Model.Approved == 0 ? "active" : "")" data-toggle="tab" role="tab"> Pending</a> </li>
+                                    <li class="nav-item"> <a tabvalue="1" class="nav-link ripplelink AnchorApproval @(Model.Approved == 1 ? "active" : "") " data-toggle="tab" role="tab">Approved</a></li>
+                                    <li class="nav-item"> <a tabvalue="2" class="nav-link ripplelink AnchorApproval @(Model.Approved == 2 ? "active" : "") " data-toggle="tab" role="tab">Rejected</a></li>
+                                </ul>
+
+                            </div>
+                        }
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="TargetDiv">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade pop-dgn" id="ViewModal">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+
+                <div class="modal-header blk-gdn-btn">
+                    <h4 class="modal-title"><span class="mx-2"><i class="fas fa-print"></i></span>Add On Demand PJP Plan </h4>
+                    <div class="close" data-dismiss="modal">&times;</div>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div id="OnTagetDiv"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+@section scripts    {
+    @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+<script>
+        function OnBegin() {
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html('<img src="/assets/design/images/loader.gif" class="imgloader" />');
+        }
+        $('#Month').bind("change", function () {
+            $("#btnSubmit").click();
+        });
+        $(document).ready(function () {
+            $("#btnSubmit").click();
+        });
+
+        $('.AnchorApproval').on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var att = $(this).attr("tabvalue");
+            $(".AnchorApproval.active").removeClass("active");
+            $(this).addClass("active");
+            $("#Approved").val(att);
+            $("#btnSubmit").click();
+        });
+        function OnSuccess(obj) {
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html(obj);
+            CloseLoadingDialog();
+            DatatableScripts();
+        }
+
+
+        function ListHeaderAdd(ID) {
+            if (ID == undefined)
+            {
+                ID = 0;
+            }
+			$.ajax({
+                url: "/Transaction/_AddPJPPlans",
+                type: "Get",
+                data: { src: EncryptJSON(@ViewBag.MenuID+"*" + "/Transaction/_AddPJPPlans" + "*" + ID+"*1") },
+                success: function (data)
+                {
+                    $("#OnTagetDiv").empty();
+                    $("#OnTagetDiv").html(data);
+                    $('#ViewModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    })
+                    $(".applyselect").select2();
+                     var form = $("form")
+                .removeData("validator")
+                .removeData("unobtrusiveValidation");
+                    $.validator.unobtrusive.parse(form);
+
+                    $('#RouteNumber').on("change", function () {
+                        if ($('#RouteNumber').val() != "" || $('#RouteNumber').val()!= undefined) {
+                            GetDealerSearch();
+                        }
+                    });
+				},
+				error: function (er) {
+					alert(er);
+
+				}
+			});
+        }
+
+        function OnPJPPlansAddSuccess(obj) {
+            CloseLoadingDialog();
+            if (obj.Status) {
+                SuccessToaster(obj.SuccessMessage);
+                $("#btnSubmit").click();
+                $("#ViewModal").modal('hide');
+                var url = "/Transaction/MyPJPPlanLists";
+                var src = EncryptJSON(@ViewBag.MenuID+"*/Transaction/MyPJPPlanLists*")
+                window.location.href = url + "?src=" + src;
+            }
+            else {
+
+                FailToaster(obj.SuccessMessage);
+
+            }
+        }
+
+
+        function GetDealerSearch() {
+            ShowLoadingDialog();
+            var RouteNumber = $("#RouteNumber").val();
+            var dataObject = JSON.stringify({
+                'RouteNumber': RouteNumber,
+            });
+            if (dataObject) {
+                var data = $.parseJSON($.ajax({
+                    url: '/CommonAjax/GetDealerByRouteNumber',
+                    dataType: "json",
+                    contentType: 'application/json',
+                    type: "Post",
+                    data: dataObject,
+                    async: false
+                }).responseText);
+                if (data != '') {
+                    $("#NewDealerID").empty();
+                    $("#NewDealerID").append($("<option />").val("").text("Select"));
+                    $(data).each(function () {
+                        $("#NewDealerID").append($("<option />").val(this.ID).text(this.Name));
+                        $("#NewDealerID").select2();
+
+                    });
+                    CloseLoadingDialog();
+                } else {
+                    $("#NewDealerID").empty();
+                    $("#NewDealerID").append($("<option />").val("").text("Select"));
+                    CloseLoadingDialog();
+
+                }
+            } else {
+                $("#NewDealerID").empty();
+                $("#NewDealerID").append($("<option />").val("").text("Select"));
+
+            }
+        }
+        function ListHeaderExport()
+        {
+            var Month = $("#Month").val();
+            var url = "/Export/MyPJPPlanLists_Export";
+            var src = EncryptJSON(@ViewBag.MenuID+"*/Export/MyPJPPlanLists_Export*" + Month)
+            window.location.href = url + "?src=" + src;
+        }
+</script>
+}

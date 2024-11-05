@@ -1,0 +1,65 @@
+﻿@using System.Data
+@model  DataSet
+<div >
+    <div class="table-responsive">
+        <div class="">
+            <table id="ExportTable" width="100%" class="table table-bordered table-hover table-wrapper-scroll-y my-custom-scrollbar table-striped text-nowrap key-buttons">
+                <thead>
+                    <tr role="row">
+                        <th class="col">S.No</th>
+                        <th class="col">Action</th>
+                        @foreach (DataColumn item in Model.Tables[0].Columns)
+                        {
+                            if (!item.ColumnName.Contains("_"))
+                            {
+                                <th class="col">@item.ColumnName</th>
+
+                            }
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{ int Rowcount = 0;}
+                    @foreach (DataRow dtRow in Model.Tables[0].Rows)
+                    {
+                        Rowcount++;
+
+                        <tr role="row" class="@(Rowcount%2==0?"even":"odd")">
+                            <td class="col">@Rowcount</td>
+                            <td class="col">
+                                <input type="hidden" name="PlanID" value="@dtRow["_PJPPlanID"]" />
+                                <input type="hidden" name="I" value="@dtRow["_PJPEntryID"]" />
+                                <a title="View" onclick="ViewPJPEntry(this);" data-toggle='tooltip'> <i class="fa fa-eye-slash checkgreen" aria-hidden="true"></i> </a>
+
+                            </td>
+                            @foreach (DataColumn dc in Model.Tables[0].Columns)
+                            {
+                                if (!dc.ColumnName.Contains("_"))
+                                {
+                                    if (dc.ColumnName.ToUpper() == "DISPLAY IMAGE")
+                                    {
+                                        <td class="col">
+                                            <a target="_blank" href="@dtRow[dc.ColumnName]">
+                                                <img src="@dtRow[dc.ColumnName]" class="listimage" />
+                                            </a>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td class="col">@dtRow[dc.ColumnName]</td>
+
+                                    }
+                                }
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+

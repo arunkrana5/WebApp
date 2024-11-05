@@ -1,0 +1,138 @@
+﻿<div class="table-section">
+    @model IList<PJPEntry.List>
+        @section style{
+        @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+        }
+
+
+
+        <div class="page-header">
+            <div class="page-leftheader d-flex justify-content-between">
+                <h4 class="page-title ">PJP Entries List</h4>
+                <div class="page-leftheader-btn ">
+                    @if (ClsApplicationSetting.GetSessionValue("Write") == "True")
+                    {
+                    <a class="btn btn-primary" href="@Url.Action(" PJPEntryAdd",new { src=ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Transaction/PJPEntryAdd*"+ViewBag.PJPPlanID+"*0*0") })">
+                        <i class="fa fa-plus"></i> Add
+                    </a>
+                    }
+                    <a class="btn btn-sm  close-btn" href="@Url.Action(" MyPJPPlanList",new { src=ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Transaction/MyPJPPlanList") })">Back To List</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 ">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="">
+
+                            <div class="table-responsive">
+                                <table id="example" class="table table-bordered text-nowrap key-buttons">
+                                    <thead>
+                                        <tr>
+                                            <th>S.no.</th>
+                                            <th>Action</th>
+                                            <th>Visit Date</th>
+                                            <th>Dealer Code</th>
+                                            <th>Dealer Name</th>
+                                            <th>SSR Name</th>
+                                            <th>SSR Code</th>
+                                            <th>SSR UserID</th>
+                                            <th>Expense Amt</th>
+
+                                            <th>Inserted Date</th>
+                                            <th>IP Address</th>
+
+                                        </tr>
+
+                                    </thead>
+                                    <tbody>
+                                        @{ int count = 0;}
+                                        @foreach (PJPEntry.List item in Model)
+                                        {
+                                        count++;
+                                        <tr>
+                                            <td>@count</td>
+                                            <td>
+                                                <input type="hidden" name="PlanID" value="@item.PJPPlanID" />
+                                                <input type="hidden" name="I" value="@item.PJPEntryID" />
+                                                <input type="hidden" name="N" value="@item.SSRUserID" />
+
+                                                <a title="View" onclick="ViewPJPEntry(this);" data-toggle='tooltip'> <i class="fa fa-eye-slash checkgreen" aria-hidden="true"></i> </a>
+
+                                            </td>
+                                            <td>@item.VisitDate</td>
+                                            <td>@item.SSRDealerCode </td>
+                                            <td>@item.SSRDealerName</td>
+                                            <td>@item.SSRName</td>
+                                            <td>@item.SSRCode</td>
+                                            <td>@item.SSRUserID</td>
+                                            <td>@item.ExpenseAmt</td>
+
+                                            <td>@item.CreatedDate</td>
+                                            <td>@item.IPAddress</td>
+                                        </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="modal fade pop-dgn" id="ViewModal">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+
+                    <div class="modal-header blk-gdn-btn">
+                        <h4 class="modal-title"><i class="fas fa-print"></i>View <span class="spnhead"></span> </h4>
+                        <div class="close" data-dismiss="modal">&times;</div>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div id="TagetDiv"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+        @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+        <script>
+            function ViewPJPEntry(obj) {
+                var PJPEntryID = $(obj).closest("tr").find("input:hidden[name=I]").val();
+                var PJPPlanID = $(obj).closest("tr").find("input:hidden[name=PlanID]").val();
+                var USer = $(obj).closest("tr").find("input:hidden[name=N]").val();
+                $(".spnhead").html(USer)
+                $.ajax({
+                    url: "/Transaction/_PJPEntryView",
+                    type: "Get",
+                    data: { src: EncryptJSON(@ViewBag.MenuID+"*" + "/Transaction/_PJPEntryView*" + PJPPlanID + "*" + PJPEntryID + "*0")
+            },
+            success: function (data) {
+                $("#TagetDiv").empty();
+                $("#TagetDiv").html(data);
+                $('#ViewModal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                })
+            },
+            error: function (er) {
+                alert(er);
+
+            }
+                    });
+                    }
+        </script>
+        }

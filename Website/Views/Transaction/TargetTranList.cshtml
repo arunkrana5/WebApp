@@ -1,0 +1,150 @@
+﻿@model Targets.TranList
+@{
+    ViewBag.Title = "TargetTranList";
+}
+<div class="table-section">
+    <div class="page-header">
+        <div class="page-leftheader">
+            <h4 class="page-title">Targets Tran</h4>
+        </div>
+
+    </div>
+
+
+    <input type="hidden" id="hdn_TID" value="@ViewBag.TID" />
+
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+                        <a class="btn btn-primary" onclick="ListHeaderAdd()">
+                            <i class="fa fa-plus"></i> Add Target
+                        </a>
+                        <div class="table-responsive">
+                            <table id="example" class="table table-bordered text-nowrap key-buttons">
+                                <thead>
+                                    <tr>
+                                        <th>S.no.</th>
+                                        <th>Doctype</th>
+                                        <th>Target For</th>
+                                        <th>Qty</th>
+                                    </tr>
+
+                                </thead>
+                                <tbody>
+                                    @{ int count = 0;}
+                                    @if (Model.TargetTranList != null)
+                                    {
+                                        for (int i = 0; i < Model.TargetTranList.Count; i++)
+                                        {
+                                            count++;
+                                            <tr>
+                                                <td>
+                                                    <input type="hidden" name="I" value="@Model.TargetTranList[i].TTID" />
+                                                    <input type="hidden" name="N" value="@Model.TargetTranList[i].Doctype" />
+
+                                                    <label>@count</label>
+                                                </td>
+                                                <td>@Model.TargetTranList[i].Doctype </td>
+                                                <td>@Model.TargetTranList[i].TargetFor </td>
+                                                <td>
+                                                    @Html.Raw(ClsApplicationSetting.GetSessionValue("Modify") == "True" ? "<input type='number' class='listpriority' list='Target_Qty' value=\"" + Model.TargetTranList[i].Qty + "\" />" : Model.TargetTranList[i].Qty.ToString())
+                                                </td>
+
+
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="btn-rt-temp">
+                <a href="@Url.Action("TargetsList",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Transaction/TargetsList") })" type="button" class="btn btn-sm  btndefault pull-right"><i class="fa fa-backward"></i> Back to List</a>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="modal fade pop-dgn" id="ViewModal">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header blk-gdn-btn">
+                    <h4 class="modal-title"><span class="mx-2"><i class="fas fa-print "></i></span> Add Target </h4>
+                    <div class="close" data-dismiss="modal">&times;</div>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div id="TagetAddDiv"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+        <script>
+
+        function ListHeaderAdd(ID) {
+            var TID = $("#hdn_TID").val();
+			$.ajax({
+                url: "/Transaction/_AddTarget",
+                type: "Get",
+                data: { src: EncryptJSON(@ViewBag.MenuID+"*" + "/Transaction/_AddTarget*" + TID) },
+                success: function (data)
+                {
+                    $("#TagetAddDiv").empty();
+                    $("#TagetAddDiv").html(data);
+                    $('#ViewModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    })
+                    $(".applyselect").select2();
+                     var form = $("form")
+                .removeData("validator")
+                .removeData("unobtrusiveValidation");
+                    $.validator.unobtrusive.parse(form);
+				},
+				error: function (er) {
+					alert(er);
+
+				}
+			});
+            }
+
+    function OnAddTargetSuccess(obj) {
+        if (obj.Status) {
+            SuccessToaster(obj.SuccessMessage);
+            window.location.reload(true);
+        }
+        else {
+            CloseLoadingDialog();
+            FailToaster(obj.SuccessMessage);
+
+        }
+    }
+
+        function OnSuccess(obj) {
+            if (obj.Status) {
+                SuccessToaster(obj.SuccessMessage);
+            }
+            else {
+                CloseLoadingDialog();
+                FailToaster(obj.SuccessMessage);
+
+            }
+        }
+        </script>
+    }

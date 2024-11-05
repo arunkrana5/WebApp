@@ -1,0 +1,58 @@
+﻿@model List<Requirement.RequestList>
+<div class="table-section">
+    <div class="row">
+        <div class="col-xl-12">
+            <table id="example" class="table table-hover text-nowrap key-buttons table-responsive-sm">
+                <thead>
+                    <tr>
+                        <th>SNo.</th>
+
+                        <th>Application Offered</th>
+                        <th>Request No.</th>
+                        <th>Request Date</th>
+                        <th>Hired Type</th>
+                        <th>Dealer Name</th>
+                        <th>Region</th>
+                        <th>State</th>
+                        <th>Branch</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int count = 0;}
+                    @foreach (var item in Model)
+                    {
+                        count++;
+                        <tr>
+                            <td> @count</td>
+                            <td class="text-green">
+                                @if (item.Approved == 0)
+                                {
+                                    <a title="Add" href="@Url.Action("AddApplication", new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*/Recurit/AddApplication*" + item.ReqID) })" data-toggle='tooltip'> @item.ApplicationOffered </a>
+                                }
+                                else
+                                {
+                                    <span> @item.ApplicationOffered </span>
+                                }
+                            </td>
+                            <td class="text-red">
+
+                                <a title="View" href="@Url.Action("ViewCompleteRequirement", new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*/Recurit/ViewCompleteRequirement*" + item.ReqID) })" data-toggle='tooltip'> @item.RequestNo </a>
+
+                            </td>
+
+                            <td>@item.RequestDate</td>
+                            <td>@item.HiredBy</td>
+                            <td>@item.DealerName</td>
+                            <td>@item.Region</td>
+                            <td>@item.Region</td>
+                            <td>@item.Branch</td>
+
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

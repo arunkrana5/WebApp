@@ -1,0 +1,57 @@
+﻿@model MasterCatalogue.Add
+
+
+@using (Ajax.BeginForm("_MasterCatalogueAdd", "Masters",
+        new { src = ViewBag.src },
+         new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnAddSuccess", OnBegin = "ShowLoadingDialog()" },
+            new { @id = "_MasterCatalogueAddForm", @enctype = "multipart/form-data" })
+    )
+{
+
+
+    @Html.HiddenFor(x => Model.CatID)
+    @Html.HiddenFor(x => Model.AttachmentID)
+    <div class="row p-2">
+        <div class="col-lg-6 form-group">
+            <label>Product Name</label>
+            @Html.TextBoxFor(model => model.ProductName, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-lg-6 form-group">
+            <label>URL </label>
+            @Html.TextBoxFor(model => model.URL, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.URL, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-12 form-group">
+            <label>Description </label>
+            @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+            <label>Priority</label>
+            @Html.TextBoxFor(model => model.Priority, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Priority, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+            <label>Upload</label>
+            @Html.TextBoxFor(x => x.Upload, new { @type = "file" })
+            @Html.ValidationMessageFor(model => model.Upload, "", new { @class = "text-danger" })
+
+            @if (Model.AttachmentID > 0)
+            {
+                <a href="@Model.AttachmentPath" target="_blank">View Document</a>
+            }
+        </div>
+        <div class="col-lg-12 form-group">
+            @if (Model.CatID > 0)
+            {
+                <button type="submit" class="btn client-save btn-primary" name="Command" value="Add"> Update</button>
+            }
+            else
+            {
+                <button type="submit" class="btn client-save" name="Command" value="Add">Submit</button>
+            }
+        </div>
+    </div>
+}

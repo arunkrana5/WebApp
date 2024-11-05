@@ -1,0 +1,58 @@
+﻿@using System.Data
+@model  DataSet
+
+<div class="masterdetails">
+    @{ int Rowcount = 0;}
+    @foreach (DataRow dtRow in Model.Tables[0].Rows)
+    {
+        <div class="row">
+            @foreach (DataColumn dc in Model.Tables[0].Columns)
+            {
+                Rowcount++;
+                if (Rowcount == 1)
+                {
+                    <div class="col-md-12">
+                        <div class="profileimg">
+                            @if (dtRow["Gender"].ToString() == "Male" && string.IsNullOrEmpty(dtRow["ImageURL"].ToString()))
+                            {
+                                <img src="~/assets/design/images/NoPhoto_Male.png" />
+                            }
+                            else if (dtRow["Gender"].ToString() == "Female" && string.IsNullOrEmpty(dtRow["ImageURL"].ToString()))
+                            {
+                                <img src="~/assets/design/images/NoPhoto_Female.png" />
+                            }
+                            else
+                            {
+                                <img src="@dtRow["ImageURL"].ToString()" />
+                            }
+
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="floatingInput">@dc.ColumnName</label>
+                            @if (dtRow[dc.ColumnName].ToString() == "Working")
+                            {
+                                <p class="grnclr">@dtRow[dc.ColumnName]</p>
+                            }
+                            else if (dtRow[dc.ColumnName].ToString() == "Left")
+                            {
+                                <p class="redclr">@dtRow[dc.ColumnName]</p>
+                            }
+                            else
+                            {
+                                <p>@dtRow[dc.ColumnName]</p>
+                            }
+                        </div>
+                    </div>
+                }
+
+
+            }
+        </div>
+    }
+
+</div>

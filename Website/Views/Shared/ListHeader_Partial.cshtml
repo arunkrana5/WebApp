@@ -1,0 +1,92 @@
+﻿
+@model string
+
+<div class="row px-3 pt-2">
+    <div class="col-lg-4 col-mg-8 col-xs-12">
+        <h4 class="page-title">@Model</h4>
+    </div>
+    <div class="col-lg-8 col-mg-4 col-xs-12">
+        <div class="page-leftheader-btn d-flex flex-wrap justify-content-end">
+
+            @if (ClsApplicationSetting.GetSessionValue("Write") == "True")
+            {
+                <a id="btnAddglobal" class="btn btndefault  " onclick="ListHeaderAdd();">
+                    <i class="fa fa-plus"></i> Add
+                </a>
+            }
+            @if (ClsApplicationSetting.GetSessionValue("Export") == "True")
+            {
+                <a id="anchListExcelReport" onclick="ListHeaderExport();" class=" ripplelink btn-exp">
+                    @*btn btnupdate btn-l*@
+                    <i class="fa-solid fa-file-export"></i> Export
+                </a>
+            }
+            @if (ClsApplicationSetting.GetSessionValue("Import") == "True")
+            {
+                <a id="anchListExcelReport" onclick="ListHeaderImport();" class=" ripplelink btn-imp">
+                    <i class="fa-solid fa-file-import"></i> Import
+                </a>
+                if (ViewBag.MappingImport == "True")
+                {
+                    <a id="anchListExcelMappingReport" onclick="ListHeaderMappingImport();" class=" ripplelink btn-imp">
+                        <i class="fa-solid fa-file-import"></i> Mapping Import
+                    </a>
+                }
+            }
+            @if (ViewBag.PDFExport == "True")
+            {
+                <a id="anchListExcelReport" onclick="ExportToPDF();" class="btn-pdf  ripplelink">
+                    @*btn btn-l btnupdate*@
+                    <i class="fa-solid fa-file-pdf"></i> Export PDF
+                </a>
+            }
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<script type="text/javascript">
+    function ListHeaderAdd() {
+        if ($("#hdnAddUrl").val() == undefined) {
+            FailToaster("Invalid Link")
+        }
+        else {
+            var count = 0;
+            ShowLoadingDialog();
+            window.location = $("#hdnAddUrl").val();
+        }
+    }
+
+    function ListHeaderExport() {
+        if ($("#hdnExportUrl").val() == undefined) {
+            FailToaster("Invalid Link")
+        }
+        else {
+            var count = 0;
+            window.location = $("#hdnExportUrl").val();
+        }
+    }
+    function ListHeaderImport() {
+        if ($("#hdnImportUrl").val() == undefined) {
+            FailToaster("Invalid Link")
+        }
+        else {
+            var count = 0;
+            window.location = $("#hdnImportUrl").val();
+        }
+    }
+    function ListHeaderMappingImport() {
+        if ($("#hdnMappingImportUrl").val() == undefined) {
+            FailToaster("Invalid Link")
+        }
+        else {
+            var count = 0;
+            window.location = $("#hdnMappingImportUrl").val();
+        }
+    }
+
+
+</script>

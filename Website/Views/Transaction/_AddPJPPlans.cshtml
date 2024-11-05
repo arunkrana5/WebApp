@@ -1,0 +1,88 @@
+﻿@model PJPPlan.Add
+@section style{
+
+
+}
+<style>
+    .select2-container--default .select2-selection--multiple {
+        min-height: 38px;
+    }
+
+    .select2-container--default.select2-container--focus .select2-selection--multiple {
+        box-shadow: none;
+    }
+</style>
+
+@using (Ajax.BeginForm("_AddPJPPlans", "Transaction",
+        new { src = ViewBag.src },
+         new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnPJPPlansAddSuccess", OnBegin = "ShowLoadingDialog()" },
+            new { @id = "_AddPJPPlansForm", @enctype = "multipart/form-data" })
+    )
+{
+    <div class="row p-2">
+        <div class="col-lg-3 form-group">
+            <label>EMP <sup>*</sup></label>
+            @Html.DropDownListFor(n => n.EMPID, new SelectList(Model.EMPList, "ID", "Name", Model.EMPID), "Select EMP",
+                new { @class = "form-control applyselect" })
+            @Html.ValidationMessageFor(model => model.EMPID, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-lg-3 form-group">
+            <label> Route Number <sup>*</sup> </label>
+            @Html.DropDownListFor(n => n.RouteNumber, new SelectList(Model.RouteNumberList, "ID", "Name", Model.RouteNumber), "Select",
+             new { @class = "form-control mb-0  applyselect" })
+            @Html.ValidationMessageFor(model => model.RouteNumber, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-lg-3 form-group">
+            <label> Dealer <sup>*</sup> </label>
+            @Html.DropDownListFor(n => n.NewDealerID, new SelectList(Model.DealerList, "ID", "Name", Model.NewDealerID), "Select",
+             new { @multiple = "multiple", @class = "form-control mb-0  applyselect" })
+            @Html.ValidationMessageFor(model => model.NewDealerID, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-lg-3 form-group">
+            <label>Visit Date  <sup>*</sup></label>
+            @Html.TextBoxFor(model => model.VisitDate, new { @class = "form-control calender", @type = "Date" })
+        </div>
+
+
+        <div class="col-lg-12 form-group d-flex justify-content-end">
+
+            @if (Model.PJPID > 0)
+            {
+                <button type="submit" class="btn btn-indigo" name="Command" value="Add"><i class="fa fa-paper-plane" aria-hidden="true"></i> Update</button>
+            }
+            else
+            {
+                <button type="submit" class="btn client-save btn-primary mx-2" name="Command" value="Add"> Submit</button>
+            }
+        </div>
+    </div>
+}
+<script>
+
+    $(document).ready(function () {
+        //const today = new Date().toISOString().split('T')[0];
+        //$('#VisitDate').attr('min', today);
+        ////$('.calender').min = today;
+        ////$('#VisitDate').setCustomValidity("");
+        //if (isNaN(new Date($('#VisitDate').value))) {
+        //    event.preventDefault(); // Stop the form from submitting
+        //    // Optionally, show an alert or message
+        //    alert("Please enter a valid date.");
+        //}
+        document.getElementById('VisitDate').addEventListener('change', function () {
+            const selectedDate = new Date(this.value);
+            const today = new Date();
+            // Set time to midnight to avoid timezone issues
+            today.setHours(0, 0, 0, 0);
+
+            if (selectedDate < today) {
+                //alert('Please select a future date.');
+                FailToaster('Please Select Either Current or Future Date.');
+                this.value = ''; // Clear the input
+            }
+        });
+    });
+</script>

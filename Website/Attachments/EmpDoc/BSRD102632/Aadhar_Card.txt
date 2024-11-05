@@ -1,0 +1,81 @@
+---
+insert into CPPD_V1.dbo.Date_Configration
+select * from CPPD.dbo.Date_Configration
+--------------------
+
+insert into CPPD_V1.dbo.Master_Emp (EMPID,EMPCode,EMPName,Phone,EmailID,FatherName,DOB,Gender,DesignID,DepartID,DOJ,DOL,DOLReason,PAN,UAN,ESIC,PaymentMode,LoginID,AttachID,IsActive,IsActive_Reason,IsActive_By,IsActive_Date,Priority,Isdeleted,DeletedBy,DeletedDate,CreatedBy,CreatedDate,ModifiedDate,ModifiedBy,IPAddress)
+select EMPID,EMPCode,EMPName,Phone,EmailID,FatherName,DOB,Gender,DesignID,DepartID,DOJ,DOL,DOLReason,PAN,UAN,ESIC,PaymentMode,UserID,AttachID,IsActive,IsActive_Reason,IsActive_By,IsActive_Date,Priority,Isdeleted,DeletedBy,DeletedDate,CreatedBy,CreatedDate,ModifiedDate,ModifiedBy,IPAddress
+from CPPD.dbo.Master_Emp
+
+--------
+
+insert into CPPD_V1.dbo.TourPlan
+select * from CPPD.dbo.TourPlan
+
+----
+
+insert into CPPD_V1.dbo.Master_Address
+select * from CPPD.dbo.Master_Address
+
+----
+insert into CPPD_V1.dbo.Attendance_Dates (ADID,AID,TourPlanID,Date,IsRFCUpdate,StatusID,IsHaveHistory,IsActive,Priority,Isdeleted,DeletedBy,DeletedDate,CreatedBy,CreatedDate,ModifiedDate,ModifiedBy,IPAddress)
+select ADID,AID,TourPlanID,Date,IsRFCUpdate,StatusID,IsHaveHistory,IsActive,Priority,Isdeleted,DeletedBy,DeletedDate,CreatedBy,CreatedDate,ModifiedDate,ModifiedBy,IPAddress from CPPD.dbo.Attendance_Dates
+
+
+----
+
+insert into CPPD_V1.dbo.Targets(TID,EMPID,Month,Year,EntrySource,IsActive,Priority,Isdeleted,DeletedBy,DeletedDate,CreatedBy,CreatedDate,ModifiedDate,ModifiedBy,IPAddress) 
+select TID,EMPID,Month,Year,EntrySource,IsActive,Priority,Isdeleted,DeletedBy,DeletedDate,CreatedBy,CreatedDate,ModifiedDate,ModifiedBy,IPAddress from CPPD.dbo.Targets
+
+---------------
+insert into CPPD_V1.dbo.PJP_Plan_Import(VisitDate,EMPCode,DealerCode,Remarks,CreatedBy,CreatedDate,IPAddress)
+select VisitDate,EMPCode,DealerCode,Remarks,CreatedBy,CreatedDate,IPAddress from CPPD.dbo.PJP_Plan_Import
+
+-----------
+
+insert into CPPD_V1.dbo.Onboard_Application
+select * from CPPD.dbo.Onboard_Application
+
+
+----
+
+insert into CPPD_V1.dbo.Announcement
+select * from CPPD.dbo.Announcement
+
+--------------
+
+insert into CPPD_V1.dbo.Master_Attachment_SSR 
+select * from CPPD.dbo.Master_Attachment_SSR
+
+
+----
+insert into CPPD_V1.dbo.AttendenceStatus
+select * from CPPD.dbo.AttendenceStatus
+
+
+------
+insert into CPPD_V1.dbo.EMP_TalentPool_Attachments
+select * from CPPD.dbo.EMP_TalentPool_Attachments
+
+----
+
+
+insert into CPPD_V1.dbo.EMP_Flags_Mismatch_Reason
+select * from CPPD.dbo.EMP_Flags_Mismatch_Reason
+
+-------
+
+insert into CPPD_V1.dbo.PJP_Plan (PJPID,DocNo,DocDate,EMPID,DealerID,VisitDate,OnDemand,IsActive,Priority,Isdeleted,DeletedBy,DeletedDate,CreatedBy,CreatedDate,ModifiedDate,ModifiedBy,IPAddress)
+select PJPID,DocNo,DocDate,EMPID,DealerID,VisitDate,OnDemand,IsActive,Priority,Isdeleted,DeletedBy,DeletedDate,CreatedBy,CreatedDate,ModifiedDate,ModifiedBy,IPAddress
+ from CPPD.dbo.PJP_Plan
+
+
+
+
+
+
+
+
+
+
+

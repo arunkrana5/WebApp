@@ -1,0 +1,76 @@
+﻿
+@model Users.Add
+
+    @using (Ajax.BeginForm("_AddUser", "Tools",
+               new { src = ViewBag.src },
+                new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+                   new { @id = "_AddUserForm", @enctype = "multipart/form-data" })
+           )
+    {
+        @Html.HiddenFor(x => Model.ID)
+<div class="row">
+    <div class="col-lg-3 col-md-6 col-sm-12 form-group">
+        <label>User ID<sup>*</sup></label>
+        @Html.TextBoxFor(model => model.UserID, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.UserID, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12 form-group">
+        <label>Name<sup>*</sup></label>
+        @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-12 form-group">
+        <label>Phone<sup>*</sup></label>
+        @Html.TextBoxFor(model => model.Phone, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12 form-group">
+        <label>Email</label>
+        @Html.TextBoxFor(model => model.email, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.email, "", new { @class = "text-danger" })
+    </div>
+
+
+    <div class="col-lg-3 col-md-6 col-sm-12 form-group">
+        <label>Password<sup>*</sup></label>
+        @Html.TextBoxFor(model => model.Password, new { @class = "form-control", @type = "password" })
+        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6 form-group">
+        <label>Role<sup>*</sup></label>
+        @Html.DropDownListFor(n => n.RoleID, new SelectList(ViewBag.RoleList, "RoleID", "rolename", Model.RoleID), "Select Role",
+            new { @class = "form-control applyselect" })
+        @Html.ValidationMessageFor(model => model.RoleID, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-sm-3 form-group SSr-fC">
+        <label>Allow Login For <sup>*</sup></label>
+        <select id="@Html.IdFor(x=>x.AllowLogin)" name="@Html.NameFor(x=>x.AllowLogin)" class="applyselect form-control">
+            <option @(Model.AllowLogin==""?"selected":"") value="">Both</option>
+            <option @(Model.AllowLogin == "OnlyAPP" ? "selected" : "") value="OnlyAPP">Only APP</option>
+            <option @(Model.AllowLogin == "OnlyWeb" ? "selected" : "") value="OnlyWeb">Only Web</option>
+        </select>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 form-group">
+        <label>Description</label>
+        @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+        <div class="text-right">
+
+            @if (Model.ID > 0)
+            {
+                <button type="submit" class="btn btn-primary client-save" name="Command" value="Add">Update</button>
+            }
+            else
+            {
+                <button type="submit" class="btn btn-primary client-save" name="Command" value="Add"> Submit</button>
+            }
+        </div>
+
+    }
+
+

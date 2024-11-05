@@ -1,0 +1,166 @@
+﻿@model Travel.Add
+
+<div class="table-section pt-3 px-3 ">
+    <div class="page-header">
+        <div class="page-leftheader px-1">
+            <h4 class="page-title">Add Travel Request</h4>
+        </div>
+
+    </div>
+    @using (Ajax.BeginForm("AddRequest", "Travel",
+            new { src = ViewBag.src },
+             new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+                new { @id = "AddRequestForm", @enctype = "multipart/form-data" })
+        )
+    {
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-2 form-group" style="@((Model.TRID??0)==0?"display:none":"")">
+                        <label>Request Number <sup>*</sup></label>
+                        @Html.TextBoxFor(model => model.DocNo, new { @class = "form-control", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.DocNo, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-2 form-group">
+                        <label>Request Date <sup>*</sup></label>
+                        @Html.TextBoxFor(model => model.DocDate, new { @class = "form-control", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.DocDate, "", new { @class = "text-danger" })
+                    </div>
+
+
+                    <div class="col-lg-3 form-group">
+                        <label>From City <sup>*</sup></label>
+                        @Html.DropDownListFor(n => n.FromCity_ID, new SelectList(Model.CityList, "ID", "Name", Model.FromCity_ID), "Select",
+                             new { @class = "form-control  applyselect" })
+                        @Html.ValidationMessageFor(model => model.FromCity_ID, "", new { @class = "text-danger" })
+
+
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label>To City <sup>*</sup></label>
+                        @Html.DropDownListFor(n => n.ToCity_ID, new SelectList(Model.CityList, "ID", "Name", Model.ToCity_ID), "Select",
+                          new { @class = "form-control  applyselect", @onchange = "FillDealer()" })
+                        @Html.ValidationMessageFor(model => model.ToCity_ID, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-2 form-group">
+                        <label>Start Date <sup>*</sup></label>
+                        @Html.TextBoxFor(model => model.StartDate, new { @class = "form-control", @type = "Date" })
+                        @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-2 form-group">
+                        <label>End Date <sup>*</sup></label>
+                        @Html.TextBoxFor(model => model.EndDate, new { @class = "form-control", @type = "Date" })
+                        @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-2 form-group">
+                        <label>Mode of Travel <sup>*</sup></label>
+                        @Html.DropDownListFor(n => n.TravelMode, new SelectList(Model.TravelModeList, "Name", "Name", Model.TravelMode), "Select",
+                         new { @class = "form-control  applyselect" })
+                        @Html.ValidationMessageFor(model => model.TravelMode, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-lg-3 form-group">
+                        <label>Need Hotel Bookig <sup>*</sup></label>
+                        @Html.HiddenFor(model => model.IsRequiredHotel)
+                        <div class="can-toggle">
+                            <input type="checkbox" id="chk_IsExchange" onclick="fnIsExchange();" @(Model.IsRequiredHotel == 1 ? "checked" : "")>
+                            <label for="chk_IsExchange"></label>
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-12 form-group">
+                        <label> Select Dealer To be visit  <sup>*</sup> </label>
+                        @Html.HiddenFor(model => model.DealerIDs)
+                        <select multiple data-val-required="Dealer Can't be Blank" name="ddDealer" id="ddDealer" data-val="true" class="form-control applyselect" onchange="FillDealerID(this)">
+                        </select>
+                        @Html.ValidationMessageFor(model => model.DealerIDs, "", new { @class = "text-danger" })
+
+                    </div>
+                    <div class="col-lg-12 form-group">
+                        <label>Remark</label>
+                        @Html.TextAreaFor(model => model.Remarks, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-lg-12 form-group">
+
+                        @if (Model.Approved == 0)
+                        {
+                            <button type="submit" class="btn client-save btn-primary" name="Command" value="Add"> Submit</button>
+                        }
+                        <a href="@Url.Action("MyTravelRequestsList",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Travel/MyTravelRequestsList") })" type="button" class="btn client-close">Back To List</a>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+    </div>
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+        <script>
+            function fnIsExchange() {
+                var checkAll = $("#chk_IsExchange").is(":checked");
+                if (checkAll) {
+                    $("#IsRequiredHotel").val(1);
+                }
+                else {
+                    $("#IsRequiredHotel").val(0);
+                }
+            }
+            $(document).ready(function () {
+                FillDealer();
+            });
+            function OnSuccess(obj) {
+                if (obj.Status) {
+                    SuccessToaster(obj.SuccessMessage);
+                    window.location.href = obj.RedirectURL;
+                }
+                else {
+                    CloseLoadingDialog();
+                    FailToaster(obj.SuccessMessage);
+
+                }
+            }
+
+            function FillDealer() {
+                var ID = $("#ToCity_ID").find("option:selected").val();
+                if (ID != '') {
+                    var data = GetDropDownList(ID, "DealerCityWise");
+                    if (data != '') {
+                        $("#ddDealer").empty();
+                        $("#ddDealer").append($("<option />").val("").text("Select"));
+                        $(data).each(function () {
+                            $("#ddDealer").append($("<option />").val(this.ID).text(this.Name));
+                            $("#ddDealer").select2();
+
+                        });
+
+                        if ($("#DealerIDs").val() != "") {
+                            $($("#DealerIDs").val().split(',')).each(function () {
+                                $("#ddDealer option[value='" + this + "']").prop("selected", true);
+
+                            });
+                            $("#ddDealer").change();
+
+                        }
+                        CloseLoadingDialog();
+                    } else {
+                        $("#ddDealer").empty();
+                        $("#ddDealer").append($("<option />").val("").text("Select"));
+                    }
+                }
+                else {
+                    $("#ddDealer").empty();
+                    $("#ddDealer").append($("<option />").val("").text("Select"));
+
+                }
+            }
+
+            function FillDealerID(obj) {
+                $("#DealerIDs").val($(obj).val());
+            }
+        </script>
+    }

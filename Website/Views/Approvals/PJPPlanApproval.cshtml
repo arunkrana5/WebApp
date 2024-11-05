@@ -1,0 +1,181 @@
+﻿@model Tab.Approval
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="table-section">
+    @Html.Partial("ListHeader_Partial", "PJP Plan Approval List")
+
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+
+
+                        @using (Ajax.BeginForm("_PJPPlanApprovalList", "Approvals",
+                                new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Approvals/_PJPPlanApprovalList") },
+                                 new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "OnBegin()", },
+                                    new { @id = "_PJPPlanApprovalListForm" })
+                            )
+                        {
+                            <div class="row">
+                                <div class="col-sm-3 form-group">
+                                    <label>Month <sup>*</sup></label>
+                                    @Html.TextBoxFor(model => model.Month, new { @class = "form-control", @type = "Month" })
+                                    @Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-sm-2 form-group d-flex align-items-end">
+                                    <label class="small">&nbsp;</label>
+                                    <button type="submit" id="btnSearch" name="Command" value="Add" class="button">
+                                        <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="tabmargin">
+                                <input type="hidden" id="Approved" name="Approved" value="0" />
+                                <ul id="tabs" class="nav nav-tabs " role="tablist">
+                                    <li class="nav-item"> <a tabvalue="0" class="nav-link ripplelink AnchorApproval @(Model.Approved == 0 ? "active" : "")" data-toggle="tab" role="tab"> Pending</a> </li>
+                                    <li class="nav-item"> <a tabvalue="1" class="nav-link ripplelink AnchorApproval @(Model.Approved == 1 ? "active" : "") " data-toggle="tab" role="tab">Approved</a></li>
+                                    <li class="nav-item"> <a tabvalue="2" class="nav-link ripplelink AnchorApproval @(Model.Approved == 2 ? "active" : "") " data-toggle="tab" role="tab">Rejected</a></li>
+                                </ul>
+
+                            </div>
+                        }
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="TargetDiv">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade pop-dgn" id="ViewModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header blk-gdn-btn">
+                    <h4 class="modal-title"><i class="fas fa-print"></i>PJP Plan Approval</h4>
+                    <div class="close" data-dismiss="modal">&times;</div>
+                </div>
+                <div class="modal-body">
+
+                    @using (Ajax.BeginForm("PJPPlanApprove", "Approvals",
+                        new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Approvals/PJPPlanApprove") },
+                         new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnPJPPlanSuccess", OnBegin = "ShowLoadingDialog()" },
+                            new { @id = "ApprovePJPPlanForm" })
+                    )
+                    {
+                        <div class="col-sm-12 form-group ">
+                            <label>Remarks</label>
+                            <textarea id="Remarks" name="ApprovedRemarks" class="form-control" Placeholder="Remarks"></textarea>
+                            <input type="hidden" name="Command" value="" />
+                            <input type="hidden" name="PJPIDs" value="" />
+                            <input type="hidden" name="Approved" value="" />
+                        </div>
+                        <div class="col-sm-12 text-center mt-3">
+                            <button type="button" class="btn cnl-btn ripplelink " data-dismiss="modal"><i class="fa fa-times"></i>Close</button>
+                            <button type="submit" class="btn apr-btn ">
+                                <i class="fa fa-check" aria-hidden="true"></i>
+                                Submit
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts    {
+    @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/164071/Drift.min.js"></script>
+    <script>
+        function OnBegin() {
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html('<img src="/assets/design/images/loader.gif" class="imgloader" />');
+        }
+        $(document).ready(function () {
+            $("#btnSearch").click();
+        });
+        $('#Month').bind("change", function () {
+            $("#btnSearch").click();
+        });
+
+        $('.AnchorApproval').on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var att = $(this).attr("tabvalue");
+            $(".AnchorApproval.active").removeClass("active");
+            $(this).addClass("active");
+            $("#Approved").val(att);
+            $("#btnSearch").click();
+        });
+        function OnSuccess(obj) {
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html(obj);
+            CloseLoadingDialog();
+            DatatableScripts();
+        }
+
+        function OnPJPPlanSuccess(obj) {
+            CloseLoadingDialog();
+            if (obj.Status) {
+                SuccessToaster(obj.SuccessMessage);
+                $("#ViewModal").modal('hide');
+                $("input:hidden[name=PJPIDs]").val('');
+                $('#Remarks').val('')
+                $("input:hidden[name=Approved]").val(0);
+                $("#btnSearch").click();
+            }
+            else {
+                FailToaster(obj.SuccessMessage);
+            }
+        }
+
+        function chkAll() {
+            var checkAll = $("#checkAll").is(":checked");
+            if (checkAll) {
+                $(".Chksingle").each(function () {
+                    $(this).prop('checked', true)
+                });
+            }
+            else {
+                $(".Chksingle").each(function () {
+                    $(this).prop('checked', false)
+                });
+            }
+        }
+        function ShowApprovalBox(obj) {
+            var Approve = $(obj).val();
+            var IDs = "";
+            $("input[name=Chksingle]").each(function () {
+                if ($(this).prop('checked') == true) {
+                    IDs += $(this).val() + ",";
+                }
+            });
+            $("input:hidden[name=PJPIDs]").val(IDs);
+
+            /* var Ids = $("input:hidden[name=RFCIDs]").val();*/
+            if (IDs == "") {
+                FailToaster("please select atleast one checkbox");
+            } else {
+                $("input:hidden[name=Command]").val(Approve);
+                $("input:hidden[name=Approved]").val(Approve);
+                $("#ViewModal").modal('show');
+            }
+
+        }
+        function ListHeaderExport()
+        {
+            var Month = $("#Month").val();
+            var url = "/Export/PJPPlanLists_Export";
+            var src = EncryptJSON(@ViewBag.MenuID+"*/Export/PJPPlanLists_Export*" + Month)
+            window.location.href = url + "?src=" + src;
+        }
+    </script>
+}

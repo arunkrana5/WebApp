@@ -1,0 +1,87 @@
+﻿
+@using System.Data
+@model  DataSet
+@{
+    int Headcount = 0;
+    bool AllowedEdit = false;
+    if (ClsApplicationSetting.GetSessionValue("Modify") == "True" && ViewBag.Approved == 0)
+    {
+        AllowedEdit = true;
+    }
+
+}
+
+<div class="table-responsive">
+    <table id="ExportTable" class="table table-bordered text-nowrap key-buttons table-hover">
+        <thead>
+            <tr role="row">
+                @foreach (DataColumn item in Model.Tables[0].Columns)
+                {
+
+                    if (!item.ColumnName.Contains("_"))
+                    {
+                        Headcount++;
+                        if (Headcount == 2 && AllowedEdit)
+                        {
+                            <th>Action</th>
+                        }
+                        <th>@item.ColumnName</th>
+                    }
+                }
+            </tr>
+        </thead>
+        <tbody>
+
+            @{ int Rowcount = 0; string Val = "";}
+            @foreach (DataRow dtRow in Model.Tables[0].Rows)
+            {
+                Rowcount++;
+                Headcount = 0;
+                <tr role="row" class="@(Rowcount%2==0?"even":"odd")">
+
+                    @foreach (DataColumn dc in Model.Tables[0].Columns)
+                    {
+
+                        if (!dc.ColumnName.Contains("_"))
+                        {
+                            Headcount++;
+                            if (Headcount == 2 && AllowedEdit)
+                            {
+                                <td>
+                                    <input type="hidden" name="I" value="@dtRow["_EMPID"].ToString()" />
+                                    <input type="hidden" name="N" value="@dtRow["EMPCODE"].ToString()" />
+
+                                    <a title="Edit" onclick="GetUpdateFAttd(this);" data-toggle='tooltip'> <i class="fa-solid fa-pen-to-square checkgreen" aria-hidden="true"></i> </a>
+
+
+                                </td>
+                            }
+                            if (dc.ColumnName.ToUpper().Contains("IMAGE"))
+                            {
+                                <td>
+                                    @if (!string.IsNullOrEmpty(dtRow[dc.ColumnName].ToString()))
+                                    {
+                                        <a href="@dtRow[dc.ColumnName]" target="_blank">
+
+                                            @Html.GetImage(dtRow[dc.ColumnName].ToString(), "", "img-responsive listimage")
+                                        </a>
+                                    }
+
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @dtRow[dc.ColumnName].ToString()
+                                </td>
+                            }
+                        }
+                    }
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+</div>
+

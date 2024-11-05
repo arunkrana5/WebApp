@@ -1,0 +1,177 @@
+﻿
+
+@{
+    ViewBag.Title = "PJP Plan Import";
+}
+
+
+@model IList<PJPPlan_Import.List>
+
+
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+
+<div class="table-section">
+    @Html.Partial("ListHeader_Partial", "PJP Plan Import List")
+
+    <div class="card">
+
+        <div class="row">
+
+
+            <div class="col-md-12">
+                <div class="card-body">
+                    @using (Ajax.BeginForm("PJPPlan_Import", "Transaction",
+new { src = ViewBag.src },
+          new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+             new { @id = "PJPPlan_ImportForm", @enctype = "multipart/form-data" })
+)
+                    {
+
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+                                <label>Sheet Name<sup>*</sup></label>
+                                <input type="text" class="form-control" @(ViewBag.ListCount > 0 ? "disabled" : "") value="Sheet1" id="txtSheet" name="txtSheet">
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+                                <label>Upload File<sup>*</sup></label>
+                                <input type="file" class="form-control" @(ViewBag.ListCount > 0 ? "disabled" : "") id="FileUpload_Excel" name="FileUpload_Excel">
+                            </div>
+
+                            <div class="col-lg-4 col-md-4 col-sm-4 form-group loaddownbtn">
+                                <button type="submit" class="btn btnupdate pull-left" @(ViewBag.ListCount > 0 ? "disabled" : "") onclick="return FindExtension();" name="Command" value="ImportData"><i class="fa fa-spinner"></i> Load</button>
+                                <div class="text-right">
+                                    <a class="btn-dsf pull-right" href="~/Attachments/ImportSample/PJPPlanSample.xlsx" target="_blank"><i class="fa fa-download"></i> Download Sample File</a>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12"><h4>Imported data</h4></div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="btn-rt-temp">
+                                    <button type="submit" class="btn btncancel pull-left" @(ViewBag.ListCount > 0 ? "" : "disabled") name="Command" onclick="return ConfirmClearData();" value="ClearData"><i class="fa fa-trash"></i> Clear List</button>
+                                    <button id="Aimport" class="btn btnupdate pull-left" @(ViewBag.ListCount > 0 ? "" : "disabled") name="Command" onclick="return ConfirmImportData();" value="UploadData"> <i class="fa-solid fa-file-import"></i> Import</button>
+
+                                    <a href="@Url.Action("PJPPlanList",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Transaction/PJPPlanList") })" type="button" class="btn btndefault pull-right"><i class="fa fa-backward"></i> Back to List</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+
+                    }
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="example" class="table table-bordered text-nowrap key-buttons">
+                            <thead>
+                                <tr>
+                                    <th>S.no.</th>
+                                    <th>Remarks</th>
+                                    <th>Visit Date</th>
+                                    <th>EMP Code</th>
+                                    <th>Dealer Code</th>
+                                    <th>Inserted Date</th>
+                                    <th>Inserted by</th>
+                                    <th>IP Address</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ int Count = 0;}
+                                @foreach (var item in Model)
+                                {
+                                    Count++;
+                                    <tr>
+                                        <td>@Count</td>
+                                        <td style="@(item.Remarks=="Success"?"color:green":"color:red")">@item.Remarks</td>
+                                        <td>@item.VisitDate</td>
+                                        <td>@item.EMPCode</td>
+                                        <td>@item.DealerCode</td>
+                                        <td>@item.CreatedDate</td>
+                                        <td>@item.CreatedBy</td>
+                                        <td>@item.IPAddress</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts    {
+    @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+    <script>
+
+        function FindExtension() {
+            var hdnFileLoad = '';
+            var len = document.getElementById('FileUpload_Excel').value.length;
+            var len2 = document.getElementById('txtSheet').value;
+            hdnFileLoad = document.getElementById('FileUpload_Excel').value.substr(len - 4, 4);
+            if (len2 == "") {
+                FailToaster('Please write sheet name.');
+                return false;
+            } else {
+                if (len > 0) {
+                    if (hdnFileLoad == 'xlsx' || hdnFileLoad == '.xls') {
+                        return true;
+                    }
+                    else {
+                        FailToaster('You can only upload .xlsx or .xls file.');
+                        return false;
+                    }
+                }
+                else {
+                    FailToaster('Please upload file.');
+                    return false;
+                }
+            }
+
+        }
+        function ConfirmClearData() {
+            if (confirm('Are you sure want to delete data.')) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        function ConfirmImportData() {
+            if (confirm('Are you sure want to Import data.')) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        function OnSuccess(obj) {
+            
+            if (obj.Status) {
+               
+                SuccessToaster(obj.SuccessMessage);
+                window.location.reload(true);
+            }
+            else {
+                CloseLoadingDialog();
+                FailToaster(obj.SuccessMessage);
+
+            }
+        }
+    </script>
+
+}
+
+
+

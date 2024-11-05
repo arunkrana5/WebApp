@@ -1,0 +1,167 @@
+﻿@using System.Data
+@model  DataSet
+@{ 
+    int TableCount = 0;
+}
+<div class="masterdetails">
+
+    @foreach (DataRow dtRow in Model.Tables[TableCount].Rows)
+    {
+        <div class="row">
+            @foreach (DataColumn dc in Model.Tables[TableCount].Columns)
+            {
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="floatingInput">@dc.ColumnName</label>
+                        <p>@dtRow[dc.ColumnName]</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    @{TableCount++; }
+    <h4 class="page-title font-sm">Address Details</h4>
+    @foreach (DataRow dtRow in Model.Tables[TableCount].Rows)
+    {
+        <div class="row">
+            @foreach (DataColumn dc in Model.Tables[TableCount].Columns)
+            {
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="floatingInput">@dc.ColumnName</label>
+                        <p>@dtRow[dc.ColumnName]</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    @{TableCount++; }
+    <h4 class="page-title font-sm">Bank Details</h4>
+    @foreach (DataRow dtRow in Model.Tables[TableCount].Rows)
+    {
+        <div class="row">
+            @foreach (DataColumn dc in Model.Tables[TableCount].Columns)
+            {
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="floatingInput">@dc.ColumnName</label>
+                        <p>@dtRow[dc.ColumnName]</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    @{TableCount++; }
+    <h4 class="page-title font-sm">Education Details</h4>
+    @foreach (DataRow dtRow in Model.Tables[TableCount].Rows)
+    {
+        <div class="row">
+            @foreach (DataColumn dc in Model.Tables[TableCount].Columns)
+            {
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="floatingInput">@dc.ColumnName</label>
+                        <p>@dtRow[dc.ColumnName]</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    @{TableCount++; }
+    <h4 class="page-title font-sm">Employement Details</h4>
+    @foreach (DataRow dtRow in Model.Tables[TableCount].Rows)
+    {
+        <div class="row">
+            @foreach (DataColumn dc in Model.Tables[TableCount].Columns)
+            {
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="floatingInput">@dc.ColumnName</label>
+                        <p>@dtRow[dc.ColumnName]</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    @{TableCount++; }
+    <h4 class="page-title font-sm">EPF Details</h4>
+    @foreach (DataRow dtRow in Model.Tables[TableCount].Rows)
+    {
+        <div class="row">
+            @foreach (DataColumn dc in Model.Tables[TableCount].Columns)
+            {
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="floatingInput">@dc.ColumnName</label>
+                        <p>@dtRow[dc.ColumnName]</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    @{TableCount++; }
+    <h4 class="page-title font-sm">ESIC Details</h4>
+    @foreach (DataRow dtRow in Model.Tables[TableCount].Rows)
+    {
+        <div class="row">
+            @foreach (DataColumn dc in Model.Tables[TableCount].Columns)
+            {
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="floatingInput">@dc.ColumnName</label>
+                        <p>@dtRow[dc.ColumnName]</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    @{TableCount++; }
+    <h4 class="page-title font-sm">Gratuity Details</h4>
+    @foreach (DataRow dtRow in Model.Tables[TableCount].Rows)
+    {
+        <div class="row">
+            @foreach (DataColumn dc in Model.Tables[TableCount].Columns)
+            {
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="floatingInput">@dc.ColumnName</label>
+                        <p>@dtRow[dc.ColumnName]</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    @{TableCount++; }
+    <h4 class="page-title font-sm">Documents Details</h4>
+    <div class="row">
+        @foreach (DataRow dtRow in Model.Tables[TableCount].Rows)
+        {
+
+            foreach (DataColumn dc in Model.Tables[TableCount].Columns)
+            {
+                if (dc.ColumnName.ToLower().Contains("image"))
+                {
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <a href="@dtRow[dc.ColumnName]" target="_blank">
+                                <img src="@dtRow[dc.ColumnName]" class="img-responsive listimage" />
+                            </a>
+                        </div>
+                    </div>
+
+                }
+            }
+
+        }
+    </div>
+</div>

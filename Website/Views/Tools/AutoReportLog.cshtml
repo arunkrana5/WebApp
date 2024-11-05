@@ -1,0 +1,169 @@
+﻿@model Tab.Approval
+
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+
+@{
+    string ConfigToken = ClsApplicationSetting.GetSessionValue("ConfigToken");
+}
+
+<div class="table-section">
+    <div>
+    <div class="page-header py-2 px-2">
+        <div class="page-leftheader d-flex justify-content-between align-items-center">
+            <h4 class="page-title">Auto Report Log List</h4>
+            @*<div class="page-leftheader-btn">*@
+                <button onclick="GetUserList();" class="button-th btn btn-success">
+                    <i class="fas fa-file-excel"></i> Send Auto Report
+                @*</button>*@
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="x_panel">
+            <div class="card-body">
+
+                @using (Ajax.BeginForm("_AutoReportLog", "Tools",
+                   new { src = ClsCommon.Encrypt(ViewBag.MenuID.ToString() + "*/Tools/_AutoReportLog") },
+                     new AjaxOptions { HttpMethod = "POST", OnSuccess = "BindTarget", OnBegin = "OnBegin()" },
+               new { @id = "_AutoReportLogFrom" })
+               )
+                {
+
+
+                <div class="row">
+                    <div class="col-sm-3 form-group">
+                        <label>Month <sup>*</sup></label>
+                        @Html.TextBoxFor(model => model.Month, new { @class = "form-control", @type = "date" })
+                        @Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-2 form-group d-flex align-items-end pt-1">
+                        <label class="small">&nbsp;</label>
+                        <button type="submit" id="btnSubmit" name="Command" value="Add" class="button ">
+                            <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
+                        </button>
+                    </div>
+
+                </div>
+                }
+                <div class="row">
+                    <div class="col-lg-12 ">
+                        <div id="TargetDiv">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="modal fade pop-dgn" id="AutoReportUserModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header blk-gdn-btn">
+                    <h4 class="modal-title">Send Mail for (<span id="spnAMHead"></span>)</h4>
+                    <div class="close" data-dismiss="modal">&times;</div>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div id="ListTargetDiv"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+        <script>
+        $('#Month').bind("change", function () {
+            $("#btnSearch").click();
+        });
+
+        $(document).ready(function () {
+            $("#btnSearch").click();
+        });
+
+        function OnBegin() {
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html('<img src="/assets/design/images/loader.gif" class="imgloader" />');
+        }
+
+        function BindTarget(args) {
+            CloseLoadingDialog();
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html(args);
+            DatatableScripts();
+        }
+
+    function GetUserList() {
+        var Month = $('#Month').val();
+        if (Month == "") {
+            FailToaster("Date Can't be blank")
+        } else {
+            $("#spnAMHead").html(Month)
+            $.ajax({
+                url: "/Tools/_AutoReport_User",
+                type: "Get",
+                data: { src: EncryptJSON(@ViewBag.MenuID+"*" + "/Tools/_AutoReport_User*" + Month) },
+                success: function (data) {
+                    $("#ListTargetDiv").empty();
+                    $("#ListTargetDiv").html(data);
+                    $('#AutoReportUserModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    })
+                    DatatableScripts_ByID("example2")
+                },
+                error: function (er) {
+                    alert(er);
+                }
+            });
+        }
+       }
+
+
+
+        function SendReport(obj) {
+            ShowLoadingDialog();
+            $(obj).attr("disabled", "disabled");
+            var LoginID = $(obj).closest("tr").find("input:hidden[name=I]").val();
+            var Date = $(obj).closest("tr").find("input:hidden[name=D]").val();
+             var ConfigToken = '@ConfigToken';
+            var PostURL = "/Schedular/Send_Report?Token=" + ConfigToken + "&LoginID=" + LoginID + "&Date=" + Date;
+                $.ajax({
+                    url: PostURL,
+                    type: "Get",
+                    contentType: 'application/json',
+                    async: true,
+                    success: function (args) {
+                        CloseLoadingDialog();
+                        if (args.Status) {
+                            SuccessToaster(args.SuccessMessage);
+                            $("#btnSearch").click();
+                        }
+                        else {
+                            CloseLoadingDialog();
+                            FailToaster(args.SuccessMessage);
+
+                        }
+                    },
+                    error: function (er) {
+                        console.log(er);
+
+                    }
+                });
+            }
+
+        </script>
+    }

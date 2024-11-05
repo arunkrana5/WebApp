@@ -1,0 +1,79 @@
+﻿@model MOP.Add
+@section style{
+
+
+}
+
+@using (Ajax.BeginForm("_AddMOP", "Transaction",
+        new { src = ViewBag.src },
+         new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnAddSuccess", OnBegin = "ShowLoadingDialog()" },
+            new { @id = "_AddMOPForm", @enctype = "multipart/form-data" })
+    )
+{
+<div class="row p-2">
+
+    <div class="col-lg-3 col-md-6 col-sm-12 form-group">
+        <label>Date <sup>*</sup></label>
+        @Html.TextBoxFor(model => model.Date, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-12  col-md-6 col-sm-12  form-group">
+        <label>Brand Name <sup>*</sup></label>
+        @Html.DropDownListFor(n => n.BrandID, new SelectList(Model.BrandList, "ID", "Name", Model.BrandID), "Select Brand",
+            new { @class = "form-control applyselect" })
+        @Html.ValidationMessageFor(model => model.BrandID, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-lg-3 col-md-6 col-sm-12  form-group">
+        <label>Product <sup>*</sup></label>
+        @Html.DropDownListFor(n => n.ProductID, new SelectList(Model.ProductList, "ID", "Name", Model.ProductID), "Select Product",
+            new { @class = "form-control applyselect", @onchange = "FillSubProduct()" })
+        @Html.ValidationMessageFor(model => model.ProductID, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12  form-group">
+        <label>Sub Product <sup>*</sup></label>
+        <input type="hidden" id="hdnPDTranID" value="@Model.PDTranID" />
+        @Html.DropDownListFor(n => n.PDTranID, new SelectList(Model.ProductTranList, "ID", "Name", Model.PDTranID), "Select Sub Product",
+            new { @class = "form-control applyselect" })
+        @Html.ValidationMessageFor(model => model.PDTranID, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12  form-group">
+        <label>
+            Top Selling Model <sup>*</sup>
+        </label>
+        @Html.TextBoxFor(model => model.ModelNo, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.ModelNo, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12  form-group">
+        <label>Price <sup>*</sup></label>
+        @Html.TextBoxFor(model => model.Price, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-lg-6 form-group">
+        <label>Store Name With Location <sup>*</sup></label>
+        @Html.TextBoxFor(model => model.Remarks, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12  col-md-6 col-sm-12  form-group">
+        <label>Rating <sup>*</sup></label>
+        @Html.DropDownListFor(n => n.Rating, new SelectList(Model.RatingList, "ID", "Name", Model.Rating), "Select Rating",
+            new { @class = "form-control applyselect" })
+        @Html.ValidationMessageFor(model => model.Rating, "", new { @class = "text-danger" })
+    </div>
+
+
+    <div class="col-lg-12 form-group text-right">
+
+        @if (Model.MOPID > 0)
+        {
+            <button type="submit" class="btn  client-save" name="Command" value="Add"> Update</button>
+        }
+        else
+        {
+            <button type="submit" class="btn client-save btn-primary" name="Command" value="Add"> Submit</button>
+        }
+    </div>
+</div>
+}

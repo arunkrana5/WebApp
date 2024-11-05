@@ -1,0 +1,47 @@
+﻿<div class="table-section">
+    @model IList<PJPPlan.List>
+
+    <div class="table-responsive">
+        <table id="example" class="table table-bordered text-nowrap key-buttons">
+            <thead>
+                <tr>
+                    <th>S.no.</th>
+                    <th>Visit Date</th>
+                    <th>Dealer</th>
+                    <th>Dealer Code</th>
+                    <th>Dealer Area</th>
+                    <th>Dealer Address</th>
+                    <th>EMP Name</th>
+                    <th>EMP Code</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @{ int count = 0;}
+                @foreach (PJPPlan.List item in Model)
+                {
+                    count++;
+                    <tr>
+                        <td>@count</td>
+
+                        <td>
+                            <a title="View" href="@Url.Action("PlanWisePJPEntryList", new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*/Transaction/PlanWisePJPEntryList*" + item.PJPID) })" data-toggle='tooltip'>
+                                @item.VisitDate
+                            </a>
+
+                        </td>
+                        <td>@item.DealerName</td>
+                        <td>@item.DealerCode</td>
+                        <td>@item.DealerArea</td>
+                        <td>@item.DealerAddress</td>
+                        <td>@item.EMPName </td>
+                        <td>@item.EMPCode</td>
+
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+    </div>

@@ -1,0 +1,46 @@
+﻿@model  List<EMPDocumentList>
+
+@foreach (string row in Model.Select(x => x.EMPCode).Distinct().ToList())
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">@row (@Model.Where(x => x.EMPCode == row).Select(x => x.EMPName).FirstOrDefault())</div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr role="row">
+                            <th>S.No</th>
+                            <th>File Name</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int Rowcount = 0;}
+                        @foreach (var dtRow in Model.Where(x => x.EMPCode == row).ToList())
+                        {
+                            Rowcount++;
+                            <tr role="row" class="@(Rowcount%2==0?"even":"odd")">
+                                <td>@Rowcount</td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(dtRow.FilePath))
+                                    {
+                                        <a href="@dtRow.FilePath" target="_blank"> @dtRow.FileName</a>
+                                    }
+                                    else
+                                    {
+                                        <p>@dtRow.FileName</p>
+                                    }
+                                </td>
+                                <td>@dtRow.Description</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+}
+
+
+

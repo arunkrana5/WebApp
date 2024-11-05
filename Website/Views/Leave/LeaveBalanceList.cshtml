@@ -1,0 +1,137 @@
+﻿@model Tab.Approval
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="table-section">
+    @Html.Partial("ListHeader_Partial", "Leave Balance")
+
+    <div class="row p-2">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+
+                        @using (Ajax.BeginForm("_LeaveBalanceList", "Leave",
+                                new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Leave/_LeaveBalanceList") },
+                                 new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "OnBegin()", OnFailure = "CloseLoadingDialog()" },
+                                    new { @id = "_LeaveBalanceListForm" })
+                            )
+                        {
+                            <div class="row px-3">
+
+                                <div class="col-sm-3 form-group no-padding">
+                                    <label>Financial Year <sup>*</sup></label>
+                                    @Html.DropDownListFor(n => n.ID, new SelectList(Model.List, "ID", "Name", Model.ID), "Select Fin Year",
+            new { @class = "form-control applyselect" })
+                                    @Html.ValidationMessageFor(model => model.ID, "", new { @class = "text-danger" })
+
+                                </div>
+                                <div class="col-sm-3 form-group">
+                                    <label>User Type <sup>*</sup></label>
+                                    @Html.DropDownListFor(x => Model.RoleID, new SelectList(ViewBag.RoleDropdownList, "ID", "Name", Model.RoleID), "Select",
+new { @class = "form-control  applyselect" })
+                                </div>
+
+                                <div class="col-md-2 d-flex align-items-center">
+                                    <label class="small"></label>
+                                    @*<button type="submit" id="btnSearch" name="Command" value="Add" class="btn btndefault pull-right form-control">
+                                            Search
+                                        </button>*@
+                                    <button type="submit" id="btnSearch" name="Command" value="Add" class=" button ">
+                                        <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
+                                    </button>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="TargetDiv">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal fade pop-dgn" id="ViewModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header blk-gdn-btn">
+                    <h4 class="modal-title"><span class="mx-2"><i class="fas fa-print"></i></span>Leave Earned (<span id="spanHeader"></span>)</h4>
+                    <div class="close" data-dismiss="modal">&times;</div>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div id="LVTagetDiv"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section scripts    {
+    @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+    <script>
+
+        function OnBegin() {
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html('<img src="/assets/design/images/loader.gif" class="imgloader" />');
+        }
+
+        $('#ID').bind("change", function () {
+            $("#btnSearch").click();
+        });
+        $('#Usertype').bind("change", function () {
+            $("#btnSearch").click();
+        });
+
+
+        function OnSuccess(obj) {
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html(obj);
+            CloseLoadingDialog();
+            DatatableScripts();
+        }
+
+            function ViewLeaveBalanceTran(obj) {
+        var ID = $(obj).closest("tr").find("input:hidden[name=I]").val();
+        var N = $(obj).closest("tr").find("input:hidden[name=N]").val();
+        $("#spanHeader").html(N);
+        if (ID == undefined)
+        {
+            ID = 0;
+        }
+			$.ajax({
+                url: "/Leave/_LeaveBalanceTranList",
+                type: "Get",
+                data: { src: EncryptJSON(@ViewBag.MenuID+"*/Leave/_LeaveBalanceTranList*" + ID) },
+                success: function (data)
+                {
+                    $("#LVTagetDiv").empty();
+                    $("#LVTagetDiv").html(data);
+                    $('#ViewModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    })
+				},
+				error: function (er) {
+					alert(er);
+
+				}
+			});
+            }
+
+    </script>
+
+}

@@ -1,0 +1,46 @@
+﻿@model  List<LeaveBalance.List>
+
+
+
+<div class="table-responsive">
+    <table id="example" class="table table-bordered table-hover table-wrapper-scroll-y my-custom-scrollbar  table-striped text-nowrap key-buttons">
+        <thead>
+            <tr role="row">
+                <th>S.No</th>
+                <th>EMP Code</th>
+                <th>EMP Name</th>
+                <th>Financial Year</th>
+                <th>Total Availed</th>
+                <th>Total Earned</th>
+                <th>Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ int Rowcount = 0;}
+            @foreach (LeaveBalance.List dtRow in Model)
+            {
+                Rowcount++;
+                <tr role="row" class="@(Rowcount%2==0?"even":"odd")">
+                    <td>
+                        @Rowcount
+                        <input type="hidden" name="I" value="@dtRow.LeaveBalance_ID" />
+                        <input type="hidden" name="N" value="@dtRow.EMPCode" />
+                    </td>
+                    <td>
+                        <a title="click to view more details" data-toggle='tooltip' data-original-title="View Request" onclick="ViewLeaveBalanceTran(this)">@dtRow.EMPCode</a>
+                    </td>
+                    <td>@dtRow.EMPName</td>
+                    <td>@dtRow.FinancialYear</td>
+                    <td>@dtRow.TotalAvailed</td>
+                    <td>@dtRow.TotalEarned</td>
+                    <td>@dtRow.Balance</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+
+

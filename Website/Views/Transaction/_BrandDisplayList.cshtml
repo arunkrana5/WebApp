@@ -1,0 +1,63 @@
+﻿
+<div class="table-section">
+    @model IList<BrandDisplay.List>
+
+
+    <div class="table-responsive">
+        <table id="example" class="table table-bordered text-nowrap key-buttons">
+            <thead>
+                <tr>
+                    <th>S.no.</th>
+                    <th>Date</th>
+                    <th>Image</th>
+                    <th>Item Name</th>
+                    <th>Item Code</th>
+                    <th>Dealer Code</th>
+                    <th>Dealer Name</th>
+                    <th>Qty</th>
+                    <th>Remarks</th>
+                    <th>Inserted Date</th>
+                    <th>Updated Date</th>
+                    <th>IP Address</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @{ int count = 0;}
+                @foreach (BrandDisplay.List item in Model)
+                {
+                    count++;
+                    <tr>
+                        <td>
+                            @count
+                            <input type="hidden" name="I" value="@item.BrandID" />
+                            <input type="hidden" name="N" value="@item.ItemName" />
+                        </td>
+
+                        <td>@item.DocDate</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.ImageURL))
+                            {
+                                <a href="@item.ImageURL" target="_blank">
+                                    <img class="img-responsive listimage" src="@item.ImageURL" />
+                                </a>
+                            }
+                        </td>
+                        <td>
+                            @item.ItemName
+                        </td>
+                        <td>@item.ItemCode</td>
+                        <td>@item.DealerCode</td>
+                        <td>@item.DealerName</td>
+                        <td>@item.Qty</td>
+                        <td>@item.Remarks</td>
+                        <td>@item.CreatedDate</td>
+                        <td>@item.ModifiedDate</td>
+                        <td>@item.IPAddress</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>

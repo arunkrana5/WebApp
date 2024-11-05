@@ -1,0 +1,73 @@
+﻿<div class="table-section">
+    @model IList<Targets.List>
+
+    <div class="table-responsive">
+        <table id="example" class="table table-bordered text-nowrap key-buttons">
+            <thead>
+                <tr>
+                    <th>S.no.</th>
+
+                    @if (ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                    {
+                        <th>Action</th>
+                    }
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Code</th>
+                    <th>Role</th>
+                    <th>Department</th>
+                    <th>Designation</th>
+                    <th>Phone</th>
+                    <th>Gender</th>
+                    <th>Inserted Date</th>
+                    <th>Inserted by</th>
+                    <th>Updated Date</th>
+                    <th>Updated by</th>
+                    <th>IP Address</th>
+                </tr>
+
+
+            </thead>
+            <tbody>
+                @{ int Count = 0;}
+                @foreach (var item in Model)
+                {
+                    Count++;
+                    <tr class="@(item.IsActive == true?"": "trrowred")">
+                        <td>
+                            <input type="hidden" name="I" value="@item.TID" />
+                            <input type="hidden" name="N" value="@item.EMPCode" />
+                            @Count
+                        </td>
+                        <td>
+                            @if (ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                            {
+
+                                <a title="Edit" href="@Url.Action("TargetTranList", new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Transaction/TargetTranList*" + item.TID) })" data-toggle='tooltip'> <i class="fa fa-pencil-square-o checkgreen" aria-hidden="true"></i> </a>
+                            }
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(@item.ImageURL))
+                            {
+                                <img class="img-responsive listimage" src="@item.ImageURL" />
+                            }
+
+                        </td>
+                        <td>@item.EMPName</td>
+                        <td>@item.EMPCode</td>
+                        <td>@item.RoleName</td>
+                        <td>@item.DeptName</td>
+                        <td>@item.DesignName</td>
+                        <td>@item.Phone</td>
+                        <td>@item.Gender</td>
+                        <td>@item.CreatedDate</td>
+                        <td>@item.CreatedBy</td>
+                        <td>@item.ModifiedDate</td>
+                        <td>@item.ModifiedBy</td>
+                        <td>@item.IPAddress</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    </div>

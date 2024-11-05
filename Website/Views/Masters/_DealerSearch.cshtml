@@ -1,0 +1,73 @@
+﻿@model DealerSearch
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="table-section">
+    <div class="row p-2">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+                        <div class="row p-2">
+                            <div class="col-md-2">
+                                @Html.TextBoxFor(model => model.DealerCode, new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.TextBoxFor(model => model.DealerName, new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.DropDownListFor(model => model.DealerCategoryID, new SelectList(Model.DealerCategoryList, "ID", "Name"), "Select Category",
+                                new { @class = "form-control applyselect" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.DropDownListFor(model => model.DealerTypeID, new SelectList(Model.DealerTypeList, "ID", "Name"), "Select Type",
+                                new { @class = "form-control applyselect" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.DropDownListFor(model => model.RegionID, new SelectList(Model.RegionList, "ID", "Name"), "Select Region",
+                                new { @class = "form-control applyselect", @onchange = "FillState(this)" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.DropDownListFor(model => model.StateID, new SelectList(Model.StateList, "ID", "Name"), "Select State",
+                                new { @class = "form-control applyselect" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.DropDownListFor(model => model.CityID, new SelectList(Model.CityList, "ID", "Name"), "Select City",
+                                new { @class = "form-control applyselect" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.DropDownListFor(model => model.AreaID, new SelectList(Model.AreaList, "ID", "Name"), "Select Area",
+                                new { @class = "form-control applyselect" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.DropDownListFor(model => model.BranchID, new SelectList(Model.BranchList, "ID", "Name"), "Select Branch",
+                                new { @class = "form-control applyselect" })
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="small">&nbsp;</label>
+                                <button type="submit" id="btnSearch" name="Command" value="Add" class="button ">
+                                    <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="row">
+                            <div class="col-lg-12 ">
+                                <div class="table-responsive">
+                                    <table id="tblDataTable" class="table table-bordered table-hover text-nowrap key-buttons">
+                                        <thead>
+                                            
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+

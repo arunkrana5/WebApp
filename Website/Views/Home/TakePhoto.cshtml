@@ -1,0 +1,74 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <a onClick="myFunction()">
+                <span class="badge" style="cursor:pointer">Open Camera</span>
+                @*<i class="plus fa-camera"></i>*@
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a onClick="take_snapshot()">
+                <span class="badge pull-right" style="cursor:pointer">Take Photo</span>
+                @*<i class="plus fa-camera"></i>*@
+            </a>
+        </div>
+    </div>
+</div>
+
+<br />
+
+<div id="results" class="container">Your captured image will appear here...</div>
+<div class="container">
+    <div style="vertical-align:central;" id="dialog">
+        <div id="my_camera"></div>
+    </div>
+</div>
+
+@section scripts    {
+
+    <script src="~/assets/design/js/WebCam.js"></script>
+    <script language="JavaScript">
+        $("#dialog").dialog({
+            autoOpen: false,
+            height: 100,
+            width: 100,
+            modal: true,
+        })
+        function myFunction() {
+            debugger
+            Webcam.set({
+                width: 500,
+                height: 500,
+                image_format: 'jpeg',
+                //mode: "callback",
+                swffile: "~/Scripts/jscam_canvas_only.swf",
+                jpeg_quality: 90
+            });
+            Webcam.attach('#my_camera');
+            $("#dialog").dialog("open");
+        }
+    </script>
+
+    <!-- A button for taking snaps -->
+    <!-- Code to handle taking the snapshot and displaying it locally -->
+    <script language="JavaScript">
+        function take_snapshot() {
+            // take snapshot and get image data
+            Webcam.snap(function (data_uri) {
+                // display results in page
+                document.getElementById('results').innerHTML =
+                    //'<h2>Here is your image:</h2>' +
+                    '<img width="250px" id="imgclick" name="imgclick" src="' + data_uri + '"/>';
+                //$("#my_camera").toggle();
+                $("#imgHidden")[0].src = data_uri;
+                Webcam.reset('#my_camera');
+                $("#imgHidden").val(data_uri);
+                //$("#my_camera").hide();
+                $("#displayimg").hide();
+                $("#divAlt").hide();
+                $("#imgVisitorPhoto1").hide();
+            });
+        }
+    </script>
+
+}

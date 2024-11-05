@@ -1,0 +1,93 @@
+﻿@model IList<Travel.ExpenseList>
+
+
+
+<div class="table-responsive">
+    <table id="example" class="table table-bordered table-hover table-wrapper-scroll-y my-custom-scrollbar table-striped text-nowrap key-buttons">
+        <thead>
+            <tr>
+                <th scope="col">S.no.</th>
+                <th scope="col">Action</th>
+                <th scope="col">Status</th>
+                <th scope="col">Doc No</th>
+                <th scope="col">Doc Date</th>
+                <th scope="col">BT Name</th>
+                <th scope="col">BT Code</th>
+                <th scope="col">From City</th>
+                <th scope="col">To City</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">End Date</th>
+                <th scope="col">Mode</th>
+                <th scope="col">Remarks</th>
+                <th scope="col">Travel Exp</th>
+                <th scope="col">Visit Exp</th>
+                <th scope="col">Hotel Exp</th>
+                <th scope="col">Other Exp</th>
+                <th scope="col">Total</th>
+                @if (ViewBag.Approved > 0)
+                {
+
+                    <th scope="col" >Approved Remarks</th>
+                    <th scope="col">Approved By</th>
+                    <th scope="col">Approved Date</th>
+                }
+                <th>IPAddress</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @{ int count = 0;}
+            @foreach (Travel.ExpenseList item in Model)
+            {
+                count++;
+            <tr>
+                <td class="col" >
+                    @count
+                    <input type="hidden" name="I" value="@item.TRID" />
+                    <input type="hidden" name="N" value="@item.DocNo" />
+                </td">
+                <td class="col">
+                    <a title="View Request" href="@Url.Action("ViewTravelCompleteRequest", new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*/Travel/ViewTravelCompleteRequest*"+ item.TRID+"*"+item.DocNo+"*Approval") })" data-toggle='tooltip'>
+                        View Request
+                    </a>
+                </td>
+                <td class="col">@item.Status</td>
+                <td class="col">@item.DocNo</td>
+                <td class="col">@item.DocDate</td>
+                <td class="col">@item.EMPName</td>
+                <td class="col">@item.EMPCode</td>
+                <td class="col">@item.FromCity</td>
+                <td class="col">@item.ToCity</td>
+                <td class="col">@item.StartDate</td>
+                <td class="col">@item.EndDate</td>
+                <td class="col">@item.TravelMode</td>
+                <td class="col">@item.Remarks</td>
+
+                <td class="col">@item.TravelExp_Amt</td>
+                <td class="col">@item.VisitExp_Amt</td>
+                <td class="col">@item.HotelExp_Amt</td>
+                <td class="col">@item.OtherExp_Amt</td>
+                <td class="col">@item.TotalExp_Amt</td>
+                @if (ViewBag.Approved > 0)
+                {
+
+                    <td class="col">@item.ApprovedRemarks</td>
+                    <td class="col">@item.ApprovedBy</td>
+                    <td class="col">@item.ApprovedDate</td>
+
+                }
+                <td class="col">@item.IPAddress</td>
+
+
+            </tr>
+            }
+
+        </tbody>
+    </table>
+
+</div>
+
+
+
+
+

@@ -1,0 +1,29 @@
+﻿
+/*.count-main {
+    background-color: #f8f9fa !important;
+    box-shadow:none !important;
+    border:none;
+}*/
+.counter-customer {
+    background-color: inherit;
+}
+.counter-icon {
+    background-color: #fff;
+}
+
+.count-div {
+    border-radius: 20px !important;
+    padding: 18px 3px 0 3px;
+    background-color: #fff;
+}
+
+    .count-div p {
+        margin: 0px;
+        font-size: 16px;
+    }
+
+    .count-div h1 {
+        font-size: 24px !important;
+        margin-top: 30px !important;
+        margin-bottom: 0px !important
+    }

@@ -1,0 +1,137 @@
+﻿.crdtxt{
+    color:#808080;
+}
+.dashSSR .dashSSR-profile {
+    background-color: #edf0f5;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+.dashSSR .userprofile{
+    background-color:none !important;
+}
+.dashSSR .ssrTarget {
+    background-color: #fff;
+    /*padding: 0px;*/
+    height:285px;
+    margin:auto;
+    border-radius: 15px;
+    box-shadow: rgb(0 0 0 / 35%) 0px 5px 15px;
+}
+.dashSSR .ssrTarget .card-title{
+    font-size:16px;
+}
+.ssrTarget .card-header {
+    padding: 0;
+}
+.ssrTarget table{
+    padding:0px;
+    font-size:14px !important;
+    margin:0px;
+}
+.ssrTarget table th{
+    padding: 0px;
+    font-size: 14px !important;
+    margin: 0px;
+}
+
+.ssrTarget .table > tbody > tr > td, .table > tfoot > tr > td, .table > thead > tr > td, table.dataTable td, table.dataTable th {
+    font-size: 14px !important;
+    /*padding:0px !important;*/
+}
+
+.dashSSR .toplistcount .counter-customer {
+    padding: 0px;
+    margin: 0px;
+}
+.dashSSR #HeaderCountDiv .toplistcount {
+    padding: 0px;
+    margin: 0px;
+}
+
+::-webkit-calendar-picker-indicator {
+    margin-left: -12px;
+}
+
+.punch-section{
+    border-radius:15px;
+
+}
+.cal-ssr .table td {
+    padding: 0px !important;
+}
+.cal-ssr .fc .fc-scrollgrid > thead > tr > *, .fc .fc-scrollgrid > tfoot > tr {
+    padding: 0px !important;
+}
+.cal-ssr .fc .fc-scrollgrid-section > td {
+    height: 0;
+    padding: 0px !important;
+}
+
+.cal-ssr .fc .fc-toolbar.fc-header-toolbar {
+    margin-bottom: 10px;
+    padding: 5px 10px;
+}
+
+.cal-ssr .fc .fc-view-harness {
+    height: 289px;
+    margin-bottom: 10px;
+    padding:5px 5px;
+}
+.fc .fc-toolbar-title {
+    font-size: 18px;
+    margin: 0;
+}
+.fc-scrollgrid{
+    border-radius:15px;
+    background-color:#fff;
+}
+
+#calendar {
+    border-radius: 15px;
+    margin-top: 10px;
+    box-shadow: rgb(0 0 0 / 35%) 0px 5px 15px;
+}
+
+.dashSSR .userprofile img {
+    height: 120px;
+    width: 120px;
+    
+}
+/*-------------------Reasponsive-----------------------*/
+@media (max-width:580px) and (min-width:250px) {
+    .dashSSR .ssrTarget {
+        height:auto ;
+    }
+
+    
+}
+
+.dashSSR .userprofile img {
+    height: 80px;
+    width: 80px;
+   
+}
+@media (max-width:600px) and (min-width:250px){
+    .order14 {
+        order: 14;
+    }
+    .order13 {
+        order: 13;
+    }
+
+    .ssr .mat-clr-stat-card {
+        display: none
+    }
+    .ssr .dh_lwp{
+        display:none;
+    }
+
+    .ssr .lower-count{
+        display: none !important;
+    }
+    .ssrName h4{
+        font-size: 16px;
+    }
+    
+   
+   
+}

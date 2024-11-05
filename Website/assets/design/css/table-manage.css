@@ -1,0 +1,38 @@
+﻿.table-manage{
+   color:#fff;
+    padding:10px;
+}
+    .table-manage .fa-fingerprint {
+        font-size: 32px;
+    }
+.fa-retweet {
+    color: #fff;
+    font-size: 32px !important;
+}
+    .table-manage h2 {
+     padding:10px 0;
+        font-weight:400;
+        margin-bottom:0px;
+    }
+.manage-sales {
+    border-radius: 9px;
+    padding: 20px;
+    background-color: #6f8cfe;
+}
+    .manage-sales h2 {
+        color: #fff;
+        font-weight: 400;
+        margin-bottom: 0px;
+    }
+.manage-atten {
+    border-radius: 9px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+    .manage-atten:hover h2{
+        color: #2b9348;
+    }
+    .manage-atten:hover .fa-retweet{
+        color: #2b9348 !important;
+    }

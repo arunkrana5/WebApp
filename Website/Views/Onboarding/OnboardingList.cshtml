@@ -1,0 +1,272 @@
+﻿@model MyTab.Approval
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+
+<div class="table-section">
+    @Html.Partial("ListHeader_Partial", "Onboarding List")
+
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+
+
+                        @using (Ajax.BeginForm("_OnboardingList", "Onboarding",
+                                 new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*/Onboarding/_OnboardingList") },
+                                  new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+                                     new { @id = "_OnboardingList" })
+                             )
+                        {
+                            <div class="row">
+                                <div class="tabmargin">
+                                    @Html.HiddenFor(x => x.Approved)
+                                    <ul id="tabs" class="nav nav-tabs " role="tablist">
+                                        <li class="nav-item"> <a tabvalue="0" class="nav-link ripplelink AnchorApproval @(Model.Approved == 0 ? "active" : "")" data-toggle="tab" role="tab">Pending</a> </li>
+                                        <li class="nav-item"> <a tabvalue="1" class="nav-link ripplelink AnchorApproval @(Model.Approved == 1 ? "active" : "") " data-toggle="tab" role="tab">Approved</a></li>
+                                        <li class="nav-item"> <a tabvalue="2" class="nav-link ripplelink AnchorApproval @(Model.Approved == 2 ? "active" : "") " data-toggle="tab" role="tab">Rejected</a></li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        }
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table id="tblDataTable" class="table table-bordered table-hover text-nowrap key-buttons">
+                                        <thead>
+                                            <tr>
+                                                <th>Doc No</th>
+                                                <th>Action</th>
+                                                <th>Remarks</th>
+                                                <th>Doc Date</th>
+                                                <th>Name</th>
+                                                <th>Mobile</th>
+                                                <th>Email</th>
+                                                <th>Gender</th>
+                                                <th>PAN</th>
+                                                <th>Aadhar No</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-sm-12 justify-content-end  my-3" id="Approvalbtn">
+        <button type="button" class="btn apr-btn btnProcess" onclick="ShowApprovalBox(this)" name="Command" value="1">
+            <i class="fa fa-check" aria-hidden="true"></i>
+            Approve
+        </button>
+        <button type="button" class="btn rct-btn btnProcess" onclick="ShowApprovalBox(this)" name="Command" value="2">
+            <i class="fa fa-ban" aria-hidden="true"></i>
+            Reject
+        </button>
+    </div>
+</div>
+
+<div class="modal fade pop-dgn" id="ViewFullModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header blk-gdn-btn">
+                <h4 class="modal-title"><i class="fas fa-print"></i>View Onboarding </h4>
+                <div class="close" data-dismiss="modal">&times;</div>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div id="ViewTagetDiv"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade pop-dgn" id="ApprovalModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header blk-gdn-btn">
+                <h4 class="modal-title"><span class="mx-1"> <i class="fas fa-print"></i> </span>Approval</h4>
+                <div class="close" data-dismiss="modal">&times;</div>
+            </div>
+            <div class="modal-body">
+
+                @using (Ajax.BeginForm("OnboardingApprove", "Onboarding",
+                    new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Onboarding/OnboardingApprove") },
+                     new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnboardingApproveSuccess", OnBegin = "ShowLoadingDialog()" },
+                        new { @id = "OnboardingApproveForm" })
+                )
+                {
+                    <div class="col-sm-12 form-group ">
+                        <label>Reason</label>
+                        <textarea name="ApproveRemarks" class="form-control" Placeholder="Reason"></textarea>
+                        <input type="hidden" name="Command" value="" />
+                        <input type="hidden" name="OnBoardIDs" value="" />
+                    </div>
+                    <div class="col-sm-12 text-center mt-3">
+                        <button type="button" class="btn cnl-btn ripplelink " data-dismiss="modal"><i class="fa fa-times"></i>Close</button>
+                        <button type="submit" class="btn apr-btn ">
+                            <i class="fa fa-check" aria-hidden="true"></i>
+                            Submit
+                        </button>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section scripts    {
+    @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+<script>
+
+        $(document).ready(function () {
+            BindDataTable();
+        });
+
+        function ListHeaderExport()
+        {
+            var Approved= $("#Approved").val();
+            var url = "/Export/Onboarding_Applications_Export";
+            var src = EncryptJSON(@ViewBag.MenuID+"*/Export/Onboarding_Applications_Export*" + Approved)
+        window.location.href = url + "?src=" + src;
+        }
+
+    $('.AnchorApproval').on('click', function (e) {
+           
+            e.preventDefault();
+            e.stopPropagation();
+            var att = $(this).attr("tabvalue");
+            $(".AnchorApproval.active").removeClass("active");
+            $(this).addClass("active");
+            $("#Approved").val(att);
+            if (att == 0) {
+                $("#Approvalbtn").show();
+            } else {
+                $("#Approvalbtn").hide();
+            }
+            BindDataTable();
+        });
+
+         function BindDataTable() {
+     var count = 0;
+             var src = EncryptJSON(@ViewBag.MenuID+"*/Onboarding/_OnboardingList*0")
+             $('#tblDataTable').DataTable({
+                 "processing": true,
+                 "serverSide": true,
+                 "destroy": true,
+                 "ajax": {
+                     url: "/Onboarding/_OnboardingList?src=" + src,
+                     data: { "Approved": $("#Approved").val() },
+                     type: "post"
+                 },
+
+                 "columns": [
+                     { "data": "DocNo" },
+                     {
+                         className: 'OnBoardID',
+                         data: 'OnBoardID',
+                         render: function (data, type, row) {
+
+                             if (type === 'display') {
+                                 let HTML = `<input type='hidden' name='I' value="${row.OnBoardID}" /><input type='hidden' name='N' value="${row.DocNo}" />`;
+                                 HTML += ` <a title="Show Details" OP="Onboarding_Applications" onclick="ShowMasterDetails(this)" data-toggle="tooltip"><i class="fa-solid fa-eye" aria-hidden="true"></i> </a>`;
+                                 if (row.Approved == 0) {
+                                     HTML += `<input type="checkbox" class="newwidth Chksingle" id="checkAll_${row.OnBoardID}" name="Chksingle" value="${row.OnBoardID}" /><label for="checkAll_${row.OnBoardID}"></label>`;
+                                 }
+                                     return HTML
+                             }
+                             return data;
+                         }
+                     },
+                     { "data": "ApprovedRemarks" },
+                     { "data": "DocDate" },
+                     { "data": "Name" },
+                     { "data": "Mobile" },
+                     { "data": "EmailID" },
+                     { "data": "Gender" },
+                     { "data": "PAN" },
+                     { "data": "AadharNo" }
+         ]
+     });
+
+ }
+
+
+    function ViewOnboarding(obj) {
+        var ID = $(obj).closest("tr").find("input:hidden[name=I]").val();
+			$.ajax({
+                url: "/Onboarding/_ViewOnboarding",
+                type: "Get",
+                data: { src: EncryptJSON(@ViewBag.MenuID+"*/Onboarding/_ViewOnboarding*" + ID) },
+                success: function (data)
+                {
+                    $("#ViewTagetDiv").empty();
+                    $("#ViewTagetDiv").html(data);
+                    $('#ViewFullModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    })
+                     var form = $("form")
+                .removeData("validator")
+                .removeData("unobtrusiveValidation");
+                    $.validator.unobtrusive.parse(form);
+				},
+				error: function (er) {
+					alert(er);
+
+				}
+			});
+    }
+
+        function OnboardingApproveSuccess(obj) {
+        if (obj.Status) {
+            $('#ApprovalModal').modal('hide');
+            SuccessToaster(obj.SuccessMessage);
+            BindDataTable();
+            CloseLoadingDialog();
+        }
+        else {
+            CloseLoadingDialog();
+            FailToaster(obj.SuccessMessage);
+
+        }
+        }
+
+        function ShowApprovalBox(obj) {
+            var Approve = $(obj).val();
+            var IDs = "";
+            $("input[name=Chksingle]").each(function () {
+                if ($(this).prop('checked') == true) {
+                    IDs += $(this).val() + ",";
+                }
+            });
+            $("input:hidden[name=OnBoardIDs]").val(IDs);
+
+            /* var Ids = $("input:hidden[name=RFCIDs]").val();*/
+            if (IDs == "") {
+                FailToaster("please select atleast one checkbox");
+            } else {
+                $("input:hidden[name=Command]").val(Approve);
+                $("#ApprovalModal").modal('show');
+            }
+
+        }
+
+</script>
+
+}

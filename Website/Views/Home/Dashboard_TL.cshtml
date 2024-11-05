@@ -1,0 +1,299 @@
+﻿
+@section style{
+    @Html.IncludeVersionedCss(Url.Content("~/assets/design/js/calendar/lib/main.css"))
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+    @Html.IncludeVersionedCss(Url.Content("~/assets/design/css/dashTL.css"))
+}
+
+<div class="dashboardTL" id="dashTL">
+
+    <div class="row count-main">
+        <div class="order-1 col-xl-12">
+            <div class="count-main">
+                <section class="counter-section">
+                    <div id="HeaderCountDiv" class="toplistcount counter-div loadingdiv  ">
+                       
+                        @*<img src="/assets/design/images/loadernew.gif" class="loadingimage"  />*@
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="row mmt-20 dashtl my-2 p-2 d-flex justify-content-center">
+        <div class="col-xl-4 col-md-6 col-sm-12 card-profile-tl my-2 row" >
+            
+                    <div class=" tl-profile py-2 col-xl-12 ">
+                        <div class="row">
+
+
+                            <div class="col-xl-5  col-md-6  col-sm-4  col-4 userprofile d-flex justify-content-center">
+                                @if (string.IsNullOrEmpty(ClsApplicationSetting.GetSessionValue("ImageURL")))
+                                {
+                                    if (ClsApplicationSetting.GetSessionValue("Gender") == "Female")
+                                    {
+                                        <img class="mx-auto" src="/assets/design/images/NoPhoto_Female.png" />
+                                    }
+                                    else
+                                    {
+                                        <img class="mx-auto" alt="img" src="/assets/design/images/NoPhoto_Male.png" height="120px" width="auto" />
+                                    }
+                                }
+                                else
+                                {
+                                    <img class="mx-auto" alt="img" height="120px" width="auto" src="@ClsApplicationSetting.GetSessionValue("ImageURL")">
+                                }
+                            </div>
+                            <div class="col-xl-7 col-md-6 col-sm-8 col-8 ">
+                                <div class="d-block h-100 card-header border-0 text-center px-0">
+                                    <h3 class="text-center mb-2 tl-hello"> @ClsApplicationSetting.GetSessionValue("EMPName")  </h3><h4> (@ClsApplicationSetting.GetSessionValue("EMPCode"))</h4>
+                                    <p class="crdtxt tl-assign my-2">Are are assigned to<br><strong>@ClsApplicationSetting.GetSessionValue("DealerName")  (@ClsApplicationSetting.GetSessionValue("AreaName"))</strong></p>
+
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="ssrmenu d-flex flex-wrap justify-content-between p-2">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <a class="btn btn-profile btn-block btn-primary mr-3 y-2" href="/Profile"><i class="fe fe-repeat"></i> View Profile</a>
+                                            
+                                        </div>
+                                        <div class="col-6">
+                                            <a onclick="MarkAttendence()" class="btn btn-block btn-approve  "><i class="fe fe-plus"></i> @ClsApplicationSetting.GetSessionValue("AttendenceStatus")</a>  @*btn-secondary*@
+
+                                        </div>
+
+                                    </div>
+                                      </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-xl-12 col-sm-12 col-md-12 tl-puch p-2 my-2 ">
+
+                        <div class=" pl-0  card-title-attendance d-flex justify-content-between ">
+                            <p class=" ">Punched Attendance</p>
+                            <div class="d-flex ml-auto ">
+                                <input onblur="GetPunchTime(this)" id="txtPunchedAttendance" class="btn btn-white" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class=" text-center">
+                                <div id="DivPunchTime_DateWise" class="fulltable py-2">
+                                    <img src="/assets/design/images/loadernew.gif" class="imgloader" />
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+               
+        </div>
+
+        <div class=" col-xl-4 col-md-6 col-sm-12 my-2">
+            <div id='calendar' class="bg-white"></div>
+        </div>
+
+        <div class="col-sm-12 col-xl-4 col-md-6 punch-calender my-2 bg-white">
+            <div class="bg-white">
+                <div class="pl-3 pr-0 d-flex align-items-center ">
+                    <p class="card-title-achieve ">Target Vs Achievement</p>
+                    <div class="d-flex ml-auto mx-1 my-1">
+                        <input id="txtADate" onblur="GetTargetAchievedList()" class="btn btn-white" type="month" value="@DateTime.Now.ToString("yyyy-MM")" />
+
+                    </div>
+                </div>
+                <div class=" m-0 p-0">
+                    <div class=" text-center tl-target">
+                        <div id="DivTargetAchieved"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+
+    <div class="modal fade pop-dgn" id="ViewModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header blk-gdn-btn">
+                    <h4 class="modal-title"><i class="fas fa-print"></i><span id="spnHead"></span></h4>
+                    <div class="close" data-dismiss="modal">&times;</div>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div id="TagetDiv"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal" id="AnnouncementModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content modal-content-demo">
+                <div class="modal-header blk-gdn-btn">
+                    <h4 class="modal-title"><i class="fas fa-print"></i>Important Message!!!</h4>
+                    <div class="close" data-dismiss="modal">&times;</div>
+                </div>
+                <div class="modal-body">
+                    <div class="row  ">
+                        <div class="col-lg-12">
+                            <div id="AnnouncementHTML"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section scripts    {
+    @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+    @Html.IncludeVersionedJs(Url.Content("~/assets/design/js/calendar/lib/main.js"))
+    @Html.IncludeVersionedJs(Url.Content("~/assets/design/scripts/PagesJS/FillCalendarAttendence.js"))
+    <script>
+        $(document).ready(function () {
+            GetTargetAchievedList();
+            GetPunchTime();
+            GetDashboardCount();
+            GetMyAnnouncement();
+        });
+
+
+        function ShowSSRList(obj, doctype) {
+            $("#spnHead").html(doctype)
+            $.ajax({
+                url: "/Home/_SSRListToday",
+                type: "Get",
+                data: { "Doctype": doctype },
+                success: function (data) {
+                    $("#TagetDiv").empty();
+                    $("#TagetDiv").html(data);
+                    $('#ViewModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                    DatatableScripts_ByID('tblSSRList');
+                },
+                error: function (er) {
+                    alert(er);
+
+                }
+            });
+        }
+
+        function GetTargetAchievedList() {
+            $("#DivTargetAchieved").empty();
+         
+            $("#DivTargetAchieved").html('<img src="/assets/design/images/1496.gif" class="imgloader" />');
+
+            var dataObject = JSON.stringify({
+                'Date': $("#txtADate").val()
+            });
+            $.ajax({
+                url: "/Home/_TargetAchieved_MonthWise",
+                type: "Post",
+                contentType: 'application/json',
+                async: true,
+                data: dataObject,
+                success: function (data) {
+                    $("#DivTargetAchieved").empty();
+                    $("#DivTargetAchieved").html(data);
+                },
+                error: function (er) {
+                    console.log(er);
+                }
+            });
+        }
+
+        function GetPunchTime() {
+            $("#DivPunchTime_DateWise").empty();
+            $("#DivPunchTime_DateWise").html('<img src="/assets/design/images/1496.gif" class="imgloader" />');
+            var dataObject = JSON.stringify({
+                'Date': $("#txtPunchedAttendance").val()
+            });
+            $.ajax({
+                url: "/Home/_PunchTime_DateWise",
+                type: "Post",
+                contentType: 'application/json',
+                async: true,
+                data: dataObject,
+                success: function (data) {
+                    $("#DivPunchTime_DateWise").empty();
+                    $("#DivPunchTime_DateWise").html(data);
+                },
+                error: function (er) {
+                    console.log(er);
+                }
+            });
+            CloseLoadingDialog();
+        }
+
+        function GetDashboardCount() {
+            $("#HeaderCountDiv").empty();
+        
+          
+            $("#HeaderCountDiv").html('<img src="/assets/design/images/1496.gif" class="imgloader"/>');
+            $.ajax({
+                url: "/Home/_DashboardCount",
+                type: "Post",
+                contentType: 'application/json',
+                async: true,
+                success: function (data) {
+                    $("#HeaderCountDiv").empty();
+                    $("#HeaderCountDiv").html(data);
+                },
+                error: function (er) {
+                    console.log(er);
+                }
+            });
+        }
+
+
+        function GetMyAnnouncement() {
+            $.ajax({
+                url: "/Home/_MyAnnouncementList",
+                type: "Get",
+                success: function (data) {
+                    if (data.Status) {
+                        $("#AnnouncementHTML").empty();
+                        $("#AnnouncementHTML").html(data.ViewAsString);
+                        $('#AnnouncementModal').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                        });
+                    }
+
+                },
+                error: function (er) {
+                    alert(er);
+
+                }
+            });
+        }
+
+
+
+
+
+
+
+
+
+    </script>
+}

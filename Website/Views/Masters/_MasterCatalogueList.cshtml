@@ -1,0 +1,70 @@
+﻿@model IList<MasterCatalogue.List>
+
+<div class="table-responsive">
+
+    <table id="example" class="table table-bordered table-hover text-nowrap key-buttons table-responsive-md table-responsive-sm">
+        <thead>
+            <tr>
+                <th>S.no.</th>
+                @if (ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                {
+                    <th>Action</th>
+                }
+                <th>Product</th>
+
+                <th>Description</th>
+                <th>Attachment</th>
+                <th>URL</th>
+                <th>Inserted Date</th>
+                <th>Inserted by</th>
+                <th>Updated Date</th>
+                <th>Updated by</th>
+                <th>IP Address</th>
+
+            </tr>
+
+        </thead>
+        <tbody>
+            @{ int count = 0;}
+            @foreach (MasterCatalogue.List item in Model)
+            {
+                count++;
+                <tr>
+                    <td>@count</td>
+                    @if (ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                    {
+                        <td>
+                            <input type="hidden" name="I" value="@item.CatID" />
+                            <input type="hidden" name="N" value="@item.ProductName" />
+
+
+
+                            @Html.Raw(item.IsActive == true
+                       ? "<a  data-toggle='tooltip' data-original-title='Click to DeActivate' list='Catalogue_IsActive' OP='0' class='AIsActive' ><i class='fa fa-circle-check' aria-hidden='true'></i></a>"
+                       : "<a data-toggle='tooltip' data-original-title='Click to Activate' list='Catalogue_IsActive' OP='1'  class='AIsActive' > <i class='fa fa-circle-xmark' aria-hidden='true'></i></a>")
+
+                        <a title="Edit" onclick="ListHeaderAdd(@item.CatID);" data-toggle='tooltip'>@*<i class="fa fa-pencil-square-o checkgreen" aria-hidden="true"></i>*@ <i class="fa-solid fa-pen-to-square checkgreen"></i> </a>
+
+
+                        </td>
+                    }
+                    <td>@item.ProductName</td>
+                    <td>@item.Description</td>
+                    <td>
+                        @if (item.AttachmentID > 0)
+                        {
+                            <a href="@item.AttachmentPath" target="_blank">View Document</a>
+                        }
+                    </td>
+                    <td><a href="@item.URL" target="_blank">URL</a></td>
+                    <td>@item.CreatedDate</td>
+                    <td>@item.CreatedBy</td>
+                    <td>@item.ModifiedDate</td>
+                    <td>@item.ModifiedBy</td>
+                    <td>@item.IPAddress</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>

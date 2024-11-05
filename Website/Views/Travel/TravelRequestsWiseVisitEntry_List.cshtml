@@ -1,0 +1,86 @@
+﻿@model IList<VisitEntry.List>
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="table-section">
+    <div class="page-header">
+        <div class="page-leftheader">
+            <h4 class="page-title">Visit Entries List (@ViewBag.DocNo)</h4>
+            <div class="page-leftheader-btn">
+                @if (ClsApplicationSetting.GetSessionValue("Write") == "True")
+                {
+                    <a class="btn btn-primary" href="@Url.Action("VisitEntryAdd",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Travel/VisitEntryAdd*"+ViewBag.TRID+"*"+ViewBag.DocNo+"*0*0" ) })">
+                        <i class="fa fa-plus"></i> Add
+                    </a>
+                }
+                <a class="btn btn-sm  close-btn" href="@Url.Action("MyApprovedTravelRequestsList",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Travel/MyApprovedTravelRequestsList") })">Back To List</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+
+                        <div class="table-responsive">
+                            @Html.Partial("_TRVisitEntry_List", Model)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal fade pop-dgn" id="ViewModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header blk-gdn-btn">
+                    <h4 class="modal-title"><i class="fas fa-print"></i><span class="spnhead"></span> </h4>
+                    <div class="close" data-dismiss="modal">&times;</div>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div id="VisitTagetDiv"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+
+
+
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+        <script>
+        function ViewVisitEntry(obj) {
+        var VisitID = $(obj).closest("tr").find("input:hidden[name=I]").val();
+        var USer = $(obj).closest("tr").find("input:hidden[name=N]").val();
+            $(".spnhead").html(USer);
+			$.ajax({
+                url: "/Travel/_VisitEntryView",
+                type: "Get",
+                data: { src: EncryptJSON(@ViewBag.MenuID+"*" + "/Travel/_VisitEntryView*" + VisitID) },
+                success: function (data)
+                {
+                    $("#VisitTagetDiv").empty();
+                    $("#VisitTagetDiv").html(data);
+                    $('#ViewModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+				},
+				error: function (er) {
+					alert(er);
+
+				}
+			});
+            }
+        </script>
+    }

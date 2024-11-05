@@ -1,0 +1,67 @@
+﻿@model IList<MOP.Report>
+
+<div class="table-responsive">
+    <table id="example" class="table table-bordered text-nowrap key-buttons">
+        <thead>
+            <tr>
+                <th>S.no.</th>
+                <th>EMP Name</th>
+                <th>EMP Code</th>
+                <th>Date</th>
+                <th>Region</th>
+                <th>Branch</th>
+                <th>Branch Code</th>
+                <th>Dealer Type</th>
+                <th>Dealer Code</th>
+                <th>Dealer Name</th>
+                <th>Dealer Area</th>
+                <th>Brand Name</th>
+                <th>Product</th>
+                <th>Sub Product</th>
+                <th>Top Selling Model</th>
+                <th>Price</th>
+                <th>Store Name With Location</th>
+                <th>Rating</th>
+                <th>Inserted Date</th>
+                <th>Inserted by</th>
+                <th>Updated Date</th>
+                <th>Updated by</th>
+                <th>IP Address</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @{ int count = 0;}
+            @foreach (MOP.Report item in Model)
+            {
+                count++;
+            <tr>
+                <td>@count</td>
+                <td>@item.EMPName</td>
+                <td>@item.EMPCode</td>
+                <td>@item.Date</td>
+                <td>@item.RegionName</td>
+                <td>@item.BranchName</td>
+                <td>@item.BranchCode</td>
+                <td>@item.DealerType</td>
+                <td>@item.DealerCode</td>
+                <td>@item.DealerName</td>
+                <td>@item.DealerArea</td>
+                <td>@item.BrandName</td>
+                <td>@item.ProductName</td>
+                <td>@item.TranName</td>
+                <td>@item.ModelNo</td>
+                <td>@item.Price</td>
+                <td>@item.Remarks</td>
+                <td>@item.Rating</td>
+                <td>@item.CreatedDate</td>
+                <td>@item.CreatedBy</td>
+                <td>@item.ModifiedDate</td>
+                <td>@item.ModifiedBy</td>
+                <td>@item.IPAddress</td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+</div>

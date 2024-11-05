@@ -1,0 +1,139 @@
+﻿
+@model IList<Dealer.List>
+
+
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+
+   
+}
+
+<div class="table-section">
+    @Html.Partial("ListHeader_Partial", "Dealer List")
+
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <input type="hidden" id="hdnAddUrl" name="hdnAddUrl" value="@Url.Action("DealerAdd",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Masters/DealerAdd"+"*"+"0") })" />
+                    <input type="hidden" id="hdnImportUrl" name="hdnImportUrl" value="@Url.Action("DealerImport",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Masters/DealerImport"+"*"+"0") })" />
+                    <input type="hidden" id="hdnMappingImportUrl" name="hdnMappingImportUrl" value="@Url.Action("DealerMappingImport",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Masters/DealerMappingImport"+"*"+"0") })" />
+                    <div class="table-responsive">
+                        <table id="tblDataTable" class="table table-bordered table-hover text-nowrap key-buttons">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Action</th>
+                                    <th>Code</th>
+                                    <th>Dealer Type</th>
+                                    <th>Dealer Category</th>
+                                    <th>Branch</th>
+                                    <th>State</th>
+                                    <th>City</th>
+                                    <th>Area</th>
+                                    <th>Region</th>
+                                    <th>Route Number</th>
+                                    <th>Visit Type</th>
+                                    <th>Region</th>
+                                    <th>Address</th>
+                                    <th>Latitude</th>
+                                    <th>Longitude</th>
+                                    <th>Billing Name</th>
+                                    <th>Billing Code</th>
+                                    <th>Inserted Date</th>
+                                    <th>Inserted by</th>
+                                    <th>Updated Date</th>
+                                    <th>Updated by</th>
+                                    <th>IP Address</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+@section scripts    {
+    @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+<script>
+    $(document).ready(function () {
+        BindDataTable();
+    });
+
+     function ListHeaderExport() {
+         var url = "/Export/Dealer_Export";
+         var src = EncryptJSON(@ViewBag.MenuID+"*" + "/Export/Dealer_Export")
+            window.location.href = url + "?src=" + src;
+    }
+
+    function BindDataTable() {
+        var count = 0;
+         var src = EncryptJSON(@ViewBag.MenuID+"*/Masters/_DealerList*0")
+        $('#tblDataTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "destroy": true,
+            "ajax": {
+                url: "/Masters/_DealerList?src=" + src,
+                type: "post"
+            },
+            "columns": [
+                { "data": "DealerID" },
+                { "data": "DealerName" },
+
+                 {
+                    className: 'DealerID',
+                    data: 'DealerID',
+                    render: function (data, type,row) {
+
+                        if (type === 'display') {
+                            let IsActiveHTML = `${(row.IsActive ? "<a  data-toggle='tooltip' data-original-title='Click to DeActivate' list='Dealer_IsActive' OP='0' class='IsActive_Confirm' onclick='ActivateIsActiveClick()' > <i class='fa fa-circle-check' aria-hidden='true'></i></a>" : "<a data-toggle='tooltip' data-original-title='Click to Activate' list='Dealer_IsActive' OP='1'  class='IsActive_Confirm' onclick='ActivateIsActiveClick()' > <i class='fa fa-circle-xmark' aria-hidden='true'></i></a>")}`
+                            let edit = EncryptJSON(@ViewBag.MenuID+"*/Masters/DealerAdd*" + row.DealerID);
+                            let HTML = `<input type='hidden' name='I' value="${row.DealerID}" /><input type='hidden' name='N' value="${row.DealerCode}" />`
+                            HTML += `${IsActiveHTML}   <a title="Edit" href="/Masters/DealerAdd?src=${edit}" data-toggle="tooltip"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i> </a>`;
+                            HTML += `  <a title="Show Details" OP="Dealer" onclick="ShowMasterDetails(this)" data-toggle="tooltip"><i class="fa-solid fa-eye" aria-hidden="true"></i> </a>`;
+                            return HTML
+                        }
+                        return data;
+                    }
+                },
+
+                { "data": "DealerCode" },
+                { "data": "DealerType" },
+                { "data": "DealerCategory" },
+                { "data": "BranchName" },
+                { "data": "StateName" },
+                { "data": "CityName" },
+                { "data": "AreaName" },
+                { "data": "RegionName" },
+                { "data": "RouteNumber" },
+                { "data": "VisitType" },
+                { "data": "Address" },
+                { "data": "Latitude" },
+                { "data": "Longitude" },
+                { "data": "BillingName" },
+                { "data": "BillingCode" },
+                { "data": "CreatedDate" },
+                { "data": "CreatedBy" },
+                { "data": "ModifiedDate" },
+                { "data": "ModifiedBy" },
+                { "data": "IPAddress" }
+            ]
+        });
+
+    }
+
+
+
+
+</script>
+
+}

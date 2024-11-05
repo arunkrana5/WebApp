@@ -1,0 +1,71 @@
+﻿@model Tab.Approval
+
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="table-section">
+    @Html.Partial("ListHeader_Partial", "Miscellaneous Reports")
+    <div class="card">
+        <div class="x_panel">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-3 form-group">
+                        <label>Report Name<sup>*</sup></label>
+                        <select id="@Html.IdFor(x=>x.ID)" name="@Html.NameFor(x=>x.ID)" class="applyselect form-control">
+                            <option desc="" value="0">Select</option>
+                            @if (ViewBag.DropdownList != null)
+                            {
+                                foreach (var item in ViewBag.DropdownList)
+                                {
+                                    <option desc="@item.Other" value="@item.ID">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-sm-2 form-group d-flex align-items-end">
+                        <label class="small">&nbsp;</label>
+                        <button type="button" id="btnSearch" name="Command" value="Add" class="btn btndefault pull-right form-control">
+                          Export
+                        </button>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+        <script src="~/assets/design/js/notify.js"></script>
+
+        <script>
+
+    $('#btnSearch').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        ExportReport();
+    });
+
+        function ExportReport()
+        {
+            var ID = $("#ID").find("option:selected").val();
+            var Name = $("#ID").find("option:selected").text();
+            if (ID == "" || ID == "0") {
+                $.notify($("#ID"), "Kindly Select Report", "error");
+                $("#ID").focus();
+            } else {
+                var url = "/Export/MiscellaneousReports_Export";
+                var src = EncryptJSON(@ViewBag.MenuID+"*/Export/MiscellaneousReports_Export*" + ID + "*" + Name)
+                window.location.href = url + "?src=" + src;
+            }
+
+        }
+
+
+        </script>
+    }

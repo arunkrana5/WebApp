@@ -1,0 +1,171 @@
+﻿
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+
+    @Html.IncludeVersionedCss(Url.Content("~/assets/design/css/dashboardComman.css"))
+}
+
+<div class="row count-main">
+    <div class="order-1 col-xl-12">
+        <div class="count-main">
+            <section class="counter-section">
+                <div id="HeaderCountDiv" class="toplistcount counter-div loadingdiv1">
+
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div class="birthday-section">
+    <section class="p-4">
+        <div>
+            <div class="row ">
+                <div class="col-xl-9 col-md-6 col-sm-6">
+                </div>
+                <div class="col-xl-3 col-md-6 col-sm-6  box-bday">
+                    <h5 class="text-center hpBday">Happy Birthday</h5>
+                    <div id="BirthdayHTML"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+
+<div class="modal fade pop-dgn" id="ViewModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header blk-gdn-btn">
+                <h4 class="modal-title"><i class="fas fa-print"></i><span id="spnHead"></span></h4>
+                <div class="close" data-dismiss="modal">&times;</div>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div id="TagetDiv"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal" id="AnnouncementModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content modal-content-demo">
+            <div class="modal-header blk-gdn-btn">
+                <h4 class="modal-title"><span class="mx-2"><i class="fas fa-print"></i></span>Important Message!!!</h4>
+                <div class="close" data-dismiss="modal">&times;</div>
+            </div>
+            <div class="modal-body">
+                <div class="row  ">
+                    <div class="col-lg-12">
+                        <div id="AnnouncementHTML"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts    {
+
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+    @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+    <script src="https://cdn.datatables.net/fixedcolumns/5.0.0/js/dataTables.fixedColumns.js" ></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/5.0.0/js/fixedColumns.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            GetDashboardCount();
+            GetMyAnnouncement();
+            GetBirthdayList();
+        });
+
+        function ShowSSRList(obj, doctype) {
+            $("#spnHead").html(doctype)
+            $.ajax({
+                url: "/Home/_SSRListToday",
+                type: "Get",
+                data: { "Doctype": doctype },
+                success: function (data) {
+                    $("#TagetDiv").empty();
+                    $("#TagetDiv").html(data);
+                    $('#ViewModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                    DatatableScripts_ByID('tblSSRList');
+                },
+                error: function (er) {
+                    alert(er);
+
+                }
+            });
+        }
+
+
+
+        function GetDashboardCount() {
+            $("#HeaderCountDiv").html('<img src="/assets/design/images/1496.gif" class="imgloader"/>');
+            $.ajax({
+                url: "/Home/_DashboardCount",
+                type: "Post",
+                contentType: 'application/json',
+                async: true,
+                success: function (data) {
+                    $("#HeaderCountDiv").empty();
+                    $("#HeaderCountDiv").html(data);
+                },
+                error: function (er) {
+                    console.log(er);
+                }
+            });
+        }
+
+
+        function GetMyAnnouncement() {
+            $.ajax({
+                url: "/Home/_MyAnnouncementList",
+                type: "Get",
+                success: function (data) {
+                    if (data.Status) {
+                        $("#AnnouncementHTML").empty();
+                        $("#AnnouncementHTML").html(data.ViewAsString);
+                        $('#AnnouncementModal').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                        });
+                    }
+
+                },
+                error: function (er) {
+                    alert(er);
+
+                }
+            });
+        }
+
+        function GetBirthdayList() {
+            $.ajax({
+                url: "/Home/_BirthdayList",
+                type: "Get",
+                success: function (data) {
+                    if (data.Status) {
+                        $("#BirthdayHTML").empty();
+                        $("#BirthdayHTML").html(data.ViewAsString);
+                    }
+                },
+                error: function (er) {
+                    alert(er);
+
+                }
+            });
+        }
+
+
+    </script>
+
+
+}

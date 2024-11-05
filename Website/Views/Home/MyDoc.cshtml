@@ -1,0 +1,54 @@
+﻿@model  List<EMPDocumentList>
+@{
+    ViewBag.Title = "MyDoc";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="m-t-20">
+    <div class="card">
+
+        <div class="x_panel">
+
+            <div class="card-body">
+                <div class="card-header-title">
+                    <div class="col-md-12">
+                        <h4>My Documents</h4>
+                    </div>
+                </div>
+
+
+                <div class="col-md-12 col-12">
+                    <div class="table-responsive">
+                        <table id="tableEMPDoc" cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Sr. No.</th>
+                                    <th>File Name</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null)
+                                {
+                                    int Count = 0;
+                                    foreach (var item in Model)
+                                    {
+                                        Count++;
+                                        <tr>
+                                            <td>@Count</td>
+                                            <td><a class="anchorclick" title="click here to download" href="@item.FilePath" target="_blank">@item.FileName </a></td>
+                                            <td>@item.Description</td>
+                                        </tr>
+                                    }
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>         

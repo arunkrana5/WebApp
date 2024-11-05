@@ -1,0 +1,346 @@
+﻿@model Tab.Approval
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="table-section">
+    @Html.Partial("ListHeader_Partial", "Sale Approval List")
+
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+
+
+                        @using (Ajax.BeginForm("_SaleApprovalList", "Approvals",
+                                new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Approvals/_SaleApprovalList") },
+                                 new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "OnBegin()", },
+                                    new { @id = "_SaleApprovalListForm" })
+                            )
+                        {
+                            <div class="row">
+                                <div class="col-sm-3 form-group">
+                                    <label>Date <sup>*</sup></label>
+                                    @Html.TextBoxFor(model => model.Month, new { @class = "form-control", @type = "Date" })
+                                    @Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-sm-2 form-group d-flex align-items-end">
+                                    <label class="small">&nbsp;</label>
+                                    <button type="submit" id="btnSearch" name="Command" value="Add" class="button">
+                                        <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="tabmargin">
+                                @Html.HiddenFor(x => x.Approved)
+                                <ul id="tabs" class="nav nav-tabs " role="tablist">
+                                    <li class="nav-item"> <a tabvalue="0" class="nav-link ripplelink AnchorApproval @(Model.Approved == 0 ? "active" : "")" data-toggle="tab" role="tab"> Pending</a> </li>
+                                    <li class="nav-item"> <a tabvalue="1" class="nav-link ripplelink AnchorApproval @(Model.Approved == 1 ? "active" : "") " data-toggle="tab" role="tab">Approved</a></li>
+                                    <li class="nav-item"> <a tabvalue="2" class="nav-link ripplelink AnchorApproval @(Model.Approved == 2 ? "active" : "") " data-toggle="tab" role="tab">Rejected</a></li>
+                                </ul>
+
+                            </div>
+                        }
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="TargetDiv">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="modal fade pop-dgn" id="ViewModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header blk-gdn-btn">
+                    <h4 class="modal-title"><i class="fas fa-print"></i>Sale Approval</h4>
+                    <div class="close" data-dismiss="modal">&times;</div>
+                </div>
+                <div class="modal-body">
+                    <div class="col-sm-12 form-group ">
+                        <label>Reason</label>
+                        <textarea id="A_Reason" name="A_Reason" class="form-control" Placeholder="Reason"></textarea>
+                        <input type="hidden" id="A_SaleEntryID" name="A_SaleEntryID" value="" />
+                        <input type="hidden" id="A_Approved" name="A_Approved" value="" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btnApproval btn btnupdate pull-right"> <i class="fa fa-check" aria-hidden="true"></i>Submit</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="VerifySaleModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="spanVerifySales"></h4>
+                    <div class="close" data-dismiss="modal">&times;</div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <section class="content">
+                                <article class="demo-area">
+                                    <img id="V_Image" class="demo-trigger north">
+                                    <div class="detail"></div>
+                                </article>
+                            </section>
+                            <a id="btnRotate"><i class="fa-solid fa fa-rotate-left"></i></a>
+                        </div>
+                        <div class="col-md-7 ">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+                                    <label>  Invoice No</label>
+                                    <p id="V_InvoiceNo"></p>
+
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+                                    <label>  Invoice Date</label>
+                                    <p id="V_InvoiceDate"></p>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+                                    <label>  Dealer Name</label>
+                                    <p id="V_DealerName"></p>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+                                    <label>  Dealer Code</label>
+                                    <p id="V_DealerCode"></p>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+                                    <label>  Customer Name</label>
+                                    <p id="V_CustomerName"></p>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+                                    <label>  Customer Phone</label>
+                                    <p id="V_CustomerPhone"></p>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+                                    <label> Item </label>
+                                    <p id="V_Item"></p>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+                                    <label> Qty </label>
+                                    <p id="V_Qty"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                            <label> Reason </label>
+                            <textarea id="V_Reason" name="V_Reason" class="form-control" Placeholder="Reason"></textarea>
+                            <input type="hidden" id="V_SaleEntryID" name="V_SaleEntryID" value="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" value="1" class="btnverify btn btnupdate pull-right"> <i class="fa fa-check" aria-hidden="true"></i>Approve</button>
+                    <button type="button" value="2" class="btnverify btn btncancel pull-right"><i class="fa fa-ban" aria-hidden="true"></i>Reject</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+        <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/164071/Drift.min.js"></script>
+
+
+
+
+        <script>
+        function OnBegin() {
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html('<img src="/assets/design/images/loader.gif" class="imgloader" />');
+        }
+        $('#Month').bind("change", function () {
+            $("#btnSearch").click();
+        });
+
+
+        $('.AnchorApproval').on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var att = $(this).attr("tabvalue");
+            $(".AnchorApproval.active").removeClass("active");
+            $(this).addClass("active");
+            $("#Approved").val(att);
+            $("#btnSearch").click();
+        });
+        function OnSuccess(obj) {
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html(obj);
+
+            DatatableScripts();
+        }
+
+        $('#btnRotate').click(function (event) {
+            rotageImage();
+        });
+        function rotageImage() {
+            var img = $('#V_Image');
+            if (img.hasClass('north')) {
+                img.removeClass('north')
+                img.addClass('west')
+            } else if (img.hasClass('west')) {
+                img.removeClass('west')
+                img.addClass('south')
+            } else if (img.hasClass('south')) {
+                img.removeClass('south')
+                img.addClass('east')
+            } else if (img.hasClass('east')) {
+                img.removeClass('east')
+                img.addClass('north')
+            }
+
+            setZoomSetting();
+        }
+
+        function ClickCheck(obj) {
+            var IDs = "";
+            $("input[name=Chksingle]").each(function () {
+                if ($(this).prop('checked') == true) {
+                    IDs += $(this).val() + ",";
+                }
+            });
+            $("input:hidden[name=A_SaleEntryID]").val(IDs);
+        }
+
+        function ShowApprovalBox(obj) {
+            var Approve = $(obj).val();
+            var Ids = $("input:hidden[name=A_SaleEntryID]").val();
+            if (Ids == "") {
+                FailToaster("please select atleast one checkbox");
+            } else {
+                $("input:hidden[name=A_Approved]").val(Approve);
+                $("#ViewModal").modal('show');
+            }
+
+        }
+
+
+        $(".btnApproval").click(function (event) {
+            if ($("#A_Reason").val() == "") {
+                FailToaster("reason can't be blank");
+            }
+            else if ($("#A_Approved").val() == "") {
+                FailToaster("something went wrong.");
+            }
+            else {
+                SubmitApprovalForm($("#A_Approved").val(),"A")
+            }
+        });
+
+        $(".btnverify").click(function (event) {
+            if ($("#V_Reason").val() == "") {
+                FailToaster("reason can't be blank");
+            }
+            else if ($("#V_SaleEntryID").val() == "") {
+                FailToaster("something went wrong.");
+            }
+            else {
+                SubmitApprovalForm($(this).val(),"V")
+            }
+        });
+
+        function SubmitApprovalForm(Approved,Prefix) {
+        var dataObject = JSON.stringify({
+            'ApprovedRemarks': $("#" + Prefix+"_Reason").val(),
+            'Approved': Approved,
+            'SaleEntryIDs': $("#" + Prefix+"_SaleEntryID").val(),
+            'src': EncryptJSON(@ViewBag.MenuID+"*" + "/Approvals/SaleApprove")
+        });
+            $.ajax({
+                url: "/Approvals/SaleApprove",
+                dataType: "json",
+                contentType: 'application/json',
+                type: "Post",
+                data: dataObject,
+                async: false,
+                success: function (data)
+                {
+                    if (data.Status) {
+                        SuccessToaster(data.SuccessMessage);
+                        if (Prefix == "V") {
+                            $('#VerifySaleModal').modal('hide');
+                        } else {
+                            $('#ViewModal').modal('hide');
+                        }
+                        CloseLoadingDialog();
+                        $("#btnSubmit").click();
+                    }
+                    else {
+                        CloseLoadingDialog();
+                        FailToaster(data.SuccessMessage);
+                    }
+
+				},
+				error: function (er) {
+                    CloseLoadingDialog();
+				}
+			});
+        }
+
+
+        function VerfiySales(obj) {
+            $("#V_SaleEntryID").val('');
+            $("#V_Reason").html('');
+            var currentRow = $(obj).closest("tr");
+            var Ap = $(currentRow).find("input:hidden[name=Ap]").val();
+            if (Ap != 0) {
+                $('#VerifySaleModal').find(".modal-footer").hide();
+                $("#V_Reason").html(currentRow.find("td:eq(25)").text())
+            } else {
+                $('#VerifySaleModal').find(".modal-footer").show();
+            }
+            $("#spanVerifySales").html($(currentRow).find("input:hidden[name=N]").val());
+
+            $("#V_Image").attr("src", $(currentRow).find("input:hidden[name=ImgPath]").val());
+            $("#V_Image").attr("data-zoom", $(currentRow).find("input:hidden[name=ImgPath]").val());
+
+            $("#V_SaleEntryID").val($(currentRow).find("input:hidden[name=I]").val());
+            $("#V_InvoiceNo").html(currentRow.find("td:eq(12)").text())
+            $("#V_InvoiceDate").html(currentRow.find("td:eq(13)").text())
+            $("#V_DealerName").html(currentRow.find("td:eq(11)").text())
+            $("#V_DealerCode").html(currentRow.find("td:eq(10)").text())
+            $("#V_CustomerName").html(currentRow.find("td:eq(16)").text())
+            $("#V_CustomerPhone").html(currentRow.find("td:eq(17)").text())
+            $("#V_Item").html(currentRow.find("td:eq(22)").text())
+            $("#V_Qty").html(currentRow.find("td:eq(23)").text())
+
+            $('#VerifySaleModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+            setZoomSetting();
+        }
+        </script>
+        <script>
+            function setZoomSetting() {
+                var demoTrigger = document.querySelector(".demo-trigger");
+                var paneContainer = document.querySelector(".detail");
+
+                new Drift(demoTrigger, {
+                    paneContainer: paneContainer,
+                    inlinePane: false
+                });
+
+            }
+
+        </script>
+    }

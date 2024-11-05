@@ -1,0 +1,31 @@
+﻿@model IList<BirthdayList>
+
+@if (Model.Count > 0)
+{
+    <marquee scrollamount="4" direction="up" onmouseover="this.stop();" onmouseout="this.start();">
+        @foreach (var item in Model)
+        {
+            <div class="row p-2 bdy-1 my-2 bdyBG ">
+                <div class="col-xl-9 col-md-9 col-sm-12">
+                    <div class="d-flex align-items-center">
+                        <img src="@(string.IsNullOrEmpty(item.ImageURL) ? "/assets/design/images/NoPhoto_Male.png" : item.ImageURL)" />
+                        <div class="ml-3">
+                            <p class="mb-1 bday-name">@item.EMPName</p>
+                            <p class="dcode">@item.EMPCode</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </marquee>
+}
+else
+{
+    <div class="row p-2 bdy-1 my-2 bdyBG  " style="height:60px;">
+        <div class="col-xl-9 col-md-9 col-sm-12 d-flex align-items-center">
+            <p>Not anyone's Birthday Today!</p>
+        </div>
+    </div>
+}
+

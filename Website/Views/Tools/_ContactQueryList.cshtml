@@ -1,0 +1,194 @@
+﻿@model IList<ContactUs_Query.List>
+@if (ViewBag.Approved == 0)
+{
+    <div class="table-responsive">
+        <table id="example" class="table table-bordered text-nowrap key-buttons table-hover table-responsive-md table-responsive-sm">
+            <thead>
+                <tr>
+                    <th>S.no.</th>
+
+                    @if (ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                    {
+                        <th>Action</th>
+                    }
+
+                    <th>Doc No</th>
+                    <th>Doc Date</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Category</th>
+                    <th>Subject</th>
+                    <th>Description</th>
+                    <th>Inserted Date</th>
+                    <th>Inserted by</th>
+                    <th>Updated Date</th>
+                    <th>Updated by</th>
+                    <th>IP Address</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @{ int count = 0;}
+                @foreach (ContactUs_Query.List item in Model)
+                {
+                    count++;
+                    <tr>
+                        <td>@count</td>
+
+                        @if (ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                        {
+                            <td>
+
+                                <input type="hidden" name="I" value="@item.ID" />
+                                <input type="hidden" name="N" value="@item.DocNo" />
+                                <a onclick="ShowApprovalBox(this)"> <i class="fa-solid fa-pen-to-square  checkgreen" aria-hidden="true"></i></a>
+                            </td>
+                        }
+
+
+                        <td>@item.DocNo</td>
+                        <td>@item.DocDate</td>
+                        <td>@item.Name</td>
+                        <td>@item.Phone</td>
+                        <td>@item.Email</td>
+                        <td>@item.Category</td>
+                        <td>@item.Subject</td>
+                        <td>@item.Description</td>
+
+                        <td>@item.CreatedDate</td>
+                        <td>@item.CreatedBy</td>
+                        <td>@item.ModifiedDate</td>
+                        <td>@item.ModifiedBy</td>
+                        <td>@item.IPAddress</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else if (ViewBag.Approved == 1)
+{
+    <div class="table-responsive">
+        <table id="example" class="table table-bordered text-nowrap key-buttons">
+            <thead>
+                <tr>
+                    <th>S.no.</th>
+
+                    @if (ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                    {
+                        <th>Action</th>
+                    }
+                    <th>Status</th>
+                    <th>Remarks</th>
+                    <th>Doc No</th>
+                    <th>Doc Date</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Category</th>
+                    <th>Subject</th>
+                    <th>Description</th>
+                    <th>Inserted Date</th>
+                    <th>Inserted by</th>
+                    <th>Updated Date</th>
+                    <th>Updated by</th>
+                    <th>IP Address</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @{ int count = 0;}
+                @foreach (ContactUs_Query.List item in Model)
+                {
+                    count++;
+                <tr>
+                    <td>@count</td>
+                    @if (ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                    {
+                        <td>
+
+
+                            <input type="hidden" name="I" value="@item.ID" />
+                            <input type="hidden" name="N" value="@item.DocNo" />
+                            <a onclick="ShowApprovalBox(this)"> <i class="fa fa-pencil-square-o checkgreen" aria-hidden="true"></i></a>
+
+
+                        </td>
+                    }
+                        <td>@item.Status</td>
+                        <td>@item.Remarks</td>
+                        <td>@item.DocNo</td>
+                        <td>@item.DocDate</td>
+                        <td>@item.Name</td>
+                        <td>@item.Phone</td>
+                        <td>@item.Email</td>
+                        <td>@item.Category</td>
+                        <td>@item.Subject</td>
+                        <td>@item.Description</td>
+
+                        <td>@item.CreatedDate</td>
+                        <td>@item.CreatedBy</td>
+                        <td>@item.ModifiedDate</td>
+                        <td>@item.ModifiedBy</td>
+                        <td>@item.IPAddress</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table id="example" class="table table-bordered text-nowrap key-buttons table-responsive-sm table-responsive-md">
+            <thead>
+                <tr>
+                    <th>S.no.</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
+                    <th>Doc No</th>
+                    <th>Doc Date</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Category</th>
+                    <th>Subject</th>
+                    <th>Description</th>
+                    <th>Inserted Date</th>
+                    <th>Inserted by</th>
+                    <th>Updated Date</th>
+                    <th>Updated by</th>
+                    <th>IP Address</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @{ int count = 0;}
+                @foreach (ContactUs_Query.List item in Model)
+                {
+                    count++;
+                    <tr>
+                        <td>@count</td>
+                        <td>@item.Status</td>
+                        <td>@item.Remarks</td>
+                        <td>@item.DocNo</td>
+                        <td>@item.DocDate</td>
+                        <td>@item.Name</td>
+                        <td>@item.Phone</td>
+                        <td>@item.Email</td>
+                        <td>@item.Category</td>
+                        <td>@item.Subject</td>
+                        <td>@item.Description</td>
+
+                        <td>@item.CreatedDate</td>
+                        <td>@item.CreatedBy</td>
+                        <td>@item.ModifiedDate</td>
+                        <td>@item.ModifiedBy</td>
+                        <td>@item.IPAddress</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

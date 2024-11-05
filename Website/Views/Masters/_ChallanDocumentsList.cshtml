@@ -1,0 +1,65 @@
+﻿@model IList<ChallanDocuments.List>
+
+<div class="table-responsive">
+
+    <table id="example" class="table table-bordered text-nowrap key-buttons">
+        <thead>
+            <tr>
+                <th>S.no.</th>
+                <th>Action</th>
+                <th>Year Month</th>
+                <th>State</th>
+
+                <th>Challan Type</th>
+                <th>Attachment</th>
+                <th>Inserted Date</th>
+                <th>Inserted by</th>
+                <th>Updated Date</th>
+                <th>Updated by</th>
+                <th>IP Address</th>
+
+            </tr>
+
+        </thead>
+        <tbody>
+            @{ int count = 0;}
+            @foreach (ChallanDocuments.List item in Model)
+            {
+                count++;
+            <tr>
+                <td>@count</td>
+                <td>
+                    <input type="hidden" name="I" value="@item.ChallanID" />
+                    <input type="hidden" name="N" value="@item.ChallanType" />
+
+
+                    @if (ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                    {
+                        @Html.Raw(item.IsActive == true
+                  ? "<a  data-toggle='tooltip' data-original-title='Click to DeActivate' list='Challan_IsActive' OP='0' class='AIsActive' > <i class='fa fa-circle-check' aria-hidden='true'></i></a>"
+                  : "<a data-toggle='tooltip' data-original-title='Click to Activate' list='Challan_IsActive' OP='1'  class='AIsActive' > <i class='fa fa-circle-xmark' aria-hidden='true'></i></a>")
+
+                <a title="Edit" onclick="ListHeaderAdd(@item.ChallanID);" data-toggle='tooltip'> @*<i class="fa fa-pencil-square-o checkgreen" aria-hidden="true"></i>*@ <i class="fa-solid fa-pen-to-square  checkgreen"></i> </a>
+                    }
+
+                </td>
+                <td>@item.Date</td>
+                <td>@item.StateName</td>
+                <td>@item.ChallanType</td>
+                <td>
+                    @if (item.AttachmentID > 0)
+                    {
+                        <a href="@item.AttachmentPath" target="_blank">View Document</a>
+                    }
+                </td>
+                <td>@item.CreatedDate</td>
+                <td>@item.CreatedBy</td>
+                <td>@item.ModifiedDate</td>
+                <td>@item.ModifiedBy</td>
+                <td>@item.IPAddress</td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+</div>

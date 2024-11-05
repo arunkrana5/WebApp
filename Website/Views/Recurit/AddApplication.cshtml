@@ -1,0 +1,128 @@
+﻿@model Requirement.Application.Add
+
+<div class="table-section px-3 py-2 client-form">
+    <div class="page-header">
+        <div class="page-leftheader">
+            <h4 class="page-title ml-2 mt-1">Add Application</h4>
+        </div>
+
+    </div>
+    @using (Ajax.BeginForm("AddApplication", "Recurit",
+            new { src = ViewBag.src },
+             new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+                new { @id = "AddApplicationForm", @enctype = "multipart/form-data" })
+        )
+    {
+        @Html.HiddenFor(model => model.ApplicationID)
+        @Html.HiddenFor(model => model.ReqID)
+        <div class="card">
+            <div class="card-body">
+                <div class="row client-form">
+                    <div class="col-lg-2 form-group">
+                        <label>Name</label>
+                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-lg-2 form-group">
+                        <label>Mobile Number   </label>
+                        @Html.TextBoxFor(model => model.Phone, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-lg-2 form-group">
+                        <label>Email </label>
+                        @Html.TextBoxFor(model => model.EmailID, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.EmailID, "", new { @class = "text-danger" })
+                    </div>
+
+
+                    <div class="col-lg-2 form-group">
+                        <label>Qualification   </label>
+                        @Html.TextBoxFor(model => model.Qualification, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Qualification, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-2 form-group">
+                        <label>Experience   </label>
+                        @Html.TextBoxFor(model => model.Experience, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Experience, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-2 form-group">
+                        <label>Salary   </label>
+                        @Html.TextBoxFor(model => model.Salary, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Salary, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-2 form-group">
+                        <label>Previous Company   </label>
+                        @Html.TextBoxFor(model => model.PreviousCompany, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.PreviousCompany, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-2 form-group">
+                        <label>Upload  </label>
+                        @Html.HiddenFor(model => model.AttachID)
+                        @Html.TextBoxFor(x => x.Upload, new { @type = "file" })
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-lg-12 mt-3 text-right">
+                        <button type="submit" class="btn btn-act btn-primary client-save">Submit</button>
+                        <a href="@Url.Action("AllRequestsList",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*/Recurit/AllRequestsList") })" type="button" class="btn   client-close ">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+
+    <div class="row">
+        <div class="col-md-12">
+            <div>Application List</div>
+            <div id="TargetDiv"></div>
+        </div>
+    </div>
+</div>
+@section scripts    {
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+
+    <script>
+        $(document).ready(function () {
+            GetRequestApplicationList();
+        });
+
+        function OnSuccess(obj) {
+            CloseLoadingDialog();
+            if (obj.Status) {
+                SuccessToaster(obj.SuccessMessage);
+                GetRequestApplicationList();
+                $('#AddApplicationForm').trigger("reset");
+            }
+            else {
+                FailToaster(obj.SuccessMessage);
+
+            }
+        }
+
+
+         function GetRequestApplicationList() {
+             var ReqID = $("#ReqID").val();
+			$.ajax({
+                url: "/Recurit/_RequestApplicationList",
+                type: "Get",
+                data: { src: EncryptJSON(@ViewBag.MenuID+"*/Recurit/_RequestApplicationList*" + ReqID) },
+                success: function (data)
+                {
+                    $("#TargetDiv").empty();
+                    $("#TargetDiv").html(data);
+				},
+				error: function (er) {
+					alert(er);
+				}
+			});
+            }
+
+
+    </script>
+}

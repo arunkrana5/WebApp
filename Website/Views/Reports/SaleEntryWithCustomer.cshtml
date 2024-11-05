@@ -1,0 +1,91 @@
+﻿@model Tab.Approval
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="table-section">
+    @Html.Partial("ListHeader_Partial", "Sale Entry With Customer")
+
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+
+
+                        @using (Ajax.BeginForm("_SaleEntryWithCustomer", "Reports",
+                                 new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Reports/_SaleEntryWithCustomer") },
+                                  new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+                                     new { @id = "_SaleEntryWithCustomerForm" })
+                             )
+                        {
+                        <div class="row">
+                            <div class="col-sm-3 form-group">
+                                <label>Start Date <sup>*</sup></label>
+                                @Html.TextBoxFor(model => model.StartDate, new { @class = "form-control", @type = "Date" })
+                                @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-3 form-group">
+                                <label>End Date <sup>*</sup></label>
+                                @Html.TextBoxFor(model => model.EndDate, new { @class = "form-control", @type = "Date" })
+                                @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-2 form-group d-flex align-items-end pt-1">
+                                <label class="small">&nbsp;</label>
+                                <button type="submit" id="btnSubmit" name="Command" value="Add" class="button ">
+                                    <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
+                                </button>
+                            </div>
+                        </div>
+                        }
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="TargetDiv">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    </div>
+
+
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+        <script>
+          function ListHeaderExport() {
+             var url = "/Export/SaleEntryWithCustomerReport_Export";
+             var StartDate = $("#StartDate").val();
+             var EndDate = $("#EndDate").val();
+             var src = EncryptJSON(@ViewBag.MenuID+"*" + url + "*" + StartDate + "*" + EndDate)
+            window.location.href = url + "?src=" + src;
+    }
+
+
+
+        $('#Month').bind("change", function () {
+            $("#btnSearch").click();
+        });
+
+
+        function OnSuccess(obj) {
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html(obj);
+            CloseLoadingDialog();
+            ExportTableDatatableScripts();
+        }
+
+
+        </script>
+
+    }

@@ -1,0 +1,104 @@
+﻿@model List<Attendance_Log.Daily>
+<div class="table-responsive">
+    <table id="ExportTable" class="table table-bordered text-nowrap key-buttons inoutrpt table-hover doubleH" >
+        <thead>
+            <tr>
+                <th colspan="20"></th>
+                <th colspan="4">IN</th>
+                <th colspan="4">OUT</th>
+            </tr>
+            <tr>
+                <th>S No.</th>
+                <th>Image</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Phone</th>
+                <th>Department</th>
+                <th>Designation</th>
+                <th>DOJ</th>
+                <th>Role</th>
+                <th>Region</th>
+                <th>State</th>
+                <th>City</th>
+                <th>Area</th>
+
+                <th>Dealer Name</th>
+                <th>Dealer Code</th>
+                <th>Dealer Type</th>
+                <th>Branch Name</th>
+              
+
+                <th>Title</th>
+                <th>Working</th>
+                <th>Time</th>
+                <th>Image</th>
+                <th>Distance</th>
+                <th>Time</th>
+                <th>Image</th>
+                <th>Distance</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ int Rowcount = 0;}
+            @foreach (var item in Model)
+            {
+                Rowcount++;
+            <tr>
+                <td>@Rowcount</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.EMPImageURL))
+                    {
+                        <a href="@item.EMPImageURL" target="_blank">
+                            <img class="img-responsive listimage" src="@item.EMPImageURL" />
+                        </a>
+                    }
+
+                </td>
+                <td>@item.EMPCode</td>
+                <td>@item.EMPName</td>
+                <td>@item.Gender</td>
+                <td>@item.Phone</td>
+                <td>@item.DeptName</td>
+                <td>@item.DesignName</td>
+                <td>@item.DOJ</td>
+                <td>@item.Role</td>
+                <td>@item.Region</td>
+                <td>@item.State</td>
+                <td>@item.City</td>
+                <td>@item.Area</td>
+                <td>@item.DealerName</td>
+                <td>@item.DealerCode</td>
+                <td>@item.DealerType</td>
+                <td>@item.BranchName</td>
+               
+                
+                <td>@item.Title</td>
+                <td>@item.Working</td>
+                <td>@item.In_Time</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.In_Image))
+                    {
+                        <a href="@item.In_Image" target="_blank">
+                            <img class="img-responsive listimage" src="@item.In_Image" />
+                        </a>
+                    }
+
+                </td>
+                <td>@item.In_PunchDistance</td>
+
+                <td>@item.Out_Time</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Out_Image))
+                    {
+                        <a href="@item.Out_Image" target="_blank">
+                            <img class="img-responsive listimage" src="@item.Out_Image" />
+                        </a>
+                    }
+                </td>
+                <td>@item.Out_PunchDistance</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

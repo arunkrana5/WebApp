@@ -1,0 +1,85 @@
+﻿@model Tab.Approval
+
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+
+<div class="table-section">
+    @Html.Partial("ListHeader_Partial", "MTD Reports")
+
+
+
+    <div class="card">
+
+        <div class="x_panel">
+            <div class="card-body">
+
+                @using (Ajax.BeginForm("_MTDReportList", "Reports",
+                   new { src = ClsCommon.Encrypt(ViewBag.MenuID.ToString() + "*/Reports/_MTDReportList") },
+                     new AjaxOptions { HttpMethod = "POST", OnSuccess = "BindTarget", OnBegin = "OnBegin()" },
+               new { @id = "_MTDReportListFrom" })
+               )
+                {
+                <div class="row">
+                    <div class="col-sm-3 form-group">
+                        <label>Month <sup>*</sup></label>
+                        @Html.TextBoxFor(model => model.Month, new { @class = "form-control", @type = "Month" })
+                        @Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-sm-2 form-group d-flex align-items-end pt-1">
+                        <label class="small">&nbsp;</label>
+                        <button type="submit" id="btnSubmit" name="Command" value="Add" class="button ">
+                            <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
+                        </button>
+                    </div>
+
+                </div>
+                }
+                <div class="row">
+                    <div class="col-lg-12 ">
+
+                        <div id="TargetDiv">
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+        <script>
+        function ListHeaderExport() {
+            var url = "/Export/MTDReport_Export";
+            var src = EncryptJSON(@ViewBag.MenuID+"*" + "/Export/MTDReport_Export*" + $('#Month').val())
+            window.location.href = url + "?src=" + src;
+            //let table = document.querySelector("#ExportTable");
+            //TableToExcel.convert(table);
+        }
+        function OnBegin() {
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html('<img src="/assets/design/images/loader.gif" class="imgloader" />');
+        }
+
+        function BindTarget(args) {
+            CloseLoadingDialog();
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html(args);
+            ExportTableDatatableScripts();
+        }
+
+        $('#Month').bind("change", function () {
+            $("#btnSearch").click();
+        });
+        </script>
+    }

@@ -1,0 +1,256 @@
+﻿@model  Tab.Approval
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="table-section">
+    @Html.Partial("ListHeader_Partial", "My Client Visit List")
+
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+
+
+                        @using (Ajax.BeginForm("_MyVisit", "ClientVisit",
+                                new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*/ClientVisit/_MyVisit") },
+                                 new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccessList", OnBegin = "OnBegin()" },
+                                    new { @id = "_MyVisitForm" })
+                            )
+                        {
+
+                            <div class="row">
+                                <div class="col-sm-3 col-md-4 col-lg-4 form-group">
+                                    <label>Month <sup>*</sup></label>
+                                    @Html.TextBoxFor(model => model.Month, new { @class = "form-control", @type = "Month" })
+                                    @Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-sm-3 col-md-3 col-lg-4 d-flex align-items-center mt-1">
+                                    <label class="small">&nbsp;</label>
+                                    <button type="submit" id="btnSearch" name="Command" value="Add" class=" button ">
+                                        <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
+                                    </button>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="TargetDivList"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <div class="modal fade pop-dgn" id="ViewModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id="TagetDiv"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section scripts    {
+    @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+    <script>
+        function OnBegin() {
+            $("#TargetDivList").empty();
+            $("#TargetDivList").html('<img src="/assets/design/images/loader.gif" class="imgloader" />');
+        }
+        $(document).ready(function () {
+            $("#btnSearch").click();
+        });
+        $('#Month').bind("change", function () {
+            $("#btnSearch").click();
+        });
+        function OnSuccessList(obj) {
+            $("#TargetDivList").empty();
+            $("#TargetDivList").html(obj);
+            CloseLoadingDialog();
+            DatatableScripts();
+        }
+
+        function ListHeaderAdd(ID)
+        {
+            if (ID == undefined) {
+                ID = 0;
+            }
+            var PageName = (ID==0 ? "_AddVisitCheckIn" : "_AddVisitCheckOut");
+			$.ajax({
+                url: "/ClientVisit/" + PageName,
+                type: "Get",
+                data: { src: EncryptJSON(@ViewBag.MenuID+"*/ClientVisit/" + PageName +"*" + ID) },
+                success: function (data)
+                {
+                    $("#TagetDiv").empty();
+                    $("#TagetDiv").html(data);
+                    $('#ViewModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    })
+                     var form = $("form")
+                .removeData("validator")
+                .removeData("unobtrusiveValidation");
+                    $.validator.unobtrusive.parse(form);
+
+
+                    setInterval(function () {
+                        GetLiveTime();
+                    }, 1000);
+
+                    $(".applyselect").select2();
+                    getLocation();
+				},
+				error: function (er) {
+					alert(er);
+
+				}
+			});
+            }
+
+        function GetLiveTime() {
+            $.ajax({
+                url: "/CommonAjax/GetDateTimeJson",
+                type: "Post",
+                async: true,
+                success: function (data) {
+                    $(".spnlivedate").html(data);
+                }
+            });
+        }
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                $("#MTargetDiv").empty();
+                $("#MTargetDiv").html("Please turn on the Location by setting");
+
+            }
+        }
+
+        function showPosition(position) {
+            $("#Latitude").val(position.coords.latitude);
+            $("#Longitude").val(position.coords.longitude);
+            $("#Location").val($("#Latitude").val() + "," + $("#Longitude").val());
+        }
+
+        function showError(error) {
+            var Message = "";
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    Message = "User denied the request for Geolocation.";;
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    Message = "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    Message = "The request to get user location timed out.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    Message = "An unknown error occurred.";
+                    break;
+            }
+            $("#Error").val(Message);
+            $("#WarningText").empty();
+            $("#WarningText").html(Message);
+            $('#MarkAttendenceModal').modal('hide');
+            $('#WarningModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            })
+
+        }
+
+
+     
+        function SendMyLocation() {
+            debugger
+            var Location = $("#Location").val();
+            var Latitude = $("#Latitude").val();
+            var Longitude = $("#Longitude").val();
+            var Error = $("#Error").val();
+            var Notes = "Check-In-Out";
+
+            var dataObject = JSON.stringify({
+                'Location': Location,
+                'Latitude': Latitude,
+                'Longitude': Longitude,
+                'Error': Error,
+                'Notes': Notes
+            });
+            $.ajax({
+                url: "/CommonAjax/SetUserCurrent_LocationJson",
+                type: "Post",
+                contentType: 'application/json',
+                data: dataObject,
+                success: function (data) {
+                    if (data.Status) {
+                        SuccessToaster(data.SuccessMessage);
+                    }
+                    else {
+                        FailToaster(data.SuccessMessage);
+                    }
+                },
+                error: function (er) {
+                    alert(er);
+                }
+            });
+        }
+
+        function AddVisitOnSuccess(obj) {
+            if (obj.Status) {
+                SuccessToaster(obj.SuccessMessage);
+                CloseLoadingDialog();
+                $("#btnSearch").click();
+                $('#ViewModal').modal('hide');
+            }
+            else {
+                CloseLoadingDialog();
+                FailToaster(obj.SuccessMessage);
+
+            }
+        }
+
+
+            function fnIsMasterDealer() {
+                var checkAll = $("#chk_IsMasterDealer").is(":checked");
+                if (checkAll) {
+                    $("#IsMasterDealer").val(1);
+                    $("#divDealerlist").show();
+                    $("#DealerName").val("will be Autofilled")
+                }
+                else {
+                    $("#IsMasterDealer").val(0);
+                    $("#divDealerlist").hide();
+                    $("#DealerName").val("")
+                    $("#DealerID").val("")
+                }
+        }
+        function fnIsNoSale() {
+            var checkAll = $("#chk_IsNoSale").is(":checked");
+            if (checkAll) {
+                $("#IsNoSale").val(1);
+            }
+            else {
+                $("#IsNoSale").val(0);
+            }
+        }
+
+    </script>
+
+}

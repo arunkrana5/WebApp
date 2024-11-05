@@ -1,0 +1,348 @@
+﻿@model EMPTalentPool.Filter 
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="table-section">
+
+    @Html.Partial("ListHeader_Partial", "Employee Talent Pool")
+
+    <div class="row p-2">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+                        <input type="hidden" id="hdnImportUrl" name="hdnImportUrl" value="@Url.Action("EMPTalentPoolImport",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Masters/EMPTalentPoolImport") })" />
+                        <input type="hidden" id="hdnAddUrl" name="hdnAddUrl" value="@Url.Action("AddEMPTalentPool",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Masters/AddEMPTalentPool*0") })" />
+                        <div class="row p-2">
+
+                            <div class="col-md-2">
+                                @Html.DropDownListFor(model => model.States, new SelectList(Model.StateList, "ID", "Name"), "Select State",
+                                new { @class = "form-control applyselect", @onchange = "FillCity(this)" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.DropDownListFor(model => model.City, new SelectList(Model.CityList, "ID", "Name"), "Select City",
+                                new { @class = "form-control applyselect" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.DropDownListFor(model => model.Pincodes, new SelectList(Model.PinCodeList, "Name", "Name"), "Select Pincode",
+                                new { @class = "form-control applyselect" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.DropDownListFor(model => model.Counters, new SelectList(Model.CountersList, "Name", "Name"), "Select Counters",
+                                new { @class = "form-control applyselect" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.DropDownListFor(model => model.Location, new SelectList(Model.LocationList, "Name", "Name"), "Select Location",
+                                new { @class = "form-control applyselect" })
+                            </div>
+                            <div class="col-md-2">
+                                <label class="small">&nbsp;</label>
+                                <button type="submit" id="btnSearch" name="Command" value="Add" class="button ">
+                                    <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="tabmargin">
+                            @Html.HiddenFor(x => x.Approved)
+                            <ul id="tabs" class="nav nav-tabs " role="tablist">
+                                <li class="nav-item"> <a tabvalue="0" class="nav-link ripplelink AnchorApproval @(Model.Approved == 0 ? "active" : "")" data-toggle="tab" role="tab"> Pending</a> </li>
+                                <li class="nav-item"> <a tabvalue="1" class="nav-link ripplelink AnchorApproval @(Model.Approved == 1 ? "active" : "") " data-toggle="tab" role="tab">Approved</a></li>
+                                <li class="nav-item"> <a tabvalue="2" class="nav-link ripplelink AnchorApproval @(Model.Approved == 2 ? "active" : "") " data-toggle="tab" role="tab">Rejected</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                        <div class="row">
+                            <div class="col-lg-12 ">
+                                <div class="table-responsive">
+                                    <table id="tblDataTable" class="table table-bordered table-hover text-nowrap key-buttons">
+                                        <thead>
+                                            <tr>
+
+                                                <th>DocNo</th>
+                                                <th>Action</th>
+                                                <th>Doc No</th>
+                                                <th>Name</th>
+                                                <th>Mobile</th>
+                                                <th>Email</th>
+                                                <th>DOB</th>
+                                                <th>Age</th>
+                                                <th>CounterName</th>
+                                                <th>Location</th>
+                                                <th>State Name</th>
+                                                <th>Pincode</th>
+                                                <th>TotalExperience</th>
+                                                <th>CurrentCompany</th>
+                                                <th>TenureWithCompany</th>
+                                                <th>CurrentSalary</th>
+                                                <th>ExpectedSalary</th>
+                                                <th>Inserted Date</th>
+                                                <th>Inserted by</th>
+                                                <th>Updated Date</th>
+                                                <th>Updated by</th>
+                                                <th>IP Address</th>
+                                                <th>Entry Source</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="row" id="ApprovalDiv">
+                            @if (ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                            {
+                                <div class="col-sm-12 d-flex justify-content-end  my-3">
+                                    <button type="button" class="btn apr-btn btnProcess" onclick="ShowApprovalBox(this)" name="Command" value="1">
+                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                        Approve
+                                    </button>
+                                    <button type="button" class="btn rct-btn btnProcess" onclick="ShowApprovalBox(this)" name="Command" value="2">
+                                        <i class="fa fa-ban" aria-hidden="true"></i>
+                                        Reject
+                                    </button>
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<div class="modal fade pop-dgn" id="ViewModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header blk-gdn-btn">
+                <h4 class="modal-title"><span class="mx-1"> <i class="fas fa-print"></i> </span>EMP Talent Pool Approval</h4>
+                <div class="close" data-dismiss="modal">&times;</div>
+            </div>
+            <div class="modal-body">
+
+                @using (Ajax.BeginForm("EMP_TalentPoolApprove", "Masters",
+                    new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Masters/EMP_TalentPoolApprove") },
+                     new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnTalentPoolSuccess", OnBegin = "ShowLoadingDialog()" },
+                        new { @id = "EMP_TalentPoolApproveForm" })
+                )
+                {
+                    <div class="col-sm-12 form-group ">
+                        <label>Reason</label>
+                        <textarea name="ApprovedRemarks" class="form-control" Placeholder="Reason"></textarea>
+                        <input type="hidden" name="Command" value="" />
+                        <input type="hidden" name="TPIDs" value="" />
+                    </div>
+                    <div class="col-sm-12 text-center mt-3">
+                        <button type="button" class="btn cnl-btn ripplelink " data-dismiss="modal"><i class="fa fa-times"></i>Close</button>
+                        <button type="submit" class="btn apr-btn ">
+                            <i class="fa fa-check" aria-hidden="true"></i>
+                            Submit
+                        </button>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+
+</div>
+@section scripts    {
+    @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+    <script>
+            function ListHeaderExport() {
+                var url = "/Export/EMPTalentPoolList";
+                var src = EncryptJSON(@ViewBag.MenuID+"*" + "/Export/EMPTalentPoolList*" + $('#Month').val())
+        window.location.href = url + "?src=" + src;
+}
+
+        $('.AnchorApproval').on('click', function (e) {
+
+            e.preventDefault();
+            e.stopPropagation();
+            var att = $(this).attr("tabvalue");
+            $(".AnchorApproval.active").removeClass("active");
+            $(this).addClass("active");
+            $("#Approved").val(att);
+            if (att == 0) {
+                $("#ApprovalDiv").show();
+            } else {
+                $("#ApprovalDiv").hide();
+            }
+            $("#btnSearch").click();
+        });
+
+        $('#btnSearch').click(function () {
+            BindDataTable();
+        });
+
+     
+        $(document).ready(function () {
+            $("#btnSearch").click();
+        });
+
+        function BindDataTable()
+        {
+            var Approved = $("#Approved").val();
+            var AllStates = $("#States").find("option:selected").val();
+            var AllCity = $("#City").find("option:selected").val();
+            var AllPincodes = $("#Pincodes").find("option:selected").val();
+            var AllCounters = $("#Counters").find("option:selected").val();
+            var AllLocation = $("#Location").find("option:selected").val();
+         var src = EncryptJSON(@ViewBag.MenuID+"*/Masters/_EMPTalentPoolList*" + Approved)
+         $('#tblDataTable').DataTable({
+         "destroy": true,
+         "processing": true,
+         "serverSide": true,
+         "ajax": {
+             url: "/Masters/_EMPTalentPoolList?src=" + src,
+             type: "post",
+             data: { "Approved": Approved, "States": AllStates, "City": AllCity, "Pincodes": AllPincodes, "Counters": AllCounters, "Location": AllLocation },
+         },
+             "columns": [
+              {
+                     className: 'TPID',
+                     data: 'TPID',
+                    render: function (data, type,row) {
+
+                        if (type === 'display') {
+                            let HTML = `<input type='hidden' name='I' value="${row.TPID}" /><input type='hidden' name='N' value="${row.DocNo}" />`
+                            HTML += `<a title="Show Details" OP="EMPTalentpool" onclick="ShowMasterDetails(this)" data-toggle="tooltip">${row.DocNo}</a>`;
+                            return HTML
+                        }
+                        return data;
+                     }
+                 },
+                 {
+                     className: 'TPID',
+                     data: 'ApprovedRemarks',
+                     render: function (data, type, row) {
+
+                         if (type === 'display' && Approved == 0) {
+                             let edit = EncryptJSON(@ViewBag.MenuID+"*/Masters/AddEMPTalentPool*" + row.TPID);
+                             let HTML = `<a title="Edit" href="/Masters/AddEMPTalentPool?src=${edit}" data-toggle="tooltip"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i> </a>`;
+                             HTML += '<a onclick="DeleteEntry(this)" title="Delete Request" class="remove"><i class="fa fa-trash red-clr" aria-hidden="true"></i></a>'
+                             HTML += `&nbsp; <input type="checkbox" class="newwidth Chksingle" id="checkAll_${row.TPID}" name="Chksingle" value="${row.TPID}" /><label for="checkAll_${row.TPID}"></label>`
+
+                             return HTML
+                         }
+                         return data;
+                     }
+                 },
+             { "data": "DocNo" },
+             { "data": "Name" },
+             { "data": "Mobile" },
+             { "data": "Email" },
+             { "data": "DOB" },
+             { "data": "Age" },
+             { "data": "CounterName" },
+                 { "data": "Location" },
+                 { "data": "StateName" },
+             { "data": "Pincode" },
+             { "data": "TotalExperience" },
+             { "data": "CurrentCompany" },
+             { "data": "TenureWithCompany" },
+             { "data": "CurrentSalary" },
+             { "data": "ExpectedSalary" },
+             { "data": "CreatedDate" },
+             { "data": "CreatedBy" },
+             { "data": "ModifiedDate" },
+             { "data": "ModifiedBy" },
+             { "data": "IPAddress" },
+             { "data": "EntrySource" }
+     ]
+ });
+
+ }
+
+    function DeleteEntry(obj) {
+        var ID = $(obj).closest("tr").find("input:hidden[name=I]").val();
+        var Name = $(obj).closest("tr").find("input:hidden[name=N]").val();
+        var Msg = 'Are you sure want to delete ' + Name + ' ?';
+        ConfirmMsgBox(Msg, '', function () {
+            if (ID) {
+                var myobj = DelRecordJson(ID, 'EMPTalentPool');
+                if (!myobj.Status) {
+                    FailToaster(myobj.SuccessMessage);
+
+                } else {
+                    SuccessToaster(myobj.SuccessMessage);
+                    $("#btnSearch").click();
+
+                }
+            }
+        });
+
+    }
+
+    function ShowApprovalBox(obj) {
+        var Approve = $(obj).val();
+        var IDs = "";
+        $("input[name=Chksingle]").each(function () {
+            if ($(this).prop('checked') == true) {
+                IDs += $(this).val() + ",";
+            }
+        });
+        $("input:hidden[name=TPIDs]").val(IDs);
+        if (IDs == "") {
+            FailToaster("please select atleast one checkbox");
+        } else {
+            $("input:hidden[name=Command]").val(Approve);
+            $("#ViewModal").modal('show');
+        }
+
+    }
+
+    function OnTalentPoolSuccess(obj) {
+        CloseLoadingDialog();
+        if (obj.Status) {
+            SuccessToaster(obj.SuccessMessage);
+            $("#ViewModal").modal('hide');
+            $("input:hidden[name=TPIDs]").val('');
+            $("input:hidden[name=ApproveRemarks]").val('');
+            $("#btnSearch").click();
+        }
+        else {
+
+            FailToaster(obj.SuccessMessage);
+
+        }
+    }
+
+
+        function FillCity() {
+            var ID = $("#States").find("option:selected").val();
+            if (ID != '') {
+                var data = GetDropDownList(ID, "EMPTalentPool_City");
+                if (data != '') {
+                    $("#City").empty();
+                    $("#City").append($("<option />").val("").text("Select"));
+                    $(data).each(function () {
+                        $("#City").append($("<option />").val(this.ID).text(this.Name));
+                        $("#City").select2();
+                    });
+                    CloseLoadingDialog();
+                } else {
+                    $("#City").empty();
+                    $("#City").append($("<option />").val("").text("Select"));
+
+                }
+            }
+            else {
+                $("#City").empty();
+                $("#City").append($("<option />").val("").text("Select"));
+            }
+
+
+
+
+        }
+
+    </script>
+
+}

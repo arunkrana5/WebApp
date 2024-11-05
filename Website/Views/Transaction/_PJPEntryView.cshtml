@@ -1,0 +1,204 @@
+﻿@model PJPEntry.Add
+
+
+
+<div class="page-header">
+    <div class="page-leftheader">
+        <h4 class="page-title">PJP Entry</h4>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-lg-12 ">
+        @if (Model.SSR_EMPID == 0)
+        {
+            <div class="card">
+
+                <h3 class="card-title"><small style="color:red">You Have Marked Entry With No SSR</small></h3>
+
+                <div class="card-body pb-2">
+                    <div class="row">
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-12 form-group textareapjp">
+                            <label>Note </label>
+                            <p>@Model.Notes</p>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-12 form-group fileuploadpjp">
+                            <a target="_blank" href="@Model.AttachmentPath">
+                                <img class="img-responsive" src="@Model.AttachmentPath" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">SSR Details </h3>
+                </div>
+                <div class="card-body pb-2">
+                    <div class="row">
+
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-12 form-group">
+                            <label>SSR Availability on Location  </label>
+                            <p>  @Model.SSRAvailability</p>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-12 form-group">
+                            <label>SSR Code<sup>*</sup></label>
+                            <p>@Model.SSR_Code</p>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-12 form-group">
+                            <label>SSR Name<sup>*</sup></label>
+                            <p>@Model.SSR_Name</p>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-12 form-group">
+                            <label>Attendence Punched by SSSR </label>
+                            <p>@Model.AttPunchedBySSR</p>
+                        </div>
+
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-12 form-group textareapjp">
+                            <label>Note </label>
+                            <p>@Model.Notes</p>
+
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-12 form-group fileuploadpjp">
+                            <a target="_blank" href="@Model.AttachmentPath">
+                                <img class="listimage" src="@Model.AttachmentPath" />
+                            </a>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Performance Rating</h3>
+                </div>
+                <div class="card-body pb-2">
+                    <div class="row starmain">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-12 form-group">
+                            <label class="starhead">Product Knowledege </label>
+                            <div class="rate">
+                                @for (int i = 0; i < Model.ProductRating; i++)
+                                {
+                                    <input type="radio" id="pstar_@i" disabled="disabled" checked />
+                                    <label for="pstar_@i" title="text">5 stars</label>
+                                }
+                            </div>
+                            <p>@Model.ProductKnw</p>
+
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-12 form-group">
+                            <label class="starhead">Customer Dealing </label>
+                            <div class="rate">
+                                @for (int i = 0; i < Model.CustomerRating; i++)
+                                {
+                                    <input type="radio" id="cstar_@i" disabled="disabled" checked />
+                                    <label for="cstar_@i" title="text">5 stars</label>
+                                }
+                            </div>
+                            <p>@Model.CustomerKnw</p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Expense Details</h3>
+            </div>
+            <div class="card-body pb-2">
+                <div class="row">
+
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-12 form-group">
+                        <label>Amount</label>
+                        <p>  @Model.ExpenseAmt</p>
+                    </div>
+                    <div class="col-lg-7 col-md-7 col-sm-7 col-12 form-group">
+                        <label>Remarks</label>
+                        <p>@Model.ExpenseRemarks</p>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-12 form-group fileuploadpjp">
+                        @if (!string.IsNullOrEmpty(Model.ExpenseAttachmentPath))
+                        {
+                            <a target="_blank" href="@Model.ExpenseAttachmentPath">
+                                <img class="listimage" src="@Model.ExpenseAttachmentPath" />
+                            </a>
+                        }
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Competitor Entry</h3>
+            </div>
+            <div class="card-body pb-2">
+                <div class="row row-sm">
+                    <div class="col-md-12 col-12">
+                        <div class="table-responsive">
+                            <table id="tableBrand" cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th width="100">Sr. No.</th>
+                                        <th>Brand</th>
+                                        <th width="100">Qty</th>
+                                        <th width="300">Image</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.BrandEntryList != null)
+                                    {
+                                        int Count = 0;
+                                        foreach (var item in Model.BrandEntryList)
+                                        {
+                                            Count++;
+                                            <tr>
+                                                <td>
+                                                    <label id="lbl_@Count"> @Count</label>
+                                                </td>
+                                                <td>
+                                                    @item.BrandName
+                                                </td>
+                                                <td>
+                                                    @item.Qty
+                                                </td>
+                                                <td>
+                                                    @if (item.AttachID > 0)
+                                                    {
+                                                        <a target="_blank" href="@item.AttachPath"> <img class="listimage" src="@item.AttachPath" /></a>
+                                                    }
+                                                </td>
+
+                                            </tr>
+                                        }
+
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

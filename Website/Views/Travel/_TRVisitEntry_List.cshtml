@@ -1,0 +1,49 @@
+﻿@model IList<VisitEntry.List>
+<div class="table-responsive">
+    <table id="example" class="table table-bordered table-hover table-wrapper-scroll-y my-custom-scrollbar table-striped text-nowrap key-buttons">
+        <thead>
+            <tr>
+                <th>S.no.</th>
+                <th>Action</th>
+                <th>Visit Date</th>
+                <th>Dealer Code</th>
+                <th>Dealer Name</th>
+                <th>SSR Name</th>
+                <th>SSR Code</th>
+                <th>Expense Amt</th>
+                <th>Inserted Date</th>
+                <th>IP Address</th>
+
+            </tr>
+
+        </thead>
+        <tbody>
+            @{ int count = 0;}
+            @foreach (VisitEntry.List item in Model)
+            {
+                count++;
+                <tr>
+                    <td>@count</td>
+                    <td>
+
+                        <input type="hidden" name="I" value="@item.VisitID" />
+                        <input type="hidden" name="N" value="@item.SSR_Name" />
+                        <a title="View" onclick="ViewVisitEntry(this);" data-toggle='tooltip'> <i class="fa fa-eye-slash checkgreen" aria-hidden="true"></i> </a>
+
+                    </td>
+                    <td>@item.VisitDate</td>
+                    <td>@item.DealerCode </td>
+                    <td>@item.DealerName</td>
+                    <td>@item.SSR_Name</td>
+                    <td>@item.SSR_Code</td>
+                   
+                    <td>@item.ExpenseAmt</td>
+
+                    <td>@item.CreatedDate</td>
+                    <td>@item.IPAddress</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>

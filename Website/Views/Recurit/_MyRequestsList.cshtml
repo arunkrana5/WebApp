@@ -1,0 +1,85 @@
+﻿@model List<Requirement.RequestList>
+<div class="table-section">
+    <div class="row">
+        <div class="col-xl-12 table-responsive">
+            <table id="example" class="table table-bordered text-nowrap key-buttons table-responsive-sm">
+                <thead>
+                    <tr>
+                        <th>SNo.</th>
+                        @if (ViewBag.Approved == 0)
+                        {
+                            <th>Action</th>
+                        }
+                        <th>Status</th>
+                        <th>Application Offered</th>
+                        <th>Request No.</th>
+                        <th>Request Date</th>
+                        <th>Hired Type</th>
+                        <th>Dealer Name</th>
+                        <th>Region</th>
+                        <th>State</th>
+                        <th>Branch</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int count = 0;}
+                    @foreach (var item in Model)
+                    {
+                        count++;
+                        <tr>
+                            <td>
+                                <input type="hidden" name="I" value="@item.ReqID" />
+                                <input type="hidden" name="N" value="@item.RequestNo" />
+                                @count
+                            </td>
+                            @if (ViewBag.Approved == 0)
+                            {
+                                <td>
+                                    @if (item.Approved == 0 && item.ApplicationOffered == 0)
+                                    {
+
+                                        <a onclick="DeleteRequest(this)" title="Delete Request" data-toggle='tooltip' data-original-title="Delete Request" class="remove"><i class="fa fa-trash red-clr" aria-hidden="true"></i></a>
+                                    }
+                                </td>
+                            }
+                            <td>
+                                <a title="click here to view status" onclick="ViewStatus(this)">View Status</a>
+                            </td>
+                            <td class="text-green">
+                                @if (item.Approved == 0)
+                                {
+                                    <a title="Add" href="@Url.Action("AddApplication", new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*/Recurit/AddApplication*" + item.ReqID) })" data-toggle='tooltip'> @item.ApplicationOffered </a>
+                                }
+                                else
+                                {
+                                    <span> @item.ApplicationOffered </span>
+                                }
+                            </td>
+                            
+                            <td class="text-red">
+                                @if (item.Approved == 0 && item.ApplicationOffered > 0)
+                                {
+                                    <a title="View" href="@Url.Action("ApprovedApplication", new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*/Recurit/ApprovedApplication*" + item.ReqID) })" data-toggle='tooltip'> @item.RequestNo </a> }
+                                else
+                                {
+                                    <a title="View" href="@Url.Action("ViewCompleteRequirement", new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*/Recurit/ViewCompleteRequirement*" + item.ReqID) })" data-toggle='tooltip'> @item.RequestNo </a>
+                                }
+                            </td>
+
+                            <td>@item.RequestDate</td>
+                            <td>@item.HiredBy</td>
+                            <td>@item.DealerName</td>
+                            <td>@item.Region</td>
+                            <td>@item.Region</td>
+                            <td>@item.Branch</td>
+
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

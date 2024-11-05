@@ -1,0 +1,223 @@
+﻿
+
+@{
+    ViewBag.Title = "SaleEntryImport";
+}
+
+
+@model IList<SaleEntry_Import.List>
+
+
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+
+<div class="table-section">
+
+    <div class="page-header">
+        <div class="page-leftheader">
+            <h4 class="page-title py-3 px-2">Sale Entry Import List</h4>
+            <div class="page-leftheader-btn">
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card salesEnt">
+
+        <div class="row">
+
+
+            <div class="col-md-12">
+                <div class="card-body">
+                    @using (Ajax.BeginForm("SaleEntry_Import", "Transaction",
+new { src = ViewBag.src },
+          new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+             new { @id = "SaleEntry_ImportForm", @enctype = "multipart/form-data" })
+)
+                    {
+
+                        <div class="row">
+                            <div class="col-lg-3 col-md-4 col-sm-4 form-group">
+                                <label>Sheet Name<sup>*</sup></label>
+                                <input type="text" class="form-control" @(ViewBag.ListCount > 0 ? "disabled" : "") value="Sheet1" id="txtSheet" name="txtSheet">
+                            </div>
+                            <div class="col-lg-3 col-md-4 col-sm-4 form-group">
+                                <label>Upload File<sup>*</sup></label>
+                                <input type="file" class="form-control" @(ViewBag.ListCount > 0 ? "disabled" : "") id="FileUpload_Excel" name="FileUpload_Excel">
+                            </div>
+
+                            <div class="col-lg-6 col-md-4 col-sm-4 form-group loaddownbtn">
+                                <button type="submit" class="btn btnupdate" @(ViewBag.ListCount > 0 ? "disabled" : "") onclick="return FindExtension();" name="Command" value="ImportData"><i class="fa fa-spinner"></i> Load</button>
+                                
+                                    <a class="btn-dsf" href="~/Attachments/ImportSample/SaleEntrySample.xlsx" target="_blank"><i class="fa fa-download"></i> Download Sample File</a>
+                                    @*btn btndefault*@
+                                
+                            </div>
+
+                        </div>
+
+
+                        <div class="row py-2">
+                            <div class="col-md-12 col-sm-12 col-xs-12"><h4>Imported data</h4></div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="btn-rt-temp">
+                                    <button type="submit" class="btn  client-save bg-red pull-left" @(ViewBag.ListCount > 0 ? "" : "disabled") name="Command" onclick="return ConfirmClearData();" value="ClearData"><i class="fa fa-trash"></i> Clear List</button>
+                                    <button id="Aimport" class="btn bg-primary client-save pull-left" @(ViewBag.ListCount > 0 ? "" : "disabled") name="Command" onclick="return ConfirmImportData();" value="UploadData"><i class="fa-solid fa-file-import"></i> Import</button>
+                                    @*btnupdate*@
+                                    <a href="@Url.Action("SaleEntryList",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Transaction/SaleEntryList") })" type="button" class=" btn-imp  pull-right"> Back to List</a> @*btndefault  btn-sm*@ 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+
+                    }
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="example" class="table table-bordered text-nowrap key-buttons">
+                            <thead>
+                                <tr>
+                                    <th>S.no.</th>
+                                    <th>Remarks</th>
+                                    <th>Doc No</th>
+                                    <th>User Remarks</th>
+                                    <th>EMP Code</th>
+                                    <th>Branch Code</th>
+                                    <th>Dealer Code</th>
+                                    <th>Date</th>
+                                    <th>Invoice Date</th>
+                                    <th>Invoice No</th>
+                                    <th>Item Code</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                    <th>Serial No</th>
+                                    <th>Installation No</th>
+                                    <th>Payment Mode</th>
+                                    <th>Is Exchange</th>
+                                    <th>Customer Name</th>
+                                    <th>Customer Phone</th>
+                                    <th>Customer Email</th>
+                                    <th>Customer Country</th>
+                                    <th>Customer State</th>
+                                    <th>Customer City</th>
+                                    <th>Customer Location</th>
+                                    <th>Customer Address</th>
+                                    <th>Customer Pincode</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ int Count = 0;}
+                                @foreach (var item in Model)
+                                {
+                                    Count++;
+                                    <tr>
+                                        <td>@Count</td>
+                                        <td style="@(("Inserted Successfully,Updated Successfully").Contains(item.Remarks)?"color:green":"color:red")">@item.Remarks</td>
+                                        <td>@item.DocNo</td>
+                                        <td>@item.UserRemarks</td>
+
+                                        <td>@item.EMPCode</td>
+                                        <td>@item.BranchCode</td>
+                                        <td>@item.DealerCode</td>
+                                        <td>@item.Date</td>
+                                        <td>@item.InvoiceDate</td>
+                                        <td>@item.InvoiceNo</td>
+                                        <td>@item.ItemCode</td>
+                                        <td>@item.Qty</td>
+                                        <td>@item.Price</td>
+                                        <td>@item.SerialNo</td>
+                                        <td>@item.InstallationNo</td>
+                                        <td>@item.PaymentMode</td>
+                                        <td>@item.IsExchange</td>
+                                        <td>@item.CustomerName</td>
+                                        <td>@item.CustomerPhone</td>
+                                        <td>@item.CustomerEmail</td>
+                                        <td>@item.CustomerCountry</td>
+                                        <td>@item.CustomerState</td>
+                                        <td>@item.CustomerCity</td>
+                                        <td>@item.CustomerLocation</td>
+                                        <td>@item.CustomerAddress</td>
+                                        <td>@item.CustomerPincode</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section scripts    {
+    @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+    <script>
+
+        function FindExtension() {
+            var hdnFileLoad = '';
+            var len = document.getElementById('FileUpload_Excel').value.length;
+            var len2 = document.getElementById('txtSheet').value;
+            hdnFileLoad = document.getElementById('FileUpload_Excel').value.substr(len - 4, 4);
+            if (len2 == "") {
+                FailToaster('Please write sheet name.');
+                return false;
+            } else {
+                if (len > 0) {
+                    if (hdnFileLoad == 'xlsx' || hdnFileLoad == '.xls') {
+                        return true;
+                    }
+                    else {
+                        FailToaster('You can only upload .xlsx or .xls file.');
+                        return false;
+                    }
+                }
+                else {
+                    FailToaster('Please upload file.');
+                    return false;
+                }
+            }
+
+        }
+        function ConfirmClearData() {
+            if (confirm('Are you sure want to delete data.')) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        function ConfirmImportData() {
+            if (confirm('Are you sure want to Import data.')) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        function OnSuccess(obj) {
+            
+            if (obj.Status) {
+               
+                SuccessToaster(obj.SuccessMessage);
+                window.location.reload(true);
+            }
+            else {
+                CloseLoadingDialog();
+                FailToaster(obj.SuccessMessage);
+
+            }
+        }
+    </script>
+
+}
+
+
+

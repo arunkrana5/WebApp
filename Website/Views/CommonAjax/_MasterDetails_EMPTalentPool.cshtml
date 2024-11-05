@@ -1,0 +1,44 @@
+﻿@using System.Data
+@model  DataSet
+
+<div class="masterdetails">
+
+    @foreach (DataRow dtRow in Model.Tables[0].Rows)
+    {
+        <div class="row">
+            @foreach (DataColumn dc in Model.Tables[0].Columns)
+            {
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="floatingInput">@dc.ColumnName</label>
+                        <p>@dtRow[dc.ColumnName]</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+  
+    <h4 class="page-title font-sm">Documents Details</h4>
+    <div class="row">
+        @foreach (DataRow dtRow in Model.Tables[1].Rows)
+        {
+
+            foreach (DataColumn dc in Model.Tables[1].Columns)
+            {
+                if (dc.ColumnName.ToLower().Contains("image"))
+                {
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <a href="@dtRow[dc.ColumnName]" target="_blank">
+                                <img src="@dtRow[dc.ColumnName]" class="img-responsive listimage" />
+                            </a>
+                        </div>
+                    </div>
+
+                }
+            }
+
+        }
+    </div>
+</div>

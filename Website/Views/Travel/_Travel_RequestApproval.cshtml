@@ -1,0 +1,107 @@
+﻿@model IList<Travel.List>
+
+
+
+<div class="table-responsive">
+
+    <table id="example" class="table table-bordered  table-hover table-wrapper-scroll-y my-custom-scrollbar table-striped text-nowrap key-buttons">
+
+        <thead>
+            <tr>
+                <th>S.no.</th>
+                @if (ViewBag.Approved == 0)
+                {
+                    <th>Action</th>
+                }
+                <th>Name</th>
+                <th>Code</th>
+                <th>Doc No</th>
+                <th>Doc Date</th>
+                <th>From City</th>
+                <th>To City</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Mode</th>scope="col"
+                <th>Remarks</th>
+                @if (ViewBag.Approved > 0)
+                {
+                    <th>Status</th>
+                    <th>Approved Remarks</th>
+                    <th>Approved By</th>
+                    <th>Approved Date</th>
+                }
+
+                <th>IP Address</th>
+
+            </tr>
+
+        </thead>
+        <tbody>
+            @{ int count = 0;}
+            @foreach (Travel.List item in Model)
+            {
+                count++;
+                <tr >
+                    <td >
+                        @count
+                        <input type="hidden" name="I" value="@item.TRID" />
+                        <input type="hidden" name="N" value="@item.DocNo" />
+                    </td>
+                    @if (ViewBag.Approved == 0)
+                    {
+                        <td >
+                            @if (item.Approved == 0 && ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                            {
+
+                                <input type="checkbox" class="newwidth" id="checkAll_@item.TRID" name="Chksingle" onclick="ClickCheck(this);" value="@item.TRID" />
+                                <label for="checkAll_@item.TRID"></label>
+
+                            }
+                        </td>
+                    }
+                    <td >@item.EMPName</td>
+                    <td >@item.EMPCode</td>
+                    <td >@item.DocNo</td>
+                    <td >@item.DocDate</td>
+                    <td >@item.FromCity</td>
+                    <td >@item.ToCity</td>
+                    <td >@item.StartDate</td>
+                    <td >@item.EndDate</td>
+
+                    <td >@item.TravelMode</td>
+                    <td >@item.Remarks</td>
+                    @if (ViewBag.Approved > 0)
+                    {
+                        <td >@item.Status</td>
+                        <td >@item.ApprovedRemarks</td>
+                        <td >@item.ApprovedBy</td>
+                        <td >@item.ApprovedDate</td>
+
+                    }
+
+                    <td >@item.IPAddress</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+    <div class="row">
+        @if (ClsApplicationSetting.GetSessionValue("Modify") == "True" && Model.Count > 0 && Model.Any(x => x.Approved == 0))
+        {
+            <div class=" text-center mt-3">
+                <button type="button" class="btn apr-btn btnProcess" onclick="ShowApprovalBox(this)" name="Command" value="1">
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                    Approve
+                </button>
+                <button type="button" class="btn rct-btn btnProcess" onclick="ShowApprovalBox(this)" name="Command" value="2">
+                    <i class="fa fa-ban" aria-hidden="true"></i>
+                    Reject
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+
+
+

@@ -1,0 +1,92 @@
+﻿@model DealerChangeRequest.Add
+
+
+@using (Ajax.BeginForm("_StoreShufflingAdd", "Operations",
+        new { src = ViewBag.src },
+         new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+            new { @id = "_StoreShufflingAddForm" })
+    )
+{
+
+
+    @Html.HiddenFor(x => Model.ChangeID)
+<div class="row p-2">
+    <div class="col-lg-3 form-group">
+        <label> Employee <sup>*</sup> </label>
+        @Html.DropDownListFor(n => n.EMPID, new SelectList(Model.EMPList, "ID", "Name", Model.EMPID), "Select",
+         new { @class = "form-control mb-0  applyselect" })
+        @Html.ValidationMessageFor(model => model.EMPID, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-3 form-group">
+        <label> Dealer Category </label>
+        @Html.DropDownListFor(n => n.DealerCategoryID, new SelectList(Model.DealerCategoryList, "ID", "Name", Model.DealerCategoryID), "Select",
+         new { @class = "form-control mb-0  applyselect" })
+        @Html.ValidationMessageFor(model => model.DealerCategoryID, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-lg-3 form-group">
+        <label> Dealer Type  </label>
+        @Html.DropDownListFor(n => n.DealerTypeID, new SelectList(Model.DealerTypeList, "ID", "Name", Model.DealerTypeID), "Select",
+         new { @class = "form-control mb-0  applyselect" })
+        @Html.ValidationMessageFor(model => model.DealerTypeID, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-lg-3 form-group">
+        <label> Region  </label>
+        @Html.DropDownListFor(n => n.RegionID, new SelectList(Model.RegionList, "ID", "Name", Model.RegionID), "Select",
+        new { @class = "form-control  applyselect", @onchange = "FillState()" })
+        @Html.ValidationMessageFor(model => model.RegionID, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-3 form-group">
+        <label> State </label>
+        <input type="hidden" id="hdnStateID" value="@Model.StateID" />
+        @Html.DropDownListFor(n => n.StateID, new SelectList(Model.StateList, "ID", "Name", Model.StateID), "Select",
+ new { @class = "form-control mb-0  applyselect", @onchange = "FillCity()" })
+        @Html.ValidationMessageFor(model => model.StateID, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-3 form-group">
+        <label>  City  </label>
+        <input type="hidden" id="hdnCityID" value="@Model.CityID" />
+        @Html.DropDownListFor(n => n.CityID, new SelectList(Model.CityList, "ID", "Name", Model.CityID), "Select",
+new { @class = "form-control mb-0  applyselect", @onchange = "FillArea()" })
+        @Html.ValidationMessageFor(model => model.CityID, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-lg-3 form-group">
+        <label>   Area  </label>
+        <input type="hidden" id="hdnAreaID" value="@Model.AreaID" />
+        @Html.DropDownListFor(n => n.AreaID, new SelectList(Model.AreaList, "ID", "Name", Model.AreaID), "Select",
+new { @class = "form-control mb-0  applyselect", @onchange = "GetDealerSearch()" })
+        @Html.ValidationMessageFor(model => model.AreaID, "", new { @class = "text-danger" })
+
+    </div>
+    <div class="col-lg-3 form-group">
+        <label> &nbsp;    </label>
+        <a onclick="GetDealerSearch()" class="btn btn-success" style="text-align: center; margin-top: 20px;">Search Dealer</a>
+    </div>
+
+    <div class="col-lg-6 form-group">
+        <label> Dealer <sup>*</sup> </label>
+        @Html.DropDownListFor(n => n.NewDealerID, new SelectList(Model.DealerList, "ID", "Name", Model.NewDealerID), "Select",
+         new { @class = "form-control mb-0  applyselect" })
+        @Html.ValidationMessageFor(model => model.NewDealerID, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-lg-3 form-group">
+        <label>Change Date  <sup>*</sup></label>
+        @Html.TextBoxFor(model => model.ChangeDate, new { @class = "form-control", @type = "Date" })
+        @Html.ValidationMessageFor(model => model.ChangeDate, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+        <label>Reason  <sup>*</sup></label>
+        @Html.TextAreaFor(model => model.Reason, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Reason, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-lg-12 form-group text-right">
+        <button type="submit" class="btn client-save btn-primary" name="Command" value="Add"> Submit</button>
+    </div>
+
+</div>
+}

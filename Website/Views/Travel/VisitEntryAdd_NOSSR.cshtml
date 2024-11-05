@@ -1,0 +1,478 @@
+﻿@model VisitEntry.AddWithNoSSR
+
+@section style{
+    @Html.IncludeVersionedCss(Url.Content("../assets/design/plugins/fileupload/css/fileupload.css"))
+
+}
+
+@{
+
+    if (Model.BrandEntryList == null || Model.BrandEntryList.Count == 0)
+    {
+        List<VisitEntry_Brand.List> bList = new List<VisitEntry_Brand.List>();
+        bList.Add(new VisitEntry_Brand.List());
+        Model.BrandEntryList = bList;
+    }
+
+
+}
+
+<div class="table-section">
+    <div class="page-header">
+        <div class="page-leftheader">
+            <h4 class="page-title">Visit Entry (@ViewBag.DocNo)</h4>
+        </div>
+
+    </div>
+
+    @using (Ajax.BeginForm("VisitEntryAdd_NOSSR", "Travel",
+        new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Travel/VisitEntryAdd_NOSSR*" + ViewBag.TRID + "*" + ViewBag.DocNo + "*" + ViewBag.DealerID + "*" + ViewBag.SSRTourPlanID) },
+             new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+                new { @id = "VisitEntryAddForm", @enctype = "multipart/form-data" })
+        )
+    {
+        <div class="row">
+
+            <div class="col-lg-12 ">
+                <div class="card">
+                    <div class="card-header">
+                        <small style="color:red">You Are Marking Entry With No SSR</small>
+                    </div>
+                    <div class="card-body pb-2">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-12 form-group">
+                                <label>Dealer </label>
+                                @Html.HiddenFor(model => model.TRID)
+                                @Html.DropDownListFor(n => n.DealerID, new SelectList(Model.DealerList, "ID", "Name", Model.DealerID), "Select",
+         new { @class = "form-control  applyselect", @onchange = "GoValues(this)" })
+                                @Html.ValidationMessageFor(model => model.DealerID, "", new { @class = "text-danger" })
+                                <a onclick="AddMoreDealer(this)">Add More Dealer</a>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-12 form-group ">
+                                <label>Contact Person Name </label>
+                                @Html.TextAreaFor(model => model.ContactPerson_Name, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-12 form-group ">
+                                <label>Contact Person Phone </label>
+                                @Html.TextAreaFor(model => model.ContactPerson_Phone, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-lg-6 form-group" style="display:none;">
+                                <label>Location  <sup>*</sup></label>
+                                @Html.TextBoxFor(model => model.Location, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger" })
+                                @Html.ValidationMessageFor(model => model.Latitude, "", new { @class = "text-danger" })
+
+                                @Html.HiddenFor(model => model.Latitude)
+                                @Html.HiddenFor(model => model.Longitude)
+                                @Html.HiddenFor(model => model.Error)
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-12 form-group textareapjp">
+                                <label>Note </label>
+                                @Html.TextAreaFor(model => model.Notes, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-12 form-group camerabtn">
+                                <a title="click here for open camera" onclick="OpenCamera(this)" style="color: #fff">
+                                    <i class="fa fa-camera" aria-hidden="true"></i>
+                                </a>
+
+                                <img class="img-responsive" src="~/assets/design/images/NoImage.jpg" />
+                                @Html.HiddenFor(model => model.ImageBase64String, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ImageBase64String, "", new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Expense Details</h3>
+                    </div>
+                    <div class="card-body pb-2">
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-12 form-group textareapjp">
+                                <label>Amount </label>
+                                @Html.TextBoxFor(model => model.ExpenseAmt, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ExpenseAmt, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-lg-7 col-md-7 col-sm-7 col-12 form-group textareapjp">
+                                <label>Remarks </label>
+                                @Html.TextAreaFor(model => model.ExpenseRemarks, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ExpenseRemarks, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-12 form-group camerabtn">
+                                @Html.HiddenFor(x => x.ExpenseAttachmentID)
+                                @Html.TextBoxFor(x => x.ExpenseUpload, new { @class = "dropify", @type = "file", @accept = "image/jpeg,image/png,image/jpg,jpeg|png|jpg" })
+                                @Html.ValidationMessageFor(model => model.ExpenseUpload, "", new { @class = "text-danger" })
+
+                                @if (Model.ExpenseAttachmentID > 0)
+                                {
+                                    <img class="mx-auto img-responsive avatar-crop" alt="img" src="@Model.ExpenseAttachmentPath?V=@DateTime.Now.ToString("mm:ss")">
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Competitor Entry</h3>
+                    </div>
+                    <div class="card-body pb-2">
+                        <div class="row row-sm">
+                            <div class="col-md-12 col-12">
+                                <div class="table-responsive">
+                                    <table id="tableBrand" cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th width="100">Sr. No.</th>
+                                                <th>Brand</th>
+                                                <th width="100">Qty</th>
+                                                <th width="300">Upload</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.BrandEntryList != null)
+                                            {
+                                                int Count = 0;
+                                                for (int i = 0; i < Model.BrandEntryList.Count; i++)
+                                                {
+                                                    Count++;
+                                                    <tr>
+                                                        <td>
+                                                            <label id="lbl_@Count"> @Count</label>
+                                                            @Html.HiddenFor(model => Model.BrandEntryList[i].VisitBrandID, new { @class = "hdnID" })
+                                                            @Html.HiddenFor(model => Model.BrandEntryList[i].AttachID)
+                                                            @Html.HiddenFor(model => Model.BrandEntryList[i].BrandName, new { @class = "hdnName" })
+                                                        </td>
+                                                        <td>
+                                                            @Html.DropDownListFor(n => Model.BrandEntryList[i].BrandID, new SelectList(Model.BrandList, "ID", "Name", Model.BrandEntryList[i].BrandID), "Select", new { @class = "form-control  applyselect" })
+                                                            @Html.ValidationMessageFor(model => Model.BrandEntryList[i].BrandID, "", new { @class = "text-danger" })
+                                                        </td>
+                                                        <td>
+                                                            @Html.TextBoxFor(model => Model.BrandEntryList[i].Qty, new { @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => Model.BrandEntryList[i].Qty, "", new { @class = "text-danger" })
+                                                        </td>
+                                                        <td>
+                                                            <div class="col-lg-12 form-group camerabtn">
+                                                                <a title="click here for open camera" onclick="OpenCamera(this,'back')" style="color: #fff">
+                                                                    <i class="fa fa-camera" aria-hidden="true"></i>
+                                                                </a>
+                                                                <input type="hidden" id="@Html.IdFor(x=>Model.BrandEntryList[i].ImageBase64String)" name="@Html.NameFor(x=>Model.BrandEntryList[i].ImageBase64String)" value="" />
+                                                                <img class="img-responsive" src="~/assets/design/images/NoImage.jpg" />
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            @if (Count == 1)
+                                                            {
+
+
+                                                                <a class="remove"><i class="fa fa-window-close" aria-hidden="true"></i></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a onclick="DeleteRow(this)" class="remove"><i class="fa fa-window-close red-clr" aria-hidden="true"></i></a>
+                                                            }
+
+                                                        </td>
+                                                    </tr>
+                                                }
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                    <div class="text-right">
+                                        <a onclick="AddNewRow(this)" class="btn btn-indigo">Add Row</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 form-group">
+
+                        @if ((Model.VisitID ?? 0) == 0)
+                        {
+                            <a onclick="getLocation();" class="btn btn-indigo">Refresh Location</a>
+                            <button type="submit" class="btn btn-indigo" name="Command" value="Add"><i class="fa fa-paper-plane" aria-hidden="true"></i> Update</button>
+                        }
+                        <a href="@Url.Action("TravelRequestsWiseVisitEntry_List",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Travel/TravelRequestsWiseVisitEntry_List*"+Model.TRID+"*"+ViewBag.DocNo) })" type="button" class="btn btn-sm  close-btn">cancel</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    </div>
+
+    <div class="modal fade pop-dgn" id="ViewModal">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+
+                <div class="modal-header blk-gdn-btn">
+                    <h4 class="modal-title"><i class="fas fa-print"></i>Add On Demand Dealer </h4>
+                    <div class="close" data-dismiss="modal">&times;</div>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div id="TagetDiv"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+        @Html.IncludeVersionedJs(Url.Content("/assets/design/plugins/fileupload/js/dropify.js"))
+        @Html.IncludeVersionedJs(Url.Content("/assets/design/js/filupload.js"))
+        <script>
+              function GoValues(obj) {
+            var DocNo = '@ViewBag.DocNo';
+            var TRID = $("#TRID").val();
+            var SSRTourPlanID = $("#SSRTourPlanID").find("option:selected").val();
+            var DealerID = $("#DealerID").find("option:selected").val();
+            if (!SSRTourPlanID) {
+                SSRTourPlanID = 0;
+            }
+            var URL = "/Travel/VisitEntryAdd";
+            var src = "src=" + EncryptJSON(@ViewBag.MenuID+"*" + "/Travel/VisitEntryAdd*" + TRID + "*" + DocNo+"*" + DealerID + "*" + SSRTourPlanID)
+            window.location.href = URL + "?" + src;
+        }
+            $(document).ready(function () {
+                getLocation();
+            });
+
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition, showError);
+                } else {
+                    FailToaster("Geolocation is not supported by this browser.");
+
+                }
+            }
+            function showPosition(position) {
+                $("#Latitude").val(position.coords.latitude);
+                $("#Longitude").val(position.coords.longitude);
+                $("#Location").val($("#Latitude").val() + "," + $("#Longitude").val());
+            }
+
+            function showError(error) {
+                var Message = "";
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        Message = "User denied the request for Geolocation.";;
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        Message = "Location information is unavailable.";
+                        break;
+                    case error.TIMEOUT:
+                        Message = "The request to get user location timed out.";
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        Message = "An unknown error occurred.";
+                        break;
+                }
+                $("#Error").val(Message);
+                $("#WarningText").empty();
+                $("#WarningText").html(Message);
+                $('#MarkAttendenceModal').modal('hide');
+                $('#WarningModal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                })
+            }
+
+
+            function DeleteBrandEntry(obj) {
+                var hdnID = $(obj).closest('tr').find('.hdnID').val();
+                var hdnName = $(obj).closest('tr').find('.hdnName').val();
+                var Msg = 'Are you sure want to delete ' + hdnName + ' ?';
+                ConfirmMsgBox(Msg, '', function () {
+                    if (hdnID) {
+                        var myobj = DelRecordJson(hdnID, 'VisitBrandEntry');
+                        if (!myobj.Status) {
+                            FailToaster(myobj.SuccessMessage);
+
+                        } else {
+                            SuccessToaster(myobj.SuccessMessage);
+
+                            DeleteRow(obj)
+                        }
+                    }
+                });
+
+            }
+
+
+
+            // add new Row
+            function AddNewRow() {
+                var LastTRCount = parseInt($('#tableBrand').find("tbody tr").length) - 1;
+                $('.applyselect').select2("destroy");
+                var $tableBody = $('#tableBrand').find("tbody"),
+                    $trLast = $tableBody.find("tr:last"),
+                    $trNew = $trLast.clone();
+                $trNew.find("td:last").html('<a onclick="DeleteRow(this)" class="remove" data-toggle="tooltip" data-original-title="Remove"><i class="fa fa-window-close red-clr" aria-hidden="true"></i></a>');
+
+
+                $trNew.find("label").each(function () {
+                    $(this).attr({
+                        'id': function (_, id) { var arr = id.split('_'); return id.replace(arr[1], LastTRCount + 1); },
+                    });
+                    $(this).html(parseInt($('#tableBrand').find("tbody tr").length) + 1);
+                });
+
+                $trNew.find("input").each(function (i) {
+                    $(this).attr({
+                        'id': function (_, name) { return name.replace('_' + LastTRCount + '_', '_' + (parseInt(LastTRCount) + 1) + '_'); },
+                        'name': function (_, name) { return name.replace('[' + LastTRCount + ']', '[' + (parseInt(LastTRCount) + 1) + ']'); },
+                    });
+
+                });
+
+                $trNew.find("select").each(function (i) {
+                    $(this).attr({
+                        'id': function (_, name) { return name.replace('_' + LastTRCount + '_', '_' + (parseInt(LastTRCount) + 1) + '_'); },
+                        'name': function (_, name) { return name.replace('[' + LastTRCount + ']', '[' + (parseInt(LastTRCount) + 1) + ']'); },
+                    });
+                    $(this).val('');
+                });
+
+                $trNew.find("span").each(function (i) {
+                    if ($(this).attr("data-valmsg-for")) {
+                        $(this).attr({
+                            'data-valmsg-for': function (_, name) { return name.replace('[' + LastTRCount + ']', '[' + (parseInt(LastTRCount) + 1) + ']'); }
+                        });
+                    }
+                    if ($(this).attr("for")) {
+                        $(this).attr({
+                            'for': function (_, name) { return name.replace('_' + LastTRCount + '_', '_' + (parseInt(LastTRCount) + 1) + '_'); }
+                        });
+                    }
+                });
+
+                $trLast.after($trNew);
+                var form = $("#VisitEntryAddForm").closest("form");
+                form.removeData('validator');
+                form.removeData('unobtrusiveValidation');
+                $.validator.unobtrusive.parse(form);
+                $(".applyselect").select2();
+            }
+
+
+            function DeleteRow(obj) {
+                var count = 0;
+                var TotalRowCount = $('#tableBrand').find("tbody tr").length;
+                ConfirmMsgBox("Are you sure want to delete", '', function () {
+
+                    $(obj).closest('tr').remove();
+                    $("#tableBrand TBODY TR").each(function (i) {
+                        $(this).closest("tr").find("label").each(function () {
+                            $(this).attr({
+                                'id': function (_, id) { var arr = id.split('_'); return id.replace(arr[1], i); },
+                            });
+                            $(this).html(i + 1)
+                        });
+
+
+                        $(this).closest("tr").find("input").each(function () {
+                            $(this).attr({
+                                'id': function (_, id) { return id.replace('_' + (parseInt(i) + 1) + '_', '_' + i + '_'); },
+                                'name': function (_, name) { return name.replace('[' + (parseInt(i) + 1) + ']', '[' + i + ']'); },
+                            });
+
+                        });
+
+                        $(this).closest("tr").find("select").each(function () {
+                            $(this).attr({
+                                'id': function (_, id) { return id.replace('_' + (parseInt(i) + 1) + '_', '_' + i + '_'); },
+                                'name': function (_, name) { return name.replace('[' + (parseInt(i) + 1) + ']', '[' + i + ']'); },
+                            });
+
+                        });
+
+
+
+                        $(this).closest("tr").find("span").each(function () {
+                            if ($(this).attr("data-valmsg-for")) {
+                                $(this).attr({
+                                    'data-valmsg-for': function (_, name) { return name.replace('[' + (parseInt(i) + 1) + ']', '[' + i + ']'); },
+                                });
+                            }
+                            if ($(this).attr("for")) {
+                                $(this).attr({
+                                    'for': function (_, id) { return id.replace('_' + (parseInt(i) + 1) + '_', '_' + i + '_'); },
+                                });
+                            }
+                        });
+                    });
+                    var form = $("#VisitEntryAddForm").closest("form");
+                    form.removeData('validator');
+                    form.removeData('unobtrusiveValidation');
+                    $.validator.unobtrusive.parse(form);
+
+                })
+            }
+
+            function OnSuccess(obj) {
+                if (obj.Status) {
+                    SuccessToaster(obj.SuccessMessage);
+                    window.location.href = obj.RedirectURL;
+                }
+                else {
+                    CloseLoadingDialog();
+                    FailToaster(obj.SuccessMessage);
+
+                }
+            }
+
+
+        function AddMoreDealer(ID) {
+        var TRID = $("#TRID").val();
+			$.ajax({
+                url: "/Travel/_AddMoreTravelDealer",
+                type: "Get",
+                data: { src: EncryptJSON(@ViewBag.MenuID+"*" + "/Travel/_AddMoreTravelDealer*" + TRID+"*1") },
+                success: function (data)
+                {
+                    $("#TagetDiv").empty();
+                    $("#TagetDiv").html(data);
+                    $('#ViewModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    })
+                    $(".applyselect").select2();
+                     var form = $("form")
+                .removeData("validator")
+                .removeData("unobtrusiveValidation");
+                    $.validator.unobtrusive.parse(form);
+				},
+				error: function (er) {
+					alert(er);
+				}
+			});
+    }
+
+        function OnAddMoreSuccess(obj) {
+            if (obj.Status) {
+                SuccessToaster(obj.SuccessMessage);
+                window.location.reload();
+            }
+            else {
+                CloseLoadingDialog();
+                FailToaster(obj.SuccessMessage);
+
+            }
+        }
+
+        </script>
+    }

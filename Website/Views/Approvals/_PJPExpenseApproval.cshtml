@@ -1,0 +1,131 @@
+﻿
+@model IList<PJPExpense.List>
+
+    <div class="table-responsive">
+        <table id="example" class="table table-bordered table-responsive  table-hover">
+            @*text-nowrap key-buttons table-wrapper-scroll-y my-custom-scrollbar table-striped  border-primary table-striped table-scroll*@
+            <thead>
+                <tr>
+                    <th>S.no.</th>
+                    @if (ViewBag.Approved == 0)
+                    {
+                        <th>
+                            <input type="checkbox" class="newwidth" id="checkAll" onclick="chkAll();" name="ChkAll" value="All" />
+                            <label for="checkAll"></label>
+                        </th>
+                    }
+                    <th>Visit_Date</th>
+                    <th>Image</th>
+                    <th>BT_Code</th>
+                    <th>BT_Name</th>
+                    <th>Dealer_Name</th>
+                    <th>Dealer_Code</th>
+                    <th>Dealer_Type</th>
+                    <th>SSR_Name</th>
+                    <th>SSR_Code</th>
+                    <th> Region </th>
+                    <th>State</th>
+                    <th>City</th>
+                    <th>Area</th>
+                    <th>Purpose_Visit </th>
+                    <th>Amount  </th>
+                    <th>Remarks  </th>
+                    <th>Contact_Person_Name </th>
+                    <th>Contact_Person_Phone </th>
+                    @if (ViewBag.Approved > 0)
+                    {
+                        <th> Approved_Status </th>
+                        <th> Approved_Remarks </th>
+                        <th>  Approved_by </th>
+                        <th> Approved_Date  </th>
+                    }
+
+                </tr>
+
+            </thead>
+            <tbody>
+                @{ int count = 0;}
+                @foreach (PJPExpense.List item in Model)
+                {
+                    count++;
+                    <tr>
+                        <td>@count</td>
+                        @if (ViewBag.Approved == 0)
+                        {
+                            <td>
+                                @if (item.Approved == 0 && ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                                {
+                                    <input type="hidden" name="I" value="@item.PJPEntryID" />
+                                    <input type="hidden" name="N" value="@item.VisitDate" />
+                                    <input type="hidden" name="PlanID" value="@item.PJPPlanID" />
+                                    <input type="hidden" name="BTCode" value="@item.BTCode" />
+
+                                    <input type="checkbox" class="newwidth Chksingle" id="checkAll_@item.PJPEntryID" name="Chksingle" value="@item.PJPEntryID" />
+                                    <label for="checkAll_@item.PJPEntryID"></label>
+
+                                }
+                            </td>
+                        }
+                        <td>
+                            <a title="View" onclick="ViewPJPEntry(this);" data-toggle='tooltip'>
+                                @item.VisitDate
+                            </a>
+
+
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Image))
+                            {
+                                <a href="@item.Image" target="_blank">
+                                    <img class="img-responsive listimage" src="@item.Image" />
+                                </a>
+                            }
+                        </td>
+                        <td>@item.BTCode</td>
+                        <td>@item.BTName</td>
+                        <td>@item.DealerName</td>
+                        <td>@item.DealerCode</td>
+                        <td>@item.DealerType</td>
+                        <td>@item.SSRName</td>
+                        <td>@item.SSRCode</td>
+                        <td>@item.RegionName</td>
+                        <td>@item.StateName</td>
+                        <td>@item.CityName</td>
+                        <td>@item.AreaName</td>
+                        <td>@item.PurposeVisit</td>
+                        <td>@item.Exp_Amount</td>
+                        <td>@item.Exp_Remarks</td>
+                        <td>@item.ContactPerson_Name</td>
+                        <td>@item.ContactPerson_Phone</td>
+                        @if (ViewBag.Approved > 0)
+                        {
+                            <td>@item.ApprovedStatus</td>
+                            <td>@item.ApprovedRemarks</td>
+                            <td>@item.Approvedby</td>
+                            <td>@item.ApprovedDate</td>
+
+                        }
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+        <div class="row">
+            @if (ClsApplicationSetting.GetSessionValue("Modify") == "True" && Model.Count > 0 && Model.Any(x => x.Approved == 0))
+            {
+                <div class="col-sm-12 text-center mt-3">
+                    <button type="button" class="btn apr-btn btnProcess" onclick="ShowApprovalBox(this)" name="Command" value="1">
+                        <i class="fa fa-check" aria-hidden="true"></i>
+                        Approve
+                    </button>
+                    <button type="button" class="btn rct-btn btnProcess" onclick="ShowApprovalBox(this)" name="Command" value="2">
+                        <i class="fa fa-ban" aria-hidden="true"></i>
+                        Reject
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+
+

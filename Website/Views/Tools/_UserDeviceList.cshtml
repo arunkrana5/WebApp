@@ -1,0 +1,77 @@
+﻿@using System.Data
+@model  DataSet
+<div class="table-responsive">
+    <table id="example" class="table table-bordered text-nowrap key-buttons table-responsive-sm table-responsive-md">
+        <thead>
+            <tr role="row">
+                @{ int HeadCount = 0;}
+                @foreach (DataColumn item in Model.Tables[0].Columns)
+                {
+                    if (!item.ColumnName.Contains("_"))
+                    {
+                        HeadCount++;
+                        if (HeadCount == 1)
+                        {
+                            <th>
+                                <input type="checkbox" class="newwidth" id="checkAll" onclick="chkAll();" name="ChkAll" value="All" />
+                                <label for="checkAll"></label>
+                            </th>
+                        }
+                        else
+                        {
+                            <th>@item.ColumnName</th>
+                        }
+                    }
+                }
+            </tr>
+        </thead>
+        <tbody>
+
+            @{ int Rowcount = 0;}
+            @foreach (DataRow dtRow in Model.Tables[0].Rows)
+            {
+                HeadCount = 0;
+                Rowcount++;
+                <tr role="row" class="@(Rowcount%2==0?"even":"odd")">
+                    @foreach (DataColumn dc in Model.Tables[0].Columns)
+                    {
+                        if (!dc.ColumnName.Contains("_"))
+                        {
+                           
+                            HeadCount++;
+                            if (HeadCount == 1)
+                            {
+                                <td>
+                                    <input type="hidden" name="I" value="@dtRow["_LoginID"]" />
+                                    <input type="hidden" name="N" value="@dtRow["User ID"]" />
+                                    <input type="checkbox" class="newwidth Chksingle" id="checkAll_@dtRow["_LoginID"]" name="Chksingle" value="@dtRow["_LoginID"]" />
+                                    <label for="checkAll_@dtRow["_LoginID"]"></label>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @dtRow[dc.ColumnName]
+                                </td>
+                            }
+
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+
+    <div class="col-sm-12 text-center mt-3">
+        <button type="button" class="btn button-th btn-success" onclick="ShowApprovalBox(this)" name="Command" value="1">
+            <i class="fa fa-check" aria-hidden="true"></i>
+            Clear Device
+        </button>
+    </div>
+
+</div>
+
+

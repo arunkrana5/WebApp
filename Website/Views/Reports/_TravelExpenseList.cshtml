@@ -1,0 +1,50 @@
+﻿@using System.Data
+@model  DataSet
+<div class="table-responsive">
+    <table id="example" class="table table-bordered text-nowrap key-buttons">
+        <thead>
+
+
+            <tr role="row">
+                @foreach (DataColumn item in Model.Tables[0].Columns)
+                {
+                    if (!item.ColumnName.Contains("_"))
+                    {
+                        <th>@item.ColumnName</th>
+
+                    }
+                }
+            </tr>
+        </thead>
+        <tbody>
+
+            @{ int Rowcount = 0;}
+            @foreach (DataRow dtRow in Model.Tables[0].Rows)
+            {
+                Rowcount++;
+
+                <tr role="row" class="@(Rowcount%2==0?"even":"odd")">
+                    @foreach (DataColumn dc in Model.Tables[0].Columns)
+                    {
+                        if (!dc.ColumnName.Contains("_"))
+                        {
+                            if (dc.ColumnName.ToLower() == "docno")
+                            {
+                                <td>
+                                    <a title="View Request" href="@Url.Action("ViewTravelCompleteRequest","Travel", new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*/Travel/ViewTravelCompleteRequest*"+ dtRow["_TRID"]+"*"+dtRow["DocNo"]+"*OnlyView") })" data-toggle='tooltip'>
+                                        @dtRow["DocNo"].ToString()
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>@dtRow[dc.ColumnName]</td>
+                            }
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

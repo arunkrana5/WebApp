@@ -1,0 +1,78 @@
+﻿
+<div class="table-section">
+    @model ManageActivities.EMPDOL
+
+    
+
+    @using (Ajax.BeginForm("ManageEMPDOL", "Tools",
+            new { src = ViewBag.src },
+             new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+                new { @id = "ManageEMPDOLForm" })
+        )
+    {
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Manage Employee DOL</div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                        <label>EMP Code <small class="sm-war">[ For multiple can be Comma (,) Seperated ]</small></label>
+                        @Html.TextAreaFor(model => model.EMPCode, new { @class = "form-control txtareabig" })
+                        @Html.ValidationMessageFor(model => model.EMPCode, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+                        <label>DOL<sup>*</sup></label>
+                        @Html.TextBoxFor(model => model.DOL, new { @class = "form-control",@type="date" })
+                        @Html.ValidationMessageFor(model => model.DOL, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-8 col-md-8 col-sm-8 form-group">
+                        <label>Reason </label>
+                        @Html.TextAreaFor(model => model.DOLReason, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.DOLReason, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-lg-12 form-group">
+                        <button type="button" class="btn client-close" onclick="ShowLoadingDialog(); window.location = '@Url.Action("ManageActivities",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Tools/ManageActivities") })';"> Cancel</button>
+
+                        <button type="submit" class="btn client-save btn-primary" name="Command" value="Add"> Submit</button>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="divResult"> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    </div>
+    @section scripts    {
+
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+        <script>
+
+            function OnSuccess(obj) {
+                $("#divResult").empty();
+                if (obj.Status) {
+                    var TablHTML = "<table class='tblSuccess'><tbody>";
+                    var array = obj.SuccessMessage.split(",");
+                    $.each(array, function (i) {
+                        TablHTML += "<tr><td>" + (i + 1) + ". " + array[i] + "</td></tr>"
+                    });
+                    TablHTML += "</tbody></table>";
+                    $("#divResult").html(TablHTML);
+                    CloseLoadingDialog();
+                }
+                else {
+                    FailToaster(obj.SuccessMessage);
+                    CloseLoadingDialog();
+
+                }
+            }
+
+        </script>
+    }

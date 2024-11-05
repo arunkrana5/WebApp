@@ -1,0 +1,102 @@
+﻿@model  Attendance_Final.WithSummary
+@{
+    DateTime dt;
+    DateTime.TryParse(ViewBag.Date, out dt);
+
+    DateTime baseDate = dt;
+    DateTime StartDate = baseDate.AddDays(1 - baseDate.Day);
+    DateTime EndDate = StartDate.AddMonths(1).AddSeconds(-1);
+
+
+}
+
+<div class="table-section">
+    <div class="table-responsive">
+        <table id="ExportTable" class="table table-bordered text-nowrap key-buttons" style="font-size:10px;" cellpadding="2">
+            <thead>
+                <tr role="row" bgcolor="#aed9ff">
+                    <th>S No.</th>
+                    <th width="125px">Name</th>
+                    <th>Code</th>
+                    <th>Gender</th>
+                    <th>Phone</th>
+                    <th width="125px">Department</th>
+                    <th width="125px">Designation</th>
+                    <th>Region</th>
+                    <th>State</th>
+                    <th>City</th>
+                    <th>Area</th>
+                    <th width="100px">Dealer Name</th>
+                    <th width="100px">Dealer Code</th>
+                    <th>Dealer Type</th>
+                    <th>Branch Name</th>
+                    <th>Branch Code</th>
+                    <th width="100px">Start Date</th>
+                    <th width="100px">End Date</th>
+
+                    @foreach (var da in ClsCommon.EachDay(StartDate, EndDate))
+                    {
+                        <th>@da.ToString("dd-MMM-yyyy")</th>
+                    }
+
+                    @foreach (var da in Model._Header)
+                    {
+                        <th>@da.Other</th>
+                    }
+
+                </tr>
+            </thead>
+            <tbody>
+
+                @{ int Rowcount = 0;}
+                @foreach (var item in Model._List)
+                {
+                    Rowcount++;
+                    <tr bgcolor="#e7f4ff">
+                        <td>@Rowcount</td>
+
+                        <td>@item.EMPName</td>
+                        <td>@item.EMPCode</td>
+
+                        <td>@item.Gender</td>
+                        <td>@item.Phone</td>
+                        <td>@item.DeptName</td>
+                        <td>@item.DesignName</td>
+                        <td>@item.Region</td>
+                        <td>@item.State</td>
+                        <td>@item.City</td>
+                        <td>@item.Area</td>
+                        <td>@item.DealerName</td>
+                        <td>@item.DealerCode</td>
+                        <td>@item.DealerType</td>
+                        <td>@item.BranchName</td>
+                        <td>@item.BranchCode</td>
+                        <td>@item.StartDate</td>
+                        <td>@item.EndDate</td>
+
+                        @foreach (var da in ClsCommon.EachDay(StartDate, EndDate))
+                        {
+                            if (item.Days.ContainsKey(da.ToString("dd-MMM-yyyy")))
+                            {
+                                <td>@item.Days[da.ToString("dd-MMM-yyyy")]</td>
+
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                        }
+                        @foreach (var da in Model._Header)
+                        {
+                            <td>
+                                @item.Days.Where(x => x.Value == da.Other).Count()
+                            </td>
+                        }
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+ </div>

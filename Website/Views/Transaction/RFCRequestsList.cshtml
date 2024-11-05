@@ -1,0 +1,191 @@
+﻿@model Tab.Approval
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+
+<div class="table-section">
+
+    @Html.Partial("ListHeader_Partial", "RFC Request List")
+
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+
+                        @using (Ajax.BeginForm("_RFCRequestsList", "Transaction",
+                                new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Transaction/_RFCRequestsList") },
+                                 new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+                                    new { @id = "_RFCRequestsListForm" })
+                            )
+                        {
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-sm-3 form-group">
+                                        <label>Month <sup>*</sup></label>
+                                        @Html.TextBoxFor(model => model.Month, new { @class = "form-control", @type = "Month" })
+                                        @Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })
+                                    </div>
+                                    @Html.HiddenFor(x => x.Approved)
+                                    <ul id="tabs" class="nav nav-tabs " role="tablist">
+                                        <li class="nav-item"> <a tabvalue="0" class="nav-link ripplelink AnchorApproval @(Model.Approved == 0 ? "active" : "")" data-toggle="tab" role="tab"> Pending</a> </li>
+                                        <li class="nav-item"> <a tabvalue="1" class="nav-link ripplelink AnchorApproval @(Model.Approved == 1 ? "active" : "") " data-toggle="tab" role="tab">Approved</a></li>
+                                        <li class="nav-item"> <a tabvalue="2" class="nav-link ripplelink AnchorApproval @(Model.Approved == 2 ? "active" : "") " data-toggle="tab" role="tab">Rejected</a></li>
+
+                                    </ul>
+                                </div>
+                                <div class="col-md-2" style="display:none">
+                                    <label class="small"></label>
+                                    <button type="submit" id="btnSubmit" name="Command" value="Add" class="btn  btn-success"></button>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="TargetDiv"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="modal fade pop-dgn" id="ViewModal">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+
+                <div class="modal-header blk-gdn-btn">
+                    <h4 class="modal-title"><span class="mx-2"><i class="fa fa-print "></i></span></h4>
+                    <div class="close" data-dismiss="modal">&times;</div>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div id="TagetDiv"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+        <script>
+        $('#Month').bind("change", function () {
+            $("#btnSubmit").click();
+        });
+        $(document).ready(function () {
+            $("#btnSubmit").click();
+        });
+
+        $('.AnchorApproval').on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var att = $(this).attr("tabvalue");
+            $(".AnchorApproval.active").removeClass("active");
+            $(this).addClass("active");
+            $("#Approved").val(att);
+            $("#btnSubmit").click();
+        });
+        function OnSuccess(obj) {
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html(obj);
+            CloseLoadingDialog();
+            DatatableScripts();
+        }
+
+
+         function ListHeaderAdd(ID) {
+        if (ID == undefined)
+        {
+            ID = 0;
+        }
+			$.ajax({
+                url: "/Transaction/_AddRFCRequests",
+                type: "Get",
+                data: { src: EncryptJSON(@ViewBag.MenuID+"*" + "/Transaction/_AddRFCRequests" + "*" + ID) },
+                success: function (data)
+                {
+                    $("#TagetDiv").empty();
+                    $("#TagetDiv").html(data);
+                    $('#ViewModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                    $(".applyselect").select2();
+                     var form = $("form")
+                .removeData("validator")
+                .removeData("unobtrusiveValidation");
+                    $.validator.unobtrusive.parse(form);
+				},
+				error: function (er) {
+					alert(er);
+
+				}
+			});
+            }
+
+    function FillAttendence(obj) {
+            var Date = $(obj).val();
+        var data = GetDropDownList(Date, "FinalAttendence");
+        var select = $("#Old_StatusID");
+        if (data != '') {
+
+            select.empty();
+                $(data).each(function () {
+                    select.append("<option value='" + this.ID + "'>" + this.Name + "</option>")
+                    select.select2();
+                });
+                CloseLoadingDialog();
+            } else {
+                    select.empty();
+            }
+        }
+
+        function OnAddSuccess(obj) {
+            if (obj.Status) {
+                SuccessToaster(obj.SuccessMessage);
+                $('#ViewModal').modal('hide');
+                $("#btnSubmit").click();
+            }
+            else {
+                CloseLoadingDialog();
+                FailToaster(obj.SuccessMessage);
+
+            }
+    }
+
+
+    function DeleteRFCEntry(obj) {
+        var ID = $(obj).closest("tr").find("input:hidden[name=I]").val();
+        var Name = $(obj).closest("tr").find("input:hidden[name=N]").val();
+        var Msg = 'Are you sure want to delete ' + Name + ' ?';
+        ConfirmMsgBox(Msg, '', function () {
+            if (ID) {
+                var myobj = DelRecordJson(ID, 'RFCRequest');
+                if (!myobj.Status) {
+                    FailToaster(myobj.SuccessMessage);
+
+                } else {
+                    SuccessToaster(myobj.SuccessMessage);
+                    $("#btnSubmit").click();
+
+                }
+            }
+        });
+
+    }
+
+
+
+
+        </script>
+
+    }

@@ -1,0 +1,74 @@
+﻿@using System.Data
+@model  DataSet
+
+<div class="table-responsive">
+    <table border="1" cellpadding="2" cellspacing="0" width="100%" class="rpttable">
+        <thead>
+            <tr role="row">
+                @foreach (DataColumn item in Model.Tables[0].Columns)
+                {
+                    if (!item.ColumnName.Contains("_"))
+                    {
+                        <th bgcolor="#e4edfd" align="center">@item.ColumnName</th>
+
+                    }
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @{ int Rowcount = 0;}
+            @foreach (DataRow dtRow in Model.Tables[0].Rows)
+            {
+                Rowcount++;
+                <tr bgcolor="@(Rowcount%2==0?"#eaf5ff":"#feff9e")">
+                    @foreach (DataColumn dc in Model.Tables[0].Columns)
+                    {
+                        if (!dc.ColumnName.Contains("_"))
+                        {
+                            <td style="@(dc.ColumnName.ToLower()=="storename"?"width: 273px;":"")" align="center">@dtRow[dc.ColumnName]</td>
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@if (Model.Tables.Count > 1)
+{
+    <br />
+    <br />
+    <h3>Emp Details</h3>
+    <div class="table-responsive">
+        <table border="1" cellpadding="2" cellspacing="0" width="100%" class="rpttable">
+            <thead>
+                <tr role="row">
+                    @foreach (DataColumn item in Model.Tables[1].Columns)
+                    {
+                        if (!item.ColumnName.Contains("_"))
+                        {
+                            <th style="width:30px;" bgcolor="#e4edfd" align="center">@item.ColumnName</th>
+
+                        }
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @{ Rowcount = 0;}
+                @foreach (DataRow dtRow in Model.Tables[1].Rows)
+                {
+                    Rowcount++;
+                    <tr bgcolor="@(Rowcount%2==0?"#eaf5ff":"#feff9e")">
+                        @foreach (DataColumn dc in Model.Tables[1].Columns)
+                        {
+                            if (!dc.ColumnName.Contains("_"))
+                            {
+                                <td  align="center">@dtRow[dc.ColumnName]</td>
+                            }
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+

@@ -1,0 +1,688 @@
+﻿@model TravelExpense
+@{
+    if (Model.OtherExpenseList == null || Model.OtherExpenseList.Count == 0)
+    {
+        List<OtherExpenseDet> OEList = new List<OtherExpenseDet>();
+        OEList.Add(new OtherExpenseDet());
+        Model.OtherExpenseList = OEList;
+    }
+
+    if (Model.AttachmentList == null || Model.AttachmentList.Count == 0)
+    {
+        List<TravelExpAttachment> AList = new List<TravelExpAttachment>();
+        AList.Add(new TravelExpAttachment());
+        Model.AttachmentList = AList;
+    }
+
+
+}
+<div class="table-section">
+    <div class="page-header">
+        <div class="page-leftheader">
+            <h4 class="page-title">Visit Entry (@ViewBag.DocNo)</h4>
+        </div>
+
+    </div>
+
+    @using (Ajax.BeginForm("AddTExpense", "Travel",
+            new { src = ViewBag.src },
+             new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+                new { @id = "_AddTExpenseForm", @enctype = "multipart/form-data" })
+        )
+    {
+
+        <div class="row">
+            <div class="col-lg-12 ">
+                @if (Model.TravelRequestDetails != null)
+                {
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Travel Request </h3>
+                        </div>
+                        <div class="card-body pb-2">
+                            <div class="table-responsive">
+                                <table cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Doc No</th>
+                                            <th>Doc Date</th>
+                                            <th>Name</th>
+                                            <th>Code</th>
+                                            <th>From City</th>
+                                            <th>To City</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Status</th>
+                                            <th>Approved By</th>
+                                            <th>Approved Date</th>
+                                            <th>Approved Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>@Model.TravelRequestDetails.DocNo</td>
+                                            <td>@Model.TravelRequestDetails.DocDate</td>
+                                            <td>@Model.TravelRequestDetails.EMPName>
+                                            <td>@Model.TravelRequestDetails.EMPCode</td>
+                                            <td>@Model.TravelRequestDetails.FromCity</td>
+                                            <td>@Model.TravelRequestDetails.ToCity</td>
+                                            <td>@Model.TravelRequestDetails.StartDate</td>
+                                            <td>@Model.TravelRequestDetails.EndDate</td>
+                                            <td>@Model.TravelRequestDetails.Status</td>
+                                            <td>@Model.TravelRequestDetails.ApprovedBy</td>
+                                            <td>@Model.TravelRequestDetails.ApprovedDate</td>
+                                            <td>@Model.TravelRequestDetails.ApprovedRemarks</td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Model.DealersAssignedList != null)
+                {
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Assigned Dealer </h3>
+                        </div>
+                        <div class="card-body pb-2">
+                            <div class="table-responsive">
+                                <table cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Code</th>
+                                            <th>Type</th>
+                                            <th>Address</th>
+                                            <th>Area</th>
+                                            <th>On Demand</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.DealersAssignedList)
+                                        {
+                                            <tr>
+                                                <td>@item.DealerName</td>
+                                                <td>@item.DealerCode</td>
+                                                <td>@item.DealerType</td>
+                                                <td>@item.Address</td>
+                                                <td>@item.AreaName</td>
+                                                <td>@item.OnDemand</td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Model.VisitEntryList != null)
+                {
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Visit Summary </h3>
+                        </div>
+                        <div class="card-body pb-2">
+                            <div class="table-responsive">
+                                <table cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Name</th>
+                                            <th>Code</th>
+                                            <th>Gender</th>
+                                            <th>Product Rating</th>
+                                            <th>Product Knw</th>
+                                            <th>Customer Rating</th>
+                                            <th>Customer Knw</th>
+                                            <th>Image</th>
+                                            <th>Expense Amt</th>
+                                            <th>Remarks</th>
+                                            <th>Expense Attachment</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.VisitEntryList)
+                                        {
+                                            <tr>
+                                                <td>@item.VisitDate</td>
+                                                <td>@item.SSR_Name</td>
+                                                <td>@item.SSR_Code</td>
+                                                <td>@item.SSR_Gender</td>
+                                                <td>@item.ProductRating</td>
+                                                <td>@item.ProductKnw</td>
+                                                <td>@item.CustomerRating</td>
+                                                <td>@item.CustomerKnw</td>
+                                                <td>
+                                                    @if (string.IsNullOrEmpty(item.AttachmentPath))
+                                                    {
+                                                        <img height="100px" width="100px" class="img-responsive imgres" src="~/assets/design/images/NoImage.jpeg" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <a target="_blank" href="@item.AttachmentPath">
+                                                            <img class="img-responsive imgres" src="@item.AttachmentPath" />
+                                                        </a>
+                                                    }
+                                                </td>
+                                                <td>@item.ExpenseAmt</td>
+                                                <td>@item.ExpenseRemarks</td>
+                                                <td>
+                                                    @if (string.IsNullOrEmpty(item.ExpenseAttachmentPath))
+                                                    {
+                                                        <img height="100px" width="100px"  class="img-responsive imgres" src="~/assets/design/images/NoImage.jpeg" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <a target="_blank" href="@item.ExpenseAttachmentPath">
+                                                            <img class="img-responsive imgres" src="@item.ExpenseAttachmentPath" />
+                                                        </a>
+                                                    }
+
+
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Other Expense</h3>
+                    </div>
+                    <div class="card-body pb-2">
+                        <div class="table-responsive">
+                            <table id="tableOtherExpense" cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th width="100">Sr. No.</th>
+                                        <th>Amount</th>
+                                        <th>Description</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.OtherExpenseList != null)
+                                    {
+                                        int Count = 0;
+                                        for (int i = 0; i < Model.OtherExpenseList.Count; i++)
+                                        {
+                                            Count++;
+                                            <tr>
+                                                <td>
+                                                    <label id="lbl_@Count"> @Count</label>
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(model => Model.OtherExpenseList[i].Amt, new { @class = "form-control txtamt", @onblur = "AddToOther(this)" })
+                                                    @Html.ValidationMessageFor(model => Model.OtherExpenseList[i].Amt, "", new { @class = "text-danger" })
+                                                </td>
+                                                <td>
+                                                    @Html.TextAreaFor(model => Model.OtherExpenseList[i].Description, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => Model.OtherExpenseList[i].Description, "", new { @class = "text-danger" })
+                                                </td>
+                                                <td>
+                                                    @Html.HiddenFor(x => Model.OtherExpenseList[i].AttachID)
+                                                    @Html.TextBoxFor(x => Model.OtherExpenseList[i].Upload, new { @class = "dropify", @type = "file", @accept = "image/jpeg,image/png,image/jpg,jpeg|png|jpg" })
+                                                    @Html.ValidationMessageFor(model => Model.OtherExpenseList[i].Upload, "", new { @class = "text-danger" })
+
+                                                    @if (Model.OtherExpenseList[i].AttachID > 0)
+                                                    {
+                                                        <img class="mx-auto img-responsive avatar-crop" alt="img" src="@Model.OtherExpenseList[i].AttachmentPath?V=@DateTime.Now.ToString("mm:ss")">
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (Count == 1)
+                                                    {
+                                                        <a class="remove"><i class="fa fa-window-close" aria-hidden="true"></i></a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a onclick="DeleteOERow(this)" class="remove"><i class="fa fa-window-close red-clr" aria-hidden="true"></i></a>
+                                                    }
+
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="text-right">
+                                <a onclick="AddOENewRow(this)" class="btn btn-indigo">Add Row</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Attachment</h3>
+                    </div>
+                    <div class="card-body pb-2">
+                        <div class="table-responsive">
+                            <table id="tableAttachment" cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th width="100">Sr. No.</th>
+                                        <th>Upload</th>
+
+                                        <th>Description</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.AttachmentList != null)
+                                    {
+                                        int Count = 0;
+                                        for (int i = 0; i < Model.AttachmentList.Count; i++)
+                                        {
+                                            Count++;
+                                            <tr>
+                                                <td>
+                                                    <label id="lbl_@Count"> @Count</label>
+                                                    @Html.HiddenFor(model => Model.AttachmentList[i].ID, new { @class = "hdnID" })
+                                                </td>
+                                                <td>
+                                                    @Html.HiddenFor(x => Model.AttachmentList[i].ID)
+                                                    @Html.TextBoxFor(x => Model.AttachmentList[i].ExpenseUpload, new { @class = "dropify", @type = "file", @accept = "image/jpeg,image/png,image/jpg,jpeg|png|jpg" })
+                                                    @Html.ValidationMessageFor(model => Model.AttachmentList[i].ExpenseUpload, "", new { @class = "text-danger" })
+
+                                                    @if (Model.AttachmentList[i].ID > 0)
+                                                    {
+                                                        <img class="mx-auto img-responsive avatar-crop" alt="img" src="@Model.AttachmentList[i].AttachmentPath?V=@DateTime.Now.ToString("mm:ss")">
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @Html.TextAreaFor(model => Model.AttachmentList[i].Description, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => Model.AttachmentList[i].Description, "", new { @class = "text-danger" })
+                                                </td>
+                                                <td>
+                                                    @if (Count == 1)
+                                                    {
+                                                        <a class="remove"><i class="fa fa-window-close" aria-hidden="true"></i></a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a onclick="DeleteARow(this)" class="remove"><i class="fa fa-window-close red-clr" aria-hidden="true"></i></a>
+                                                    }
+
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="text-right">
+                                <a onclick="AddANewRow(this)" class="btn btn-indigo">Add Row</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">All Expense Summary</h3>
+                    </div>
+                    <div class="card-body pb-2">
+                        <div class="table-responsive">
+                            <table cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                                <tbody>
+                                    <tr>
+                                        <td>Travel Expense</td>
+                                        <td>
+                                            @Html.TextBoxFor(model => Model.TravelExp_Amt, new { @class = "form-control", @onblur = "CalculateTotal()" })
+                                            @Html.ValidationMessageFor(model => Model.TravelExp_Amt, "", new { @class = "text-danger" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dealer Visit Expense</td>
+                                        <td>
+                                            @Html.TextBoxFor(model => Model.VisitExp_Amt, new { @class = "form-control", @onblur = "CalculateTotal()", @readonly = "readonly" })
+                                            @Html.ValidationMessageFor(model => Model.VisitExp_Amt, "", new { @class = "text-danger" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Hotel Expense</td>
+                                        <td>
+                                            @Html.TextBoxFor(model => Model.HotelExp_Amt, new { @class = "form-control", @onblur = "CalculateTotal()" })
+                                            @Html.ValidationMessageFor(model => Model.HotelExp_Amt, "", new { @class = "text-danger" })
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Other Expense</td>
+                                        <td>
+                                            @Html.TextBoxFor(model => Model.OtherExp_Amt, new { @class = "form-control", @onblur = "CalculateTotal()", @readonly = "readonly" })
+                                            @Html.ValidationMessageFor(model => Model.OtherExp_Amt, "", new { @class = "text-danger" })
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td>Total</td>
+                                        <td>
+                                            @Html.TextBoxFor(model => Model.TotalExp_Amt, new { @class = "form-control", @readonly = "readonly" })
+                                            @Html.ValidationMessageFor(model => Model.TotalExp_Amt, "", new { @class = "text-danger" })
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                @if (Model.ExpenseApprovedSummaryList.Count > 0)
+                {
+                    int Count = 0;
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Expense Approval Summary List</h3>
+                        </div>
+                        <div class="card-body pb-2">
+                            <div class="table-responsive">
+                                <table id="tableExpenseApprovedSummaryList" cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th width="100">Sr. No.</th>
+                                            <th>Approver</th>
+                                            <th>Status</th>
+                                            <th>Remarks</th>
+                                            <th>Approved Date</th>
+                                            <th>Approved By</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.ExpenseApprovedSummaryList)
+                                        {
+                                            Count++;
+                                            <tr>
+                                                <td>@Count</td>
+                                                <td>@item.Doctype</td>
+                                                <td>@item.Status</td>
+                                                <td>@item.ApprovedRemarks</td>
+                                                <td>@item.ApprovedDate</td>
+                                                <td>@item.ApprovedBy</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 form-group">
+                @Html.ValidationSummary(false)
+                <button type="submit" class="btn btn-indigo" name="Command" value="Add"><i class="fa fa-paper-plane" aria-hidden="true"></i> Submit</button>
+                <a href="@Url.Action("MyTravel_ExpenseList",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Travel/MyTravel_ExpenseList") })" type="button" class="btn btn-sm  close-btn">cancel</a>
+
+            </div>
+        </div>
+    }
+
+    </div>
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+        <script>
+            function CalculateTotal() {
+                var TravelExp_Amt = Number($("#TravelExp_Amt").val());
+                var HotelExp_Amt = Number($("#HotelExp_Amt").val());
+                var OtherExp_Amt = Number($("#OtherExp_Amt").val());
+                var VisitExp_Amt = Number($("#VisitExp_Amt").val());
+
+                var Final = parseFloat(TravelExp_Amt) + parseFloat(HotelExp_Amt) + parseFloat(OtherExp_Amt) + parseFloat(VisitExp_Amt);
+
+                $("#TotalExp_Amt").val(Final);
+            }
+            function AddToOther(obj) {
+                var amt = 0;
+                $(".txtamt").each(function () {
+                    if ($(this).val()) {
+                        amt += parseFloat(Number($(this).val()));
+                    }
+                });
+                $("#OtherExp_Amt").val(amt);
+            }
+            function OnSuccess(obj) {
+                if (obj.Status) {
+                    SuccessToaster(obj.SuccessMessage);
+                    window.location.href = obj.RedirectURL;
+                }
+                else {
+                    CloseLoadingDialog();
+                    FailToaster(obj.SuccessMessage);
+
+                }
+            }
+
+
+            function AddOENewRow() {
+                var LastTRCount = parseInt($('#tableOtherExpense').find("tbody tr").length) - 1;
+                var $tableBody = $('#tableOtherExpense').find("tbody"),
+                    $trLast = $tableBody.find("tr:last"),
+                    $trNew = $trLast.clone();
+                $trNew.find("td:last").html('<a onclick="DeleteOERow(this)" class="remove" data-toggle="tooltip" data-original-title="Remove"><i class="fa fa-window-close red-clr" aria-hidden="true"></i></a>');
+
+                $trNew.find("label").each(function () {
+                    $(this).attr({
+                        'id': function (_, id) { var arr = id.split('_'); return id.replace(arr[1], LastTRCount + 1); },
+                    });
+                    $(this).html(parseInt($('#tableOtherExpense').find("tbody tr").length) + 1);
+                });
+
+                $trNew.find("input").each(function (i) {
+                    $(this).attr({
+                        'id': function (_, name) { return name.replace('_' + LastTRCount + '_', '_' + (parseInt(LastTRCount) + 1) + '_'); },
+                        'name': function (_, name) { return name.replace('[' + LastTRCount + ']', '[' + (parseInt(LastTRCount) + 1) + ']'); },
+                    });
+
+                });
+                $trNew.find("textarea").each(function (i) {
+                    $(this).attr({
+                        'id': function (_, name) { return name.replace('_' + LastTRCount + '_', '_' + (parseInt(LastTRCount) + 1) + '_'); },
+                        'name': function (_, name) { return name.replace('[' + LastTRCount + ']', '[' + (parseInt(LastTRCount) + 1) + ']'); },
+                    });
+
+                });
+
+                $trNew.find("span").each(function (i) {
+                    if ($(this).attr("data-valmsg-for")) {
+                        $(this).attr({
+                            'data-valmsg-for': function (_, name) { return name.replace('[' + LastTRCount + ']', '[' + (parseInt(LastTRCount) + 1) + ']'); }
+                        });
+                    }
+                    if ($(this).attr("for")) {
+                        $(this).attr({
+                            'for': function (_, name) { return name.replace('_' + LastTRCount + '_', '_' + (parseInt(LastTRCount) + 1) + '_'); }
+                        });
+                    }
+                });
+
+                $trLast.after($trNew);
+                var form = $("#VisitEntryAddForm").closest("form");
+                form.removeData('validator');
+                form.removeData('unobtrusiveValidation');
+                $.validator.unobtrusive.parse(form);
+                $(".applyselect").select2();
+            }
+
+
+            function DeleteOERow(obj) {
+                var count = 0;
+                var TotalRowCount = $('#tableOtherExpense').find("tbody tr").length;
+                ConfirmMsgBox("Are you sure want to delete", '', function () {
+
+                    $(obj).closest('tr').remove();
+                    $("#tableOtherExpense TBODY TR").each(function (i) {
+                        $(this).closest("tr").find("label").each(function () {
+                            $(this).attr({
+                                'id': function (_, id) { var arr = id.split('_'); return id.replace(arr[1], i); },
+                            });
+                            $(this).html(i + 1)
+                        });
+
+
+                        $(this).closest("tr").find("input").each(function () {
+                            $(this).attr({
+                                'id': function (_, id) { return id.replace('_' + (parseInt(i) + 1) + '_', '_' + i + '_'); },
+                                'name': function (_, name) { return name.replace('[' + (parseInt(i) + 1) + ']', '[' + i + ']'); },
+                            });
+
+                        });
+
+                        $(this).closest("tr").find("textarea").each(function () {
+                            $(this).attr({
+                                'id': function (_, id) { return id.replace('_' + (parseInt(i) + 1) + '_', '_' + i + '_'); },
+                                'name': function (_, name) { return name.replace('[' + (parseInt(i) + 1) + ']', '[' + i + ']'); },
+                            });
+
+                        });
+
+                        $(this).closest("tr").find("span").each(function () {
+                            if ($(this).attr("data-valmsg-for")) {
+                                $(this).attr({
+                                    'data-valmsg-for': function (_, name) { return name.replace('[' + (parseInt(i) + 1) + ']', '[' + i + ']'); },
+                                });
+                            }
+                            if ($(this).attr("for")) {
+                                $(this).attr({
+                                    'for': function (_, id) { return id.replace('_' + (parseInt(i) + 1) + '_', '_' + i + '_'); },
+                                });
+                            }
+                        });
+                    });
+                    var form = $("#VisitEntryAddForm").closest("form");
+                    form.removeData('validator');
+                    form.removeData('unobtrusiveValidation');
+                    $.validator.unobtrusive.parse(form);
+
+                })
+            }
+
+            // add new Row
+            function AddANewRow() {
+                var LastTRCount = parseInt($('#tableAttachment').find("tbody tr").length) - 1;
+                var $tableBody = $('#tableAttachment').find("tbody"),
+                    $trLast = $tableBody.find("tr:last"),
+                    $trNew = $trLast.clone();
+                $trNew.find("td:last").html('<a onclick="DeleteARow(this)" class="remove" data-toggle="tooltip" data-original-title="Remove"><i class="fa fa-window-close red-clr" aria-hidden="true"></i></a>');
+
+                $trNew.find("label").each(function () {
+                    $(this).attr({
+                        'id': function (_, id) { var arr = id.split('_'); return id.replace(arr[1], LastTRCount + 1); },
+                    });
+                    $(this).html(parseInt($('#tableAttachment').find("tbody tr").length) + 1);
+                });
+
+                $trNew.find("input").each(function (i) {
+                    $(this).attr({
+                        'id': function (_, name) { return name.replace('_' + LastTRCount + '_', '_' + (parseInt(LastTRCount) + 1) + '_'); },
+                        'name': function (_, name) { return name.replace('[' + LastTRCount + ']', '[' + (parseInt(LastTRCount) + 1) + ']'); },
+                    });
+                    $(this).val('')
+
+                });
+                $trNew.find("textarea").each(function (i) {
+                    $(this).attr({
+                        'id': function (_, name) { return name.replace('_' + LastTRCount + '_', '_' + (parseInt(LastTRCount) + 1) + '_'); },
+                        'name': function (_, name) { return name.replace('[' + LastTRCount + ']', '[' + (parseInt(LastTRCount) + 1) + ']'); },
+                    });
+                    $(this).val('')
+
+                });
+
+                $trNew.find("span").each(function (i) {
+                    if ($(this).attr("data-valmsg-for")) {
+                        $(this).attr({
+                            'data-valmsg-for': function (_, name) { return name.replace('[' + LastTRCount + ']', '[' + (parseInt(LastTRCount) + 1) + ']'); }
+                        });
+                    }
+                    if ($(this).attr("for")) {
+                        $(this).attr({
+                            'for': function (_, name) { return name.replace('_' + LastTRCount + '_', '_' + (parseInt(LastTRCount) + 1) + '_'); }
+                        });
+                    }
+                });
+
+                $trLast.after($trNew);
+                var form = $("#VisitEntryAddForm").closest("form");
+                form.removeData('validator');
+                form.removeData('unobtrusiveValidation');
+                $.validator.unobtrusive.parse(form);
+                $(".applyselect").select2();
+            }
+
+
+            function DeleteARow(obj) {
+                var count = 0;
+                var TotalRowCount = $('#tableAttachment').find("tbody tr").length;
+                ConfirmMsgBox("Are you sure want to delete", '', function () {
+
+                    $(obj).closest('tr').remove();
+                    $("#tableAttachment TBODY TR").each(function (i) {
+                        $(this).closest("tr").find("label").each(function () {
+                            $(this).attr({
+                                'id': function (_, id) { var arr = id.split('_'); return id.replace(arr[1], i); },
+                            });
+                            $(this).html(i + 1)
+                        });
+
+
+                        $(this).closest("tr").find("input").each(function () {
+                            $(this).attr({
+                                'id': function (_, id) { return id.replace('_' + (parseInt(i) + 1) + '_', '_' + i + '_'); },
+                                'name': function (_, name) { return name.replace('[' + (parseInt(i) + 1) + ']', '[' + i + ']'); },
+                            });
+
+                        });
+
+                        $(this).closest("tr").find("textarea").each(function () {
+                            $(this).attr({
+                                'id': function (_, id) { return id.replace('_' + (parseInt(i) + 1) + '_', '_' + i + '_'); },
+                                'name': function (_, name) { return name.replace('[' + (parseInt(i) + 1) + ']', '[' + i + ']'); },
+                            });
+
+                        });
+
+                        $(this).closest("tr").find("span").each(function () {
+                            if ($(this).attr("data-valmsg-for")) {
+                                $(this).attr({
+                                    'data-valmsg-for': function (_, name) { return name.replace('[' + (parseInt(i) + 1) + ']', '[' + i + ']'); },
+                                });
+                            }
+                            if ($(this).attr("for")) {
+                                $(this).attr({
+                                    'for': function (_, id) { return id.replace('_' + (parseInt(i) + 1) + '_', '_' + i + '_'); },
+                                });
+                            }
+                        });
+                    });
+                    var form = $("#VisitEntryAddForm").closest("form");
+                    form.removeData('validator');
+                    form.removeData('unobtrusiveValidation');
+                    $.validator.unobtrusive.parse(form);
+
+                })
+            }
+
+
+        </script>
+    }

@@ -1,0 +1,176 @@
+﻿
+@model AddLeave
+
+@section style{
+    @Html.IncludeVersionedCss(Url.Content("~/assets/design/js/calendar/lib/main.css"))
+}
+@{
+    string MenuID = ViewBag.MenuID.ToString();
+}
+<div class="table-section">
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-lg-7 col-md-12 mb-5">
+
+                            @using (Ajax.BeginForm("ApplyLeave", "Leave",
+                                    new { src = ViewBag.src },
+                                     new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnLeaveSuccess", OnBegin = "ShowLoadingDialog()" },
+                                        new { @id = "LeaveRequestForm" })
+                                )
+                            {
+
+                                <div class="shadow-box h-540">
+                                    <h2 class="heading-grd heading-btn blk-gdn-btn m-0 p-0 dpl-t">
+                                        <p class="hd-p px-2"><i class="far fa-calendar-check"></i> Leave request </p>
+                                    </h2>
+                                    <div class="leavelist fullwidth">
+                                        <div class="row d-flex mt-2 mb-2 p-2">
+                                            <div class="col-md-3">
+                                                <div class="form-group slt-dgn">
+                                                    <label class="lbl-abs">Leave Type</label>
+                                                    @Html.DropDownListFor(x => Model.LeaveTypeID, new SelectList(Model.LeaveTypeList, "ID", "Name", Model.LeaveTypeID), "Select",
+                                                      new { @class = "form-control  applyselect  ddleaveType" })
+                                                    @Html.ValidationMessageFor(model => Model.LeaveTypeID, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-sm-6 halfcol-575">
+                                                <div class="form-group">
+                                                    <label class="lbl-abs">From</label>
+                                                    @Html.TextBoxFor(model => Model.StartDate, new { @class = "form-control actdate", Type = "date", @placeholder = "Start Date" })
+                                                    @Html.ValidationMessageFor(model => Model.StartDate, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-sm-6 halfcol-575">
+                                                <div class="form-group">
+                                                    <label class="lbl-abs">To</label>
+                                                    @Html.TextBoxFor(model => Model.EndDate, new { @class = "form-control actdate", Type = "date", @placeholder = "End Date" })
+                                                    @Html.ValidationMessageFor(model => Model.EndDate, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 form-group d-flex justify-content-center align-items-end">
+                                                <button type="button" class="  btn btnOk ">@*green-clr*@ OK </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="row pl-2 pr-2 d-flex">
+                                        <div class="col-md-12 form-group mb-1">
+                                            <div id="DivLeaveRequestTable" class="scroll">
+
+                                                <div id="TableTran">
+                                                    @Html.Partial("_ApplyLeaveTran", Model)
+                                                </div>
+                                                <div class="text-right">
+                                                    <a class=" green-clr btn btn-pd btnAddRow "><i class="fa fa-plus mr-2" aria-hidden="true"></i>Add Row</a>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-12 text-right align-self-center">
+                                            <strong>Total: <span id="spnTotalHour"></span> Hours </strong>
+
+                                        </div>
+
+                                        <div class="col-md-12 form-group">
+                                            <label>Remarks, if any</label>
+                                            @Html.TextAreaFor(model => Model.Reason, new { @class = "form-control height-70", @placeholder = "Enter Remarks", @cols = "4", @rows = "4" })
+                                            @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationMessageFor(m => m.Reason, "", new { @class = "text-danger" }).ToHtmlString()))
+
+                                        </div>
+                                        <div class="col-sm-12 text-right">
+                                            @Html.CreateAnchor(MenuID, "/Leave/AppliedLeaveList", "Back", "btn cnl-btn btn-l ripplelink", "Click to go back", "")
+
+                                            <button type="submit" class="btn btn-submit btn-indigo btnApplyLeave "> Submit </button>
+                                            <a href="#" class="btn btn-submit" data-toggle="modal" data-target="#ViewModal" >Show Balance</a>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="col-lg-5 col-md-12 mb-5 leave-calender">
+                            <div id='calendar' class="pt-5"> </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade pop-dgn" id="ViewModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header blk-gdn-btn">
+                <h4 class="modal-title"><i class="fas fa-print"></i>Leave Balance Details</h4>
+                <div class="close" data-dismiss="modal">&times;</div>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="table-responsive">
+                                <table class="table mt-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Month</th>
+                                            <th class="tw-100">Opening</th>
+                                            <th class="tw-100">Availed</th>
+                                            <th class="tw-100">Earned</th>
+                                            <th class="tw-100">Total Earned</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.LeaveBalList.Count != 0)
+                                        {
+                                            foreach (var item in Model.LeaveBalList)
+                                            {
+                                                <tr>
+                                                    <td>@item.MonthName</td>
+                                                    <td>@item.Opening</td>
+                                                    <td>@item.Availed</td>
+                                                    <td>@item.Earned</td>
+                                                    <td>@item.TotalEarned</td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr class="text-center">
+                                                <td colspan="5">No Balance Found</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@section scripts    {
+    @Html.IncludeVersionedJs(Url.Content("~/assets/design/js/calendar/lib/main.js"))
+    @Html.IncludeVersionedJs(Url.Content("~/assets/design/scripts/PagesJS/FillCalendar.js"))
+    @Html.IncludeVersionedJs(Url.Content("~/assets/design/scripts/PagesJS/ApplyLeave.js"))
+
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+    <script src="~/assets/design/js/sweetalert.js"></script>
+    <script src="~/assets/design/js/notify.js"></script>
+    <script>
+
+
+    </script>
+}

@@ -1,0 +1,208 @@
+﻿.dashtl .tl-hello {
+    color:#fff;
+}
+.dashtl p{
+    color:#eaeaea;
+}
+
+/*.dashboardTL {
+    background-color: #f8f9fa !important;
+  padding:0;
+    margin: 0px;
+    
+    position:absolute;
+    box-shadow:none;
+}*/
+.dashboardTL{
+    z-index:10;
+    margin-top:20px;
+}
+.dashboardTL .toplistcount .counter-customer {
+        padding: 0px !important;
+        margin: 0px !important;
+}
+.dashboardTL #HeaderCountDiv .toplistcount {
+        padding: 0px !important;
+        margin: 0px !important;
+}
+ /*   .dashboardTL .count-div .col-xl-2{
+        width:120px !important;
+        background-color:inherit;
+        padding:0;
+        margin:0;
+    }*/
+
+.dashtl .card-header {
+   
+}
+.dashboardTL .card-profile-tl .card {
+  
+    box-shadow: 0 1px 20px 0 rgb(69 90 100 / 8%);
+    border-radius:8px;
+}
+.dashboardTL .card-profile-tl .card-header{
+    border:none;
+    padding:5px;
+    box-shadow:none !important;
+}
+/*.dashboardTL .card-profile-tl img {
+    background-color: #fff;
+    border-radius: 50%;
+    padding: 5px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px !important;
+}*/
+.dashboardTL .card-profile-tl h4{
+    color:#eaeaea;
+    margin-bottom:2px;
+}
+.dashboardTL .card-profile-tl .crdtxt{
+    padding:0px;
+    margin:0px;
+}
+
+.dashboardTL .fc-theme-standard td{
+    padding: 0px !important;
+  margin-bottom:5px;
+}
+.dashboardTL .fc-theme-standard th {
+    padding:2px !important;
+    color: #fff;
+}
+.dashboardTL .fc .fc-daygrid-day-frame {
+    padding-top: 10px;
+    padding-bottom: 7px;
+    position: relative;
+    min-height: 100%;
+}
+
+.dashboardTL .card-profile-tl .ssrmenu {
+    /*color: #888;
+    background-color: #fff;
+    border-radius:10px;
+*/}
+.card-title-attendance p {
+    font-size: 16px;
+    margin-bottom: 0px;
+    color: #455a64;
+    font-weight:bold;
+}
+.punch-calender .table-bordered, .text-wrap table, .table-bordered th, .text-wrap table th, .table-bordered td, .text-wrap table td {
+    margin: 0 0px 3px 0px;
+   
+    padding: 0;
+    font-size:14px !important;
+    border: 1px solid #eff0f6;
+}
+.punch-calender .card-body{
+    padding:0px;
+}
+::-webkit-calendar-picker-indicator {
+    margin-left: 0px;
+}
+.fc .fc-view-harness {
+    height: 270px;
+    /* margin-bottom: 10px; */
+}
+
+.br-t-b{
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    border-left:none;
+    border-right:none;
+}
+.bg-white {
+    background-color: #fff;
+    box-shadow: rgb(0 0 0 / 35%) 0px 5px 15px;
+    border: none;
+    border-radius: 15px;
+    padding: 0;
+}
+.fc .fc-toolbar.fc-header-toolbar {
+    padding: 1px 7px 1px 7px;
+    margin-bottom: 15px;
+}
+.fc .fc-toolbar-title {
+    font-size: 16px;
+    margin: 0;
+}
+.bg-white p {
+    font-size: 16px;
+    margin-bottom: 0px;
+    color: #000;
+    font-weight: bold;
+}
+.bg-white table{
+    box-shadow:none!important;
+    border:none !important;
+}
+
+.tl-target table td{
+    font-size:14px;
+}
+
+.tl-profile {
+    border-radius:15px;
+    background-color: #003049;
+}
+.tl-profile .userprofile{
+    background-color: inherit;
+}
+.tl-profile .userprofile img {
+    width: 120px;
+    height: 120px;
+    background-color: #fff;
+    border-radius: 50%;
+    border: 2px solid #eee;
+    box-shadow: rgb(0 0 0 / 2%) 0px 1px 3px 0px, rgb(27 31 35 / 15%) 0px 0px 0px 1px;
+    /* box-shadow: rgb(0 0 0 / 24%) 0px 3px 8px; */
+    padding: 3px;
+    margin-bottom: 0px !important;
+}
+
+.dashtl .tl-puch {
+    background-color: #fff;
+    color: #888;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius:15px;
+}
+.tl-puch p {
+    color: #000;
+  
+}
+.btn-site {
+    margin: 10px;
+   /* background-color:;*/
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.dashtl .btn-profile {
+    color: #808080;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+/*-----------------------------loader---------------------------*/
+
+
+.loadingdiv .imgloader {
+    margin-left: 40% !important;
+}
+
+
+
+
+/*----------------------Resopnisve profile -----------------------*/
+
+
+@media (max-width:480px) and (min-width:280px) {
+    .tl-profile .userprofile img {
+    width:80px;
+    height:80px
+    }
+    .dashtl .tl-hello{
+        font-size:20px;
+    }
+    .dashboardTL .card-profile-tl h4{
+        font-size:18px;
+    }
+}

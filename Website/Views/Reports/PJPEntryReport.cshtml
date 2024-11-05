@@ -1,0 +1,125 @@
+﻿@model Tab.Approval
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="table-section">
+
+    @Html.Partial("ListHeader_Partial", "PJP Entry Report")
+
+
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+
+
+                        @using (Ajax.BeginForm("_PJPEntryReport", "Reports",
+                                 new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Reports/_PJPEntryReport") },
+                                  new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+                                     new { @id = "_PJPEntryReportForm" })
+                             )
+                        {
+                        <div class="row">
+                            <div class="col-md-4 col-lg-4 form-group">
+                                <label>Month <sup>*</sup></label>
+                                @Html.TextBoxFor(model => model.Month, new { @class = "form-control", @type = "date" })
+                                @Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-2 form-group d-flex align-items-end pt-1">
+                                <label class="small">&nbsp;</label>
+                                <button type="submit" id="btnSubmit" name="Command" value="Add" class="button ">
+                                    <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
+                                </button>
+                            </div>
+                        </div>
+                        }
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="TargetDiv">
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+
+
+    <div class="modal fade pop-dgn" id="ViewModal">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+
+                <div class="modal-header blk-gdn-btn">
+                    <h4 class="modal-title"><i class="fas fa-print"></i>View <span class="spnhead"></span> </h4>
+                    <div class="close" data-dismiss="modal">&times;</div>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div id="ViewModalTagetDiv"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+        <script>
+        function ListHeaderExport() {
+            let table = document.querySelector("#ExportTable");
+            TableToExcel.convert(table);
+        }
+
+        $('#Month').bind("change", function () {
+            $("#btnSearch").click();
+        });
+
+
+
+        function OnSuccess(obj) {
+            $("#TargetDiv").empty();
+            $("#TargetDiv").html(obj);
+            CloseLoadingDialog();
+            ExportTableDatatableScripts();
+        }
+
+          function ViewPJPEntry(obj) {
+        var PJPEntryID = $(obj).closest("tr").find("input:hidden[name=I]").val();
+        var PJPPlanID = $(obj).closest("tr").find("input:hidden[name=PlanID]").val();
+        var USer = $(obj).closest("tr").find("input:hidden[name=N]").val();
+        $(".spnhead").html(USer)
+			$.ajax({
+                url: "/Transaction/_PJPEntryView",
+                type: "Get",
+                data: { src: EncryptJSON(@ViewBag.MenuID+"*" + "/Transaction/_PJPEntryView*" + PJPPlanID + "*" + PJPEntryID + "*0") },
+                success: function (data)
+                {
+                    $("#ViewModalTagetDiv").empty();
+                    $("#ViewModalTagetDiv").html(data);
+                    $('#ViewModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    })
+				},
+				error: function (er) {
+					alert(er);
+
+				}
+			});
+            }
+
+        </script>
+
+    }

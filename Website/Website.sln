@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31613.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website", "Website.csproj", "{52F0E018-477B-4FBF-91BD-DDCE43C9D192}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataModal", "..\DataModal\DataModal.csproj", "{F3E077F0-BF47-4AF2-BCB6-EE7D8A78259B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{52F0E018-477B-4FBF-91BD-DDCE43C9D192}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52F0E018-477B-4FBF-91BD-DDCE43C9D192}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52F0E018-477B-4FBF-91BD-DDCE43C9D192}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52F0E018-477B-4FBF-91BD-DDCE43C9D192}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3E077F0-BF47-4AF2-BCB6-EE7D8A78259B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3E077F0-BF47-4AF2-BCB6-EE7D8A78259B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3E077F0-BF47-4AF2-BCB6-EE7D8A78259B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3E077F0-BF47-4AF2-BCB6-EE7D8A78259B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E0C391E3-1403-4F0D-BC91-74185FCBE9F0}
+	EndGlobalSection
+EndGlobal

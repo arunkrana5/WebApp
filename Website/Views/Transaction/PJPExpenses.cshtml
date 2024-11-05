@@ -1,0 +1,73 @@
+﻿
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Competitor Entry</h3>
+    </div>
+    <div class="card-body pb-2">
+        <div class="row row-sm">
+            <div class="col-md-12 col-12">
+                <div class="table-responsive">
+                    <table id="tableBrand" cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th width="100">Sr. No.</th>
+                                <th>Brand</th>
+                                <th width="100">Qty</th>
+                                <th width="300">Upload</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label></label>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <div class="col-lg-12 form-group camerabtn">
+                                        <a title="click here for open camera" onclick="OpenCamera(this,'back')" style="color: #fff">
+                                            <i class="fa fa-camera" aria-hidden="true"></i>
+                                        </a>
+                                        <img class="img-responsive" src="~/assets/design/images/NoImage.jpg" />
+                                    </div>
+
+                                </td>
+                                <td>
+
+
+                                    <a class="remove"><i class="fa fa-window-close" aria-hidden="true"></i></a>
+
+                                    <a onclick="DeleteRow(this)" class="remove"><i class="fa fa-window-close red-clr" aria-hidden="true"></i></a>
+
+
+                                </td>
+                            </tr>
+                            }
+
+                            }
+                        </tbody>
+                    </table>
+                    <div class="text-right">
+                        <a onclick="AddNewRow(this)" class="btn btn-indigo">Add Row</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+}
+@section scripts    {
+    @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+    <script>
+
+    </script>
+}

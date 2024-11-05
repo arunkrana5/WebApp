@@ -1,0 +1,54 @@
+﻿
+@model Product.Add
+
+
+@using (Ajax.BeginForm("_ProductAdd", "Product",
+        new { src = ViewBag.src },
+         new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+            new { @id = "_ProductAddForm" })
+    )
+{
+
+<div class="table-section">
+
+    @Html.HiddenFor(x => Model.ProductID)
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+            <label>Name<sup>*</sup></label>
+            @Html.TextBoxFor(model => model.ProductName, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+            <label>Code<sup>*</sup></label>
+            @Html.TextBoxFor(model => model.ProductCode, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ProductCode, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+            <label>Product Type<sup>*</sup></label>
+            @Html.DropDownListFor(n => n.PDTypeID, new SelectList(Model.ProductTypeList, "ID", "Name", Model.PDTypeID), "Select Type",
+             new { @class = "form-control applyselect" })
+            @Html.ValidationMessageFor(model => model.PDTypeID, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+            <label>Priority</label>
+            @Html.TextBoxFor(model => model.Priority, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Priority, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-12 form-group">
+
+            @if (Model.ProductID > 0)
+            {
+                <button type="submit" class="btn btn-indigo" name="Command" value="Add"><i class="fa fa-paper-plane" aria-hidden="true"></i> Update</button>
+            }
+            else
+            {
+                <button type="submit" class="btn btn-indigo" name="Command" value="Add"><i class="fa fa-paper-plane" aria-hidden="true"></i> Submit</button>
+            }
+        </div>
+
+    </div>
+    
+</div>
+
+}

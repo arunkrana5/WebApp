@@ -1,0 +1,57 @@
+﻿@using System.Data
+@model  DataSet
+@{
+    int TableCount = 0;
+}
+<div class="masterdetails">
+
+    @foreach (DataRow dtRow in Model.Tables[TableCount].Rows)
+    {
+        <div class="row">
+            @foreach (DataColumn dc in Model.Tables[TableCount].Columns)
+            {
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="floatingInput">@dc.ColumnName</label>
+                        <p>@dtRow[dc.ColumnName]</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    @{TableCount++; }
+    <h4 class="page-title font-sm">Old Dealer Details</h4>
+    @foreach (DataRow dtRow in Model.Tables[TableCount].Rows)
+    {
+        <div class="row">
+            @foreach (DataColumn dc in Model.Tables[TableCount].Columns)
+            {
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="floatingInput">@dc.ColumnName</label>
+                        <p>@dtRow[dc.ColumnName]</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    @{TableCount++; }
+    <h4 class="page-title font-sm">New Dealer Details</h4>
+    @foreach (DataRow dtRow in Model.Tables[TableCount].Rows)
+    {
+        <div class="row">
+            @foreach (DataColumn dc in Model.Tables[TableCount].Columns)
+            {
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="floatingInput">@dc.ColumnName</label>
+                        <p>@dtRow[dc.ColumnName]</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+   </div>

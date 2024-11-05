@@ -1,0 +1,14 @@
+	declare @STARTDATE DATETIME,  @ENDDATE DATETIME
+	SET @STARTDATE = cast('01-Dec-2021'  as date)
+	select @ENDDATE=DATEADD(s,-1,DATEADD(mm, DATEDIFF(m,0,@STARTDATE)+1,0));
+	DECLARE @sql VARCHAR(8000)='', @DAttend VARCHAR(50),@TMPDAY DATETIME;
+
+SET @TMPDAY=@STARTDATE
+		WHILE  cast(@TMPDAY as date)<= cast(@ENDDATE as date)
+			BEGIN 
+				set @DAttend =format(@TMPDAY,'dd-MMM-yyyy')
+				exec spu_SetAttendenceFinal @DAttend,0,''
+				set @TMPDAY=DATEADD(DAY, 1, @TMPDAY)
+			END 
+
+			

@@ -1,0 +1,229 @@
+﻿@model  PJPDocuments
+@{
+    if (Model.DocumentList.Count == 0)
+    {
+        List<PJPDocumentList> List = new List<PJPDocumentList>();
+        PJPDocumentList obj = new PJPDocumentList();
+        List.Add(obj);
+        Model.DocumentList = List;
+    }
+}
+<style>
+    .form-control:disabled {
+        opacity: 1.5;
+    }
+</style>
+@using (Ajax.BeginForm("_PJPDocuments", "Transaction",
+          new { src = ViewBag.src },
+           new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnDocSuccess", OnBegin = "ShowLoadingDialog()" },
+              new { @id = " ", @enctype = "multipart/form-data" })
+      )
+{
+    <input type="hidden" name="PJPID" value="@ViewBag.PJPEntryID" />
+    <input type="hidden" name="VisitType" id="txtVisitType" value="@ViewBag.VisitType" />
+    <div class="col-md-12 col-12">
+        <div class="table-responsive">
+            @{
+                if (ViewBag.VisitType == "Local")
+                {
+                    <table id="Local" cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Sr. No.</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Description</th>
+                                <th>#</th>
+                            </tr>
+                        </thead>
+                        @if (Model != null)
+                        {
+                            for (int i = 0; i < Model.DocumentList.Count; i++)
+                            {
+                                <tbody>
+                                    <tr>
+                                        <td>1 @Html.HiddenFor(model => Model.DocumentList[i].PJPExpensesID, new { @class = "hdnID" })</td>
+                                        <td>Dealer Visit Expense</td>
+                                        <td>
+                                            @Html.TextBoxFor(model => model.DocumentList[i].Amount, new { type = "number", @class = "form-control amount" })
+                                            @Html.ValidationMessageFor(model => Model.DocumentList[i].Amount, "", new { @class = "text-danger" })
+                                        </td>
+                                        <td>
+                                            @Html.TextAreaFor(model => model.DocumentList[i].Description, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => Model.DocumentList[i].Description, "", new { @class = "text-danger" })
+                                        </td>
+                                        <td>
+                                            @if (Model.DocumentList[i].Status != "Approved" && Model.DocumentList[i].Status != "Rejected")
+                                            {
+                                                <div class="text-right">
+                                                    <button type="submit" class="btn btn-primary" name="Command" value="Add"><i class="fa fa-paper-plane" aria-hidden="true"></i> Update</button>
+                                                </div>
+                                            }
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            }
+                        }
+                    </table>
+                }
+                else
+                {
+                    <table id="tablePJPDoc" cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Sr.No.</th>
+                                <th>Expense Type</th>
+                                <th>Amount</th>
+                                <th>Description</th>
+                                <th>Upload</th>
+                                <th>Download</th>
+                                <th>#</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @if (Model != null)
+                            {
+                                int Count = 0;
+                                for (int i = 0; i < Model.DocumentList.Count; i++)
+                                {
+                                    Count++;
+                                    <tr>
+                                        <td>
+                                            <label id="lbl_@Count"> @Count </label>
+                                            @Html.HiddenFor(model => Model.DocumentList[i].PJPExpensesID, new { @class = "hdnID" })
+                                        </td>
+                                        @{
+                                            if (i == 0)
+                                            {
+                                                <td>
+                                                    @Html.DropDownListFor(n => Model.DocumentList[i].ExpenseType, new SelectList(ViewBag.PJPExpDoc, "Name", "Name", "Dealer Visit Exp"), "Select", new { @class = "form-control  applyselect mydropdown", @disabled = "disabled", @OnChange = "ValidateDuplicate(this)" })
+                                                    @Html.ValidationMessageFor(model => Model.DocumentList[i].ExpenseType, "", new { @class = "text-danger" })
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    @Html.DropDownListFor(n => Model.DocumentList[i].ExpenseType, new SelectList(ViewBag.PJPExpDoc, "Name", "Name", Model.DocumentList[i].ExpenseType), "Select", new { @class = "form-control  applyselect mydropdown", @OnChange = "ValidateDuplicate(this)" })
+                                                    @Html.ValidationMessageFor(model => Model.DocumentList[i].ExpenseType, "", new { @class = "text-danger" })
+                                                </td>
+                                            }
+                                        }
+
+                                        <td>
+                                            @Html.TextBoxFor(model => model.DocumentList[i].Amount, new { type = "number", @class = "form-control amount" })
+                                            @Html.ValidationMessageFor(model => Model.DocumentList[i].Amount, "", new { @class = "text-danger" })
+                                        </td>
+                                        <td>
+                                            @Html.TextAreaFor(model => model.DocumentList[i].Description, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => Model.DocumentList[i].Description, "", new { @class = "text-danger" })
+                                        </td>
+                                        <td>
+                                            @{
+                                                if (i == 0)
+                                                {
+                                                    @Html.TextBoxFor(x => Model.DocumentList[i].upload, new { @type = "file", @disabled = "disabled" })
+                                                    @Html.ValidationMessageFor(model => Model.DocumentList[i].upload, "", new { @class = "text-danger" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.TextBoxFor(x => Model.DocumentList[i].upload, new { @type = "file" })
+                                                    @Html.ValidationMessageFor(model => Model.DocumentList[i].upload, "", new { @class = "text-danger" })
+                                                }
+                                            }
+                                        </td>
+                                        <td>
+                                            @{
+                                                if (i == 0)
+                                                {
+                                                    if (Model.DocumentList[i].PJPExpensesID > 0)
+                                                    {
+                                                        <a class="shfile" href="@Model.DocumentList[i].FilePath" target="_blank" disabled="disabled">@Model.DocumentList[i].FileName</a>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    if (Model.DocumentList[i].PJPExpensesID > 0)
+                                                    {
+                                                        <a class="shfile" href="@Model.DocumentList[i].FilePath" target="_blank" disabled="disabled" style="color: blue;">Download</a>
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (Count == 1)
+                                            {
+                                                <a class="remove"><i class="fa fa-window-close" aria-hidden="true"></i></a>
+                                            }
+                                            else
+                                            {
+                                                if (ViewBag.showbutton)
+                                                {
+                                                    <a onclick="DeleteRow(this)" class="remove"><i class="fa fa-window-close red-clr" aria-hidden="true"></i></a>
+                                                }
+                                                else
+                                                {
+                                                    <a class="remove"><i class="fa fa-window-close" aria-hidden="true"></i></a>
+                                                }
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    <div class="text-left" style="margin-left: 340px;">
+                        <p id="total"></p>
+                    </div>
+                    if (ViewBag.showbutton)
+                    {
+                        <div class="text-right">
+                            <a onclick="AddNewRow(this)" class="btn btn-indigo"> Add Row </a>
+                            <button type="submit" class="btn btn-primary" name="Command" value="Add"><i class="fa fa-paper-plane" aria-hidden="true"></i>Update</button>
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+}
+<script>
+    $(document).ready(function () {
+        calculateTotal();
+    });
+    function calculateTotal() {
+        const table = document.getElementById('tablePJPDoc');
+        const rows = table.getElementsByTagName('tr');
+        let total = 0;
+        for (let i = 1; i < rows.length; i++) { // Start from 1 to skip the header
+            const priceCell = rows[i].getElementsByTagName('td')[2]; // Get the third <td> (Price)
+            let price = parseFloat(priceCell.childNodes[1].defaultValue); // Convert text to number
+            //check price is not a number
+            if (isNaN(price)) {
+                price = 0;
+            }
+            total += price; // Add to total
+        }
+
+        document.getElementById('total').textContent = 'Total: ' + total;
+        //console.log(total);
+    }
+    function ValidateDuplicate(obj) {
+        var selected = $(obj).find("option:selected").val();
+        if (selected == "Dealer Visit Exp") {
+            //console.log(selected);
+            var duplicateFound = false;
+            $('.mydropdown').not(obj).each(function () {
+                if ($(this).val() === selected && selected) {
+                    duplicateFound = true;
+                    return false; // Break the loop
+                }
+            });
+            if (duplicateFound) {
+                FailToaster("Already Exists !");
+                $(obj).val('');
+            }
+        }
+    }
+
+</script>

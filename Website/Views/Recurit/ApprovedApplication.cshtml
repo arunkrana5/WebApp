@@ -1,0 +1,291 @@
+﻿
+@model Requirement.FullView
+@{ 
+    <style>
+        .chkdiv input {
+            width: auto;
+            vertical-align: sub;
+        }
+    </style>
+}
+@using (Ajax.BeginForm("ApprovedApplication", "Recurit",
+        new { src = ViewBag.src },
+         new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+            new { @id = "ApprovedApplicationForm", @enctype = "multipart/form-data" })
+    )
+{
+    @Html.HiddenFor(model => model.ReqID)
+    <div class="table-section px-3 pt-1">
+        <section class="request">
+            <div class="row my-2">
+                <div class="col-xl-8 my-1">
+                    <div class="card pb-3">
+                        <div class="card-header py-2 ">
+                            <div class="card-title d-flex justify-content-between py-0 my-0">
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="rrname">Request No: </p>
+                                    <p class="rrqno mx-1 "> @Model.RequestNo</p>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="rrname">Request Date:</p>
+                                    <p class="rrqno mx-1">@Model.RequestDate</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+
+                                    <div class="d-flex justify-content-between bgR">
+                                        <p class="rname">Hired Type</p>
+                                        <p class="rqno">@Model.HiredBy</p>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between bgR">
+                                        <p class="rname">Region</p>
+                                        <p class="rqno">@Model.Region</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between bgR">
+                                        <p class="rname">State</p>
+                                        <p class="rqno">@Model.State</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between bgR">
+                                        <p class="rname">Branch</p>
+                                        <p class="rqno">@Model.Branch</p>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex justify-content-between bgR">
+                                        <p class="rname">Dealer Name</p>
+                                        <p class="rqno">@Model.DealerName (@Model.DealerCode)	</p>
+                                    </div>
+
+
+                                    <div class="d-flex justify-content-between bgR">
+                                        <p class="rname">Potential</p>
+                                        <p class="rqno">@Model.Potential</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between bgR">
+                                        <p class="rname">Dealer Category</p>
+                                        <p class="rqno">@Model.DealerCategory</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between bgR">
+                                        <p class="rname">Dealer Type</p>
+                                        <p class="rqno">@Model.DealerType</p>
+                                    </div>
+
+
+                                </div>
+                                <div class="col-12">
+                                    <div class=" bgR">
+                                        <div class="row">
+                                            <div class="col-2 ">
+                                                <p class="rname">Dealer Address</p>
+                                            </div>
+                                            <div class="col-10">
+                                                <p class="rqno">@Model.DealerAddress
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                @if (Model.TargetList != null)
+                {
+                    <div class="col-xl-4 my-1">
+                        <div class="card-shadow m-0 p-0 client">
+                            <div class="d-flex justify-content-between client-header p-0 m-0">
+                                <div class="client-tb-title mx-2 my-2"><h3>Target</h3></div>
+                            </div>
+                            <div class="row card">
+                                <div class="col-xl-12 p-0 m-0" id="client-table">
+                                    <table class="table table-bordered text-nowrap key-buttons mb-0 pb-0 ">
+                                        <thead>
+                                            <tr>
+                                                <th>S.NO</th>
+                                                <th>Product Type</th>
+                                                <th>Target Qty</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{ int pdcount = 0;}
+                                            @foreach (var item in Model.TargetList)
+                                            {
+                                                pdcount++;
+                                                <tr>
+                                                    <td>@pdcount</td>
+                                                    <td>@item.ProductType</td>
+                                                    <td>@item.Qty</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            @if (Model.ApplicationList != null)
+            {
+                <div class="mt-3 mb-2" id="client-table">
+                    <div class="d-flex justify-content-between my-1">
+                        <div class="client-tb-title">
+                            <p>Application Offered</p>
+                            <small style="color:red">Note:- checked application will considered as approved rest as rejected. once you will hit submit and close button, this request will be closed.</small>
+                        </div>
+                       
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <table id="example" class="table table-bordered text-nowrap key-buttons table-responsive-sm">
+                                <thead>
+                                    <tr>
+                                        <th>SNo.</th>
+                                        <th>Action</th>
+                                        <th>Remarks</th>
+                                        <th>Name</th>
+                                        <th>Phone</th>
+                                        <th>EmailID</th>
+                                        <th>Qualification</th>
+                                        <th>Experience</th>
+                                        <th>Salary</th>
+                                        <th>Resume</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.ApplicationList.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @(i+1)
+                                                @Html.HiddenFor(model => Model.ApplicationList[i].ApplicationID)
+                                                
+                                            </td>
+                                            <td class="chkdiv">
+                                                <input type="checkbox" class="" id="@Html.IdFor(m => m.ApplicationList[i].IsChecked)" name="@Html.NameFor(m => m.ApplicationList[i].IsChecked)" @(Model.ApplicationList[i].Approved==1?"checked":"") />
+                                                <label for="@Html.IdFor(m => m.ApplicationList[i].IsChecked)"></label>
+                                                @Html.ValidationMessageFor(m => m.ApplicationList[i].IsChecked, "", new { @class = "text-danger" })
+                                            </td>
+                                            <td>
+                                                @Html.TextBoxFor(model => Model.ApplicationList[i].ApprovedRemarks, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => Model.ApplicationList[i].ApprovedRemarks, "", new { @class = "text-danger" })
+                                            </td>
+                                            <td>@Model.ApplicationList[i].Name </td>
+                                            <td>@Model.ApplicationList[i].Phone</td>
+                                            <td>@Model.ApplicationList[i].EmailID</td>
+                                            <td>@Model.ApplicationList[i].Qualification</td>
+                                            <td>@Model.ApplicationList[i].Experience</td>
+                                            <td>@Model.ApplicationList[i].Salary</td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(Model.ApplicationList[i].AttachmentURL))
+                                                {
+                                                    <a target="_blank" href="@Model.ApplicationList[i].AttachmentURL">Resume</a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 my-1 py-1 px-0">
+                    <label>Remarks<sup>*</sup></label>
+                    @Html.TextBoxFor(model => model.ApprovedRemarks, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ApprovedRemarks, "", new { @class = "text-danger" })
+                </div>
+                <div class="d-flex justify-content-end my-3">
+                    <button type="submit" class="btn apr-btn btnProcess pull-right" name="Command" value="FinalSubmit">
+                        <i class="fa fa-check" aria-hidden="true"></i>
+                        Submit and Close
+                    </button>
+
+                    <button type="submit" class="btn btn-primary pull-right" name="Command" value="submit">
+                        <i class="fa fa-check" aria-hidden="true"></i>
+                        Submit
+                    </button>
+
+                    <div class="">
+                        <a href="/" type="button" class="btn-default client-save btn  px-5">Back </a>
+                    </div>
+                </div>
+            }
+
+
+
+        </section>
+    </div>
+}
+@section scripts    {
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+    <script>
+        function OnSuccess(obj) {
+            if (obj.Status) {
+                SuccessToaster(obj.SuccessMessage);
+                window.location.href = obj.RedirectURL;
+            }
+            else {
+                CloseLoadingDialog();
+                FailToaster(obj.SuccessMessage);
+
+            }
+        }
+
+
+
+            @*function ClickCheck(obj) {
+                var IDs = "";
+                $("input[name=Chksingle]").each(function () {
+                    if ($(this).prop('checked') == true) {
+                        IDs += $(this).val() + ",";
+                    }
+                });
+                $("input:hidden[name=ApplicationIDs]").val(IDs);
+            }
+
+
+             function SubmitApprovalForm(Approved) {
+                var dataObject = JSON.stringify({
+                    'ApprovedRemarks': $("#txtReason").val(),
+                    'Approved': Approved,
+                    'IDs': $("#ApplicationIDs").val(),
+                    'src': EncryptJSON(@ViewBag.MenuID+"*" + "/Recurit/ApprovedApplication")
+                });
+            $.ajax({
+                url: "/Recurit/ApprovedApplication",
+                dataType: "json",
+                contentType: 'application/json',
+                type: "Post",
+                data: dataObject,
+                async: false,
+                success: function (data)
+                {
+                    if (data.Status) {
+                        SuccessToaster(data.SuccessMessage);
+                        window.location.href = data.RedirectURL;
+                    }
+                    else {
+                        CloseLoadingDialog();
+                        FailToaster(data.SuccessMessage);
+                    }
+
+				},
+				error: function (er) {
+                    CloseLoadingDialog();
+				}
+			});
+        }*@
+    </script>
+}

@@ -1,0 +1,47 @@
+﻿@model IList<AutoReport.Log> 
+
+<div class="table-responsive">
+<table id="example" class="table table-bordered text-nowrap key-buttons table-hover table-responsive-md table-responsive-md">
+    <thead>
+        <tr>
+            <th>S.no.</th>
+            <th>Action</th>
+            <th>Date</th>
+            <th>Email</th>
+            <th>Name</th>
+            <th>User Type</th>
+            <th>Mail Count</th>
+            <th>Mail Status</th>
+            <th>Response Message</th>
+            <th>Updated Date</th>
+            <th>IP Address</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @{ int count = 0;}
+        @foreach (AutoReport.Log item in Model)
+        {
+            count++;
+        <tr>
+            <td>@count</td>
+            <td>
+                <input type="hidden" name="I" value="@item.LoginID" />
+                <input type="hidden" name="D" value="@item.Date" />
+                <button onclick="SendReport(this)">Resend Mail</button>
+            </td>
+            <td>@item.Date</td>
+            <td>@item.EmailID</td>
+            <td>@item.EMPName</td>
+            <td>@item.UserType</td>
+            <td>@item.MailCount</td>
+            <td class="@(item.MailFlag==1?"grnclr":"redclr")">@item.MailStatus</td>
+            <td>@item.Error</td>
+            <td>@item.ModifiedDate</td>
+            <td>@item.IPAddress</td>
+        </tr>
+        }
+
+    </tbody>
+</table>
+</div>

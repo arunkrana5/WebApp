@@ -1,0 +1,85 @@
+﻿@model AttendenceStatus.Add
+
+
+@using (Ajax.BeginForm("_AttendenceStatusAdd", "Masters",
+        new { src = ViewBag.src },
+         new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+            new { @id = "_AttendenceStatusAddForm" })
+    )
+{
+
+
+  
+    @Html.HiddenFor(x => Model.ID)
+<div class="row p-2">
+
+    <div class="col-lg-2 col-md-6 col-sm-6 form-group">
+        <label>Status<sup>*</sup></label>
+        @Html.TextBoxFor(model => model.Status, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-2 col-md-6 col-sm-6 form-group">
+        <label>Display Name<sup>*</sup></label>
+        @Html.TextBoxFor(model => model.DisplayName, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.DisplayName, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-2 col-md-6 col-sm-6 form-group">
+        <label>Color </label>
+        @Html.TextBoxFor(model => model.Color, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Color, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-2 col-md-6 col-sm-6 form-group">
+        <label>Icon </label>
+        @Html.TextBoxFor(model => model.Icon, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Icon, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-lg-2 col-md-6 col-sm-6 form-group">
+        <label>Priority</label>
+        @Html.TextBoxFor(model => model.Priority, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Priority, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-lg-2 col-md-6 col-sm-6 form-group MonthlyAccrued">
+        <label>Monthly Accrued</label>
+        @Html.TextBoxFor(model => model.MonthlyAccrued, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.MonthlyAccrued, "", new { @class = "text-danger" })
+    </div>
+    <div class="col-lg-2 col-md-6 col-sm-6 form-group row">
+
+        @Html.HiddenFor(model => model.UseFor)
+        <div class="form-label ">Use For</div>
+        <div class="custom-controls-stacked row">
+            <label class="custom-control custom-checkbox col-xl-3">
+                <input type="checkbox" class="custom-control-input" name="chkAll" @(Model.UseFor.Contains("Attendence") ? "checked" : "") onclick="SaveUseFor(this)" value="Attendence">
+                <span class="custom-control-label">Attendence</span>
+            </label>
+            <label class="custom-control custom-checkbox col-xl-3">
+                <input type="checkbox" class="custom-control-input" name="chkAll" @(Model.UseFor.Contains("FinalAttendence") ? "checked" : "") onclick="SaveUseFor(this)" value="FinalAttendence">
+                <span class="custom-control-label">Final Attendence</span>
+            </label>
+            <label class="custom-control custom-checkbox col-xl-3">
+                <input type="checkbox" class="custom-control-input" name="chkAll" @(Model.UseFor.Contains("Leave") ? "checked" : "") onclick="SaveUseFor(this)" value="Leave">
+                <span class="custom-control-label">Leave</span>
+            </label>
+        </div>
+
+
+        @Html.ValidationMessageFor(model => model.UseFor, "", new { @class = "text-danger" })
+    </div>
+
+
+    <div class="col-lg-12 form-group">
+
+        @if (Model.ID > 0)
+        {
+            <button type="submit" class="btn client-save btn-primary" name="Command" value="Add"> Update</button>
+        }
+        else
+        {
+            <button type="submit" class="btn client-save btn-primary" name="Command" value="Add"> Submit</button>
+        }
+    </div>
+
+</div>
+    }

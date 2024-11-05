@@ -1,0 +1,61 @@
+﻿@model ContactUs_Query.AddQuery
+
+@using (Html.BeginForm("_ContactUs", "Home", FormMethod.Post,
+new
+{
+    name = "_ContactUsForm",
+    id = "_ContactUsForm",
+    enctype = "multipart/form-data",
+    @autocomplete= "off"
+}))
+{
+	<div class="group">
+		@Html.TextBoxFor(model => model.Subject, new { @class = "form-control", @placeholder = " Phone - 8588863512 &Email - bslcre@thrivera.in" })
+		@Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
+	</div>	
+	<div class="group">
+		@Html.TextBoxFor(model => model.Subject, new { @class = "form-control", @placeholder = "Email - bslcre@thrivera.in" })
+		@Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
+	</div>	
+	
+<div class="group">
+   
+    @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @placeholder = "Name" })
+    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+
+</div>
+<div class="group">
+    @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @placeholder = "Email" })
+    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+</div>
+<div class="group">
+    @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", @placeholder = "Phone" })
+    @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+</div>
+<div class="group">
+    <select class="form-control applyselect" id="@Html.IdFor(x=>x.Category)" name="@Html.NameFor(x=>x.Category)">
+        <option>Complaint</option>
+        <option>Feedback</option>
+    </select>
+    @Html.ValidationMessageFor(model => model.Category, "", new { @class = "text-danger" })
+</div>
+<div class="group">
+    @Html.TextBoxFor(model => model.Subject, new { @class = "form-control", @placeholder = "Subject" })
+    @Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
+</div>
+<div class="group text-group">
+    @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @placeholder = "Description",@rows="4" })
+    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+   
+</div>
+
+    <div class="group-btn">
+        <center>
+            <button type="submit" id="SendQuery" class="btn btn-warning">
+                Submit
+                <i class="fa fa-send"></i>
+                
+            </button>
+        </center>
+    </div>
+}

@@ -1,0 +1,57 @@
+﻿@model IList<RFCEntry.List>
+
+
+<div class="table-responsive">
+    <table id="example" class="table table-bordered text-nowrap key-buttons">
+        <thead>
+            <tr>
+                <th>S.no.</th>
+                <th>Doc No</th>
+                <th>Doc Date</th>
+
+                <th>EMP Code</th>
+                <th>EMP Name</th>
+                <th>Attendence Date</th>
+                <th>Old Attendence</th>
+                <th>New Attendence</th>
+                <th>Reason</th>
+                @if (ViewBag.Approved > 0)
+                {
+                    <th>Status</th>
+                    <th>Remarks</th>
+                }
+
+            </tr>
+
+        </thead>
+        <tbody>
+            @{ int count = 0;}
+            @foreach (RFCEntry.List item in Model)
+            {
+                count++;
+            <tr>
+                <td>@count</td>
+
+                <td>@item.DocNo</td>
+                <td>@item.DocDate</td>
+                <td>@item.EMPCode</td>
+                <td>@item.EMPName</td>
+                <td>@item.AttendenceDate</td>
+                <td>@item.OldStatus</td>
+                <td>@item.NewStatus</td>
+                <td>@item.Reason</td>
+                @if (ViewBag.Approved > 0)
+                {
+                    <td>@item.Status</td>
+                    <td>@item.ApprovedRemarks</td>
+
+                }
+            </tr>
+            }
+
+        </tbody>
+    </table>
+    
+</div>
+
+

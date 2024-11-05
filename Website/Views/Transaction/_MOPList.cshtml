@@ -1,0 +1,64 @@
+﻿<div class="table-section mop-section">
+    @model IList<MOP.List>
+
+    <div class="table-responsive">
+        <table id="example" class="table table-bordered text-nowrap key-buttons">
+            <thead>
+                <tr>
+                    <th>S.no.</th>
+                    <th>Action</th>
+                    <th>Date</th>
+                    <th>Brand Name</th>
+                    <th>Product</th>
+                    <th>Sub Product</th>
+                    <th>Top Selling Model</th>
+                    <th>Price</th>
+                    <th>Store Name With Location</th>
+                    <th>Rating</th>
+                    <th>Inserted Date</th>
+                    <th>Inserted by</th>
+                    <th>Updated Date</th>
+                    <th>Updated by</th>
+                    <th>IP Address</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @{ int count = 0;}
+                @foreach (MOP.List item in Model)
+                {
+                    count++;
+                    <tr>
+                        <td>@count</td>
+                        <td>
+                            <input type="hidden" name="I" value="@item.MOPID" />
+                            <input type="hidden" name="N" value="@item.ProductName" />
+
+
+                            @if (ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                            {
+                                <a title="Edit" onclick="ListHeaderAdd(@item.MOPID);" data-toggle='tooltip'> <i class="fa-solid fa-pen-to-square checkgreen" aria-hidden="true"></i> </a>
+                            }
+
+                        </td>
+                        <td>@item.Date</td>
+                        <td>@item.BrandName</td>
+                        <td>@item.ProductName</td>
+                        <td>@item.TranName</td>
+                        <td>@item.ModelNo</td>
+                        <td>@item.Price</td>
+                        <td>@item.Remarks</td>
+                        <td>@item.Rating</td>
+                        <td>@item.CreatedDate</td>
+                        <td>@item.CreatedBy</td>
+                        <td>@item.ModifiedDate</td>
+                        <td>@item.ModifiedBy</td>
+                        <td>@item.IPAddress</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+</div>

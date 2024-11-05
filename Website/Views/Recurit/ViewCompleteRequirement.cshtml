@@ -1,0 +1,199 @@
+﻿
+@model Requirement.FullView
+
+<div class="table-section px-3 pt-1">
+
+    <section id="client-form" class="request">
+        <div class="row mt-2">
+            <div class="col-xl-8 my-1">
+                <div class="card pb-3">
+                    <div class="card-header  py-2">
+                        <div class="card-title d-flex justify-content-between py-0 my-0">
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="rrname">Request No: </p>
+                                <p class="rrqno mx-1 "> @Model.RequestNo</p>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="rrname">Request Date:</p>
+                                <p class="rrqno mx-1">@Model.RequestDate</p>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+
+                                <div class="d-flex justify-content-between bgR">
+                                    <p class="rname">Hired Type</p>
+                                    <p class="rqno">@Model.HiredBy</p>
+                                </div>
+
+                                <div class="d-flex justify-content-between bgR">
+                                    <p class="rname">Region</p>
+                                    <p class="rqno">@Model.Region</p>
+                                </div>
+                                <div class="d-flex justify-content-between bgR">
+                                    <p class="rname">State</p>
+                                    <p class="rqno">@Model.State</p>
+                                </div>
+                                <div class="d-flex justify-content-between bgR">
+                                    <p class="rname">Branch</p>
+                                    <p class="rqno">@Model.Branch</p>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex justify-content-between bgR">
+                                    <p class="rname">Dealer Name</p>
+                                    <p class="rqno">@Model.DealerName (@Model.DealerCode)	</p>
+                                </div>
+
+
+                                <div class="d-flex justify-content-between bgR">
+                                    <p class="rname">Potential</p>
+                                    <p class="rqno">@Model.Potential</p>
+                                </div>
+                                <div class="d-flex justify-content-between bgR">
+                                    <p class="rname">Dealer Category</p>
+                                    <p class="rqno">@Model.DealerCategory</p>
+                                </div>
+                                <div class="d-flex justify-content-between bgR">
+                                    <p class="rname">Dealer Type</p>
+                                    <p class="rqno">@Model.DealerType</p>
+                                </div>
+
+
+                            </div>
+                            <div class="col-12">
+                                <div class=" bgR">
+                                    <div class="row">
+                                        <div class="col-2 ">
+                                            <p class="rname">Dealer Address</p>
+
+                                        </div>
+                                        <div class="col-10">
+                                            <p class="rqno">@Model.DealerAddress
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-xl-4 my-1">
+                @if (Model.TargetList != null)
+                {
+                    <div class="card-shadow m-0 p-0 client">
+                        <div class="d-flex justify-content-between my-1 client-header m-0 p-0">
+                            <div class="client-tb-title mx-2 mt-1"><h3>Target</h3></div>
+                        </div>
+                        <div class="row card p-0 m-0">
+                            <div class="col-xl-12 m-0 p-0" id="client-table">
+                                <table class="table table-bordered text-nowrap key-buttons m-0 p-0">
+                                    <thead>
+                                        <tr>
+                                            <th>S.NO</th>
+                                            <th>Product Type</th>
+                                            <th>Target Qty</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{ int pdcount = 0;}
+                                        @foreach (var item in Model.TargetList)
+                                        {
+                                            pdcount++;
+                                            <tr>
+                                                <td>@pdcount</td>
+                                                <td>@item.ProductType</td>
+                                                <td>@item.Qty</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+            </div>
+        </div>
+        @if (Model.ApplicationList != null && @Model.ApplicationList.Count() > 0)
+        {
+            <div class="my-2" id="client-table">
+                <div class="d-flex justify-content-between my-1">
+                    <div class="client-tb-title"><p>Application Offered @Model.ApplicationList.Count()</p></div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <table id="example" class="table table-bordered text-nowrap key-buttons table-responsive-sm">
+                            <thead>
+                                <tr>
+                                    <th>SNo.</th>
+                                    <th>Action</th>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>EmailID</th>
+                                    <th>Qualification</th>
+                                    <th>Experience</th>
+                                    <th>Salary</th>
+                                    <th>Resume</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ int count = 0;}
+                                @foreach (var item in Model.ApplicationList)
+                                {
+                                    count++;
+                                    <tr>
+                                        <td>@count</td>
+                                        <td>
+                                            <span class="@item.ApprovedStatus">@item.ApprovedStatus</span>
+                                        </td>
+                                        <td>@item.Name</td>
+                                        <td>@item.Phone</td>
+                                        <td>@item.EmailID</td>
+                                        <td>@item.Qualification</td>
+                                        <td>@item.Experience</td>
+                                        <td>@item.Salary</td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(@item.AttachmentURL))
+                                            {
+                                                <a target="_blank" href="@item.AttachmentURL">Resume</a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(@Model.ApprovedRemarks))
+                    {
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+                                <label class="form-label" style="font-size:16px; color:#000; font-weight:400">Approved Remarks</label>
+                                <p> @Model.ApprovedRemarks</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="row pb-3">
+            <div class="col-lg-12 mt-3 text-right">
+                <a href="/" type="button" class="btn-primary client-save btn  ">Back </a>
+            </div>
+        </div>
+    </section>
+</div>

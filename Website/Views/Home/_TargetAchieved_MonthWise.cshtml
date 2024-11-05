@@ -1,0 +1,45 @@
+﻿
+@model IList<TrgVsAch> 
+<div class="table-responsive">
+    <table class="table table-bordered table-hover table-wrapper-scroll-y my-custom-scrollbar  text-nowrap key-buttons inoutrpt">
+        <thead>
+            <tr role="row">
+                <th>S No.</th>
+                <th>Product</th>
+                <th>Target</th>
+                <th>Achievement</th>
+                <th>Percent</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @{ int Rowcount = 0;}
+            @foreach (var dtRow in Model)
+            {
+                Rowcount++;
+
+            <tr role="row" class="@(Rowcount%2==0?"even":"odd")">
+                <td>@dtRow.SNo</td>
+                <td>@dtRow.ProductType</td>
+                <td>@dtRow.Target</td>
+               
+                <td>@dtRow.Achievement</td>
+                <td>
+                    @{
+                        var names = new List<string> { "bg-primary", "bg-success", "bg-warning", "bg-secondary", "bg-ac", "bg-ap" };
+                        System.Random rnd = new System.Random();
+                        int index = rnd.Next(names.Count);
+                        var Classnames = names[index];
+                        
+                    }
+                    <div class="progress progress-sm mb-1  mt-2 bg-primary-transparent">
+                        <div class="progress-bar @Classnames" style="width: @dtRow.Percent%"></div>
+                    </div>
+                    <span class="prct-clr text-right"><strong>@dtRow.Percent %</strong> </span>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

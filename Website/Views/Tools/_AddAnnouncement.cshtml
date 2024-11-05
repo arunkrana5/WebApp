@@ -1,0 +1,86 @@
+﻿@model Announcement.Add
+
+
+<div class="card">
+
+    <div class="x_panel">
+        <div class="card-body">
+            @using (Ajax.BeginForm("_AddAnnouncement", "Tools",
+             new { src = ViewBag.src },
+              new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+                 new { @id = "_AddAnnouncementForm", @enctype = "multipart/form-data" })
+         )
+            {
+                @Html.HiddenFor(x => Model.ID)
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+                        <label>Heading</label>
+                        @Html.TextBoxFor(model => model.Heading, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Heading, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+                        <label>Roles</label>
+                        @Html.HiddenFor(model => model.Roles)
+                        <select multiple data-val="true" class="form-control applyselect" onchange="FillRoles(this)">
+                            @if (Model.RoleList != null)
+                            {
+                                foreach (var item in Model.RoleList)
+                                {
+                                    if (!string.IsNullOrEmpty(Model.Roles))
+                                    {
+                                        <option value="@item.Name" @(Model.Roles.Contains(item.Name) ? "selected" : "")>@item.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Name">@item.Name</option>
+                                    }
+
+                                }
+                            }
+                        </select>
+                        @Html.ValidationMessageFor(model => model.Roles, "", new { @class = "text-danger" })
+
+                    </div>
+
+                    <div class="col-lg-6 form-group">
+                        <label>Start Date <sup>*</sup></label>
+                        @Html.TextBoxFor(model => model.StartDate, new { @class = "form-control", @type = "Date" })
+                        @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-lg-6 form-group">
+                        <label>End Date <sup>*</sup></label>
+                        @Html.TextBoxFor(model => model.EndDate, new { @class = "form-control", @type = "Date" })
+                        @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label>Priority <sup>*</sup></label>
+                        @Html.TextBoxFor(model => model.Priority, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Priority, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 form-group">
+                        <label>Message </label>
+                        @Html.TextAreaFor(model => model.Message, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="row">
+
+                    @if (Model.ID > 0)
+                    {
+                        <button type="submit" class="btn client-save btn-primary" name="Command" value="Add"> Update</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn client-save btn-primary" name="Command" value="Add"> Submit</button>
+                    }
+
+                </div>
+
+            }
+
+        </div>
+    </div>
+</div>

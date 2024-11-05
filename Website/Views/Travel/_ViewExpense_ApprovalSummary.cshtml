@@ -1,0 +1,35 @@
+﻿@model IList<ExpenseApprovedSummary>
+
+
+
+<div class="table-responsive">
+    <table id="example" class="table table-bordered table-hover table-wrapper-scroll-y my-custom-scrollbar table-striped text-nowrap key-buttons">
+        <thead>
+            <tr>
+              
+
+                <th>Status</th>
+                <th>Doctype</th>
+                <th>Approved Remarks</th>
+                <th>Approved By</th>
+                <th>Approved Date</th>
+
+
+            </tr>
+
+        </thead>
+        <tbody>
+            @foreach (var    item in Model)
+            {
+            <tr>
+                <td>@item.Status</td>
+                <td>@item.Doctype</td>
+                <td>@item.ApprovedRemarks</td>
+                <td>@item.ApprovedBy</td>
+                <td>@item.ApprovedDate</td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+</div>

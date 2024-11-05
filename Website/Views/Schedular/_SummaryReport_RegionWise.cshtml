@@ -1,0 +1,193 @@
+﻿@model DailySummary.Data
+<div class="table-responsive">
+    <table border="1" cellpadding="2" cellspacing="0" width="100%" class="rpttable">
+        <thead>
+            <tr>
+                <th bgcolor="#e4edfd" align="center" colspan="4">&nbsp;</th>
+                <th bgcolor="#57bbca" align="center" colspan="@(Model.AttendenceList.Select(x => x.Status).Distinct().Count()*3)">Attendance</th>
+                <th bgcolor="#fbffbb" align="center" colspan="@(Model.SaleList.Select(x => x.ProductType).Distinct().Count()*3)">Yesterday Sales</th>
+                <th bgcolor="#feff9e" align="center" colspan="3">Yesterday Sales Grand Total</th>
+
+                <th bgcolor="#fbffbb" align="center" colspan="@(Model.MTDList.Select(x => x.ProductType).Distinct().Count()*3)">MTD Sales</th>
+                <th bgcolor="#feff9e" align="center" colspan="3">MTD Sales Grand Total</th>
+                <th bgcolor="#57bbca" align="center" colspan="3">Productivity</th>
+
+
+            </tr>
+            <tr bgcolor="#eaf5ff">
+                <th align="center" colspan="1">Region</th>
+                <th align="center" colspan="3">Active Head Count</th>
+                @foreach (var item in Model.AttendenceList.Select(x => x.Status).Distinct())
+                {
+                    <th align="center" colspan="3">@item </th>
+                }
+                @foreach (var item in Model.SaleList.Select(x => x.ProductType).Distinct())
+                {
+                    <th align="center" bgcolor="#fbffbb" colspan="3">@item </th>
+                }
+                <th bgcolor="#feff9e" colspan="3"></th>
+                @foreach (var item in Model.MTDList.Select(x => x.ProductType).Distinct())
+                {
+                    <th align="center" bgcolor="#fbffbb" colspan="3">@item </th>
+                }
+                <th  align="center" bgcolor="#fbffbb" colspan="3"></th>
+                <th align="center" colspan="3"></th>
+            </tr>
+            <tr bgcolor="#eaf5ff">
+                <th align="center"></th>
+                <th align="center">GT</th>
+                <th align="center">MT</th>
+                <th align="center" >Total</th>
+                @foreach (var item in Model.AttendenceList.Select(x => x.Status).Distinct())
+                {
+                    <th align="center">GT</th>
+                    <th align="center">MT</th>
+                    <th align="center">Total</th>
+                }
+
+                @foreach (var item in Model.SaleList.Select(x => x.ProductType).Distinct())
+                {
+                    <th align="center">GT</th>
+                    <th align="center">MT</th>
+                    <th align="center">Total</th>
+                }
+                <th align="center">GT</th>
+                <th align="center">MT</th>
+                <th align="center">Total</th>
+                @foreach (var item in Model.MTDList.Select(x => x.ProductType).Distinct())
+                {
+                    <th align="center" >GT</th>
+                    <th align="center">MT</th>
+                    <th align="center">Total</th>
+                }
+                <th align="center">GT</th>
+                <th align="center">MT</th>
+                <th align="center">Total</th>
+                <th align="center">GT</th>
+                <th align="center">MT</th>
+                <th align="center">Total</th>
+            </tr>
+
+        </thead>
+        <tbody>
+
+            @{ int Count = 0;}
+            @foreach (var item in Model.TotalSSRList.Select(x => x.RegionName).Distinct())
+            {
+                Count++;
+            <tr>
+                <td>@item</td>
+                <td style="text-align:right">@Model.TotalSSRList.Where(x => x.DealerType == "GT" && x.RegionName == item).Sum(x => x.Qty).ToString("N0")</td>
+                <td style="text-align:right">@Model.TotalSSRList.Where(x => x.DealerType == "MT" && x.RegionName == item).Sum(x => x.Qty).ToString("N0")</td>
+                <td style="text-align:right">@Model.TotalSSRList.Where(x => x.RegionName == item).Sum(x => x.Qty).ToString("N0")</td>
+
+                @foreach (var Att in Model.AttendenceList.Select(x => x.Status).Distinct())
+                {
+                    <td style="text-align:right">@Model.AttendenceList.Where(x => x.DealerType == "GT" && x.RegionName == item && x.Status == Att).Sum(x => x.Qty).ToString("N0")</td>
+                    <td style="text-align:right">@Model.AttendenceList.Where(x => x.DealerType == "MT" && x.RegionName == item && x.Status == Att).Sum(x => x.Qty).ToString("N0")</td>
+                    <td style="text-align:right">@Model.AttendenceList.Where(x => x.RegionName == item && x.Status == Att).Sum(x => x.Qty).ToString("N0")</td>
+                }
+
+                @foreach (var ProductType in Model.SaleList.Select(x => x.ProductType).Distinct())
+                {
+                    <td style="text-align:right">@Model.SaleList.Where(x => x.DealerType == "GT" && x.RegionName == item && x.ProductType == ProductType).Sum(x => x.Qty).ToString("N0")</td>
+                    <td style="text-align:right">@Model.SaleList.Where(x => x.DealerType == "MT" && x.RegionName == item && x.ProductType == ProductType).Sum(x => x.Qty).ToString("N0")</td>
+                    <td style="text-align:right">@Model.SaleList.Where(x => x.RegionName == item && x.ProductType == ProductType).Sum(x => x.Qty).ToString("N0")</td>
+                }
+
+                <td style="text-align:right">@Model.SaleList.Where(x => x.DealerType == "GT" && x.RegionName == item).Sum(x => x.Qty).ToString("N0")</td>
+                <td style="text-align:right">@Model.SaleList.Where(x => x.DealerType == "MT" && x.RegionName == item).Sum(x => x.Qty).ToString("N0")</td>
+                <td style="text-align:right">@Model.SaleList.Where(x => x.RegionName == item).Sum(x => x.Qty).ToString("N0")</td>
+
+
+
+                @foreach (var ProductType in Model.MTDList.Select(x => x.ProductType).Distinct())
+                {
+                    <td style="text-align:right">@Model.MTDList.Where(x => x.DealerType == "GT" && x.RegionName == item && x.ProductType == ProductType).Sum(x => x.Qty).ToString("N0")</td>
+                    <td style="text-align:right">@Model.MTDList.Where(x => x.DealerType == "MT" && x.RegionName == item && x.ProductType == ProductType).Sum(x => x.Qty).ToString("N0")</td>
+                    <td style="text-align:right">@Model.MTDList.Where(x => x.RegionName == item && x.ProductType == ProductType).Sum(x => x.Qty).ToString("N0")</td>
+                }
+
+                <td style="text-align:right">@Model.MTDList.Where(x => x.DealerType == "GT" && x.RegionName == item).Sum(x => x.Qty).ToString("N0")</td>
+                <td style="text-align:right">@Model.MTDList.Where(x => x.DealerType == "MT" && x.RegionName == item).Sum(x => x.Qty).ToString("N0")</td>
+                <td style="text-align:right">@Model.MTDList.Where(x => x.RegionName == item).Sum(x => x.Qty).ToString("N0")</td>
+
+                <td style="text-align:right">
+                    @if (Model.TotalSSRList.Where(x => x.DealerType == "GT" && x.RegionName == item).Sum(x => x.Qty) != 0)
+                    {
+                        <span>@Decimal.Round(Convert.ToDecimal(Model.MTDList.Where(x => x.DealerType == "GT" && x.RegionName == item).Sum(x => x.Qty)) / Convert.ToDecimal(Model.TotalSSRList.Where(x => x.DealerType == "GT" && x.RegionName == item).Sum(x => x.Qty)), 2)</span>
+                    }
+                </td>
+                <td style="text-align:right">
+                    @if (Model.TotalSSRList.Where(x => x.DealerType == "MT" && x.RegionName == item).Sum(x => x.Qty) != 0)
+                    {
+                        <span>@Decimal.Round(Convert.ToDecimal(Model.MTDList.Where(x => x.DealerType == "MT" && x.RegionName == item).Sum(x => x.Qty)) / Convert.ToDecimal(Model.TotalSSRList.Where(x => x.DealerType == "MT" && x.RegionName == item).Sum(x => x.Qty)), 2)</span>
+                    }
+                </td>
+                <td style="text-align:right">
+                    @if (Model.TotalSSRList.Where(x => x.RegionName == item).Sum(x => x.Qty) != 0)
+                    {
+                        <span>@Decimal.Round(Convert.ToDecimal(Model.MTDList.Where(x => x.RegionName == item).Sum(x => x.Qty)) / Convert.ToDecimal(Model.TotalSSRList.Where(x => x.RegionName == item).Sum(x => x.Qty)), 2)</span>
+                    }
+                </td>
+
+
+
+            </tr>
+
+            }
+        </tbody>
+        <tfoot>
+            <tr style="background-color: #f1f1f1;">
+                <td>Grand Total</td>
+                <td style="text-align:right">@Model.TotalSSRList.Where(x => x.DealerType == "GT").Sum(x => x.Qty).ToString("N0")</td>
+                <td style="text-align:right">@Model.TotalSSRList.Where(x => x.DealerType == "MT").Sum(x => x.Qty).ToString("N0")</td>
+                <td style="text-align:right">@Model.TotalSSRList.Sum(x => x.Qty).ToString("N0")</td>
+                @foreach (var Att in Model.AttendenceList.Select(x => x.Status).Distinct())
+                {
+                    <td style="text-align:right">@Model.AttendenceList.Where(x => x.DealerType == "GT" && x.Status == Att).Sum(x => x.Qty).ToString("N0")</td>
+                    <td style="text-align:right">@Model.AttendenceList.Where(x => x.DealerType == "MT" && x.Status == Att).Sum(x => x.Qty).ToString("N0")</td>
+                    <td style="text-align:right">@Model.AttendenceList.Where(x => x.Status == Att).Sum(x => x.Qty).ToString("N0")</td>
+                }
+
+                @foreach (var ProductType in Model.SaleList.Select(x => x.ProductType).Distinct())
+                {
+                    <td style="text-align:right">@Model.SaleList.Where(x => x.DealerType == "GT" && x.ProductType == ProductType).Sum(x => x.Qty).ToString("N0")</td>
+                    <td style="text-align:right">@Model.SaleList.Where(x => x.DealerType == "MT" && x.ProductType == ProductType).Sum(x => x.Qty).ToString("N0")</td>
+                    <td style="text-align:right">@Model.SaleList.Where(x => x.ProductType == ProductType).Sum(x => x.Qty).ToString("N0")</td>
+                }
+                <td style="text-align:right">@Model.SaleList.Where(x => x.DealerType == "GT").Sum(x => x.Qty).ToString("N0")</td>
+                <td style="text-align:right">@Model.SaleList.Where(x => x.DealerType == "MT").Sum(x => x.Qty).ToString("N0")</td>
+                <td style="text-align:right">@Model.SaleList.Sum(x => x.Qty).ToString("N0")</td>
+                @foreach (var ProductType in Model.MTDList.Select(x => x.ProductType).Distinct())
+                {
+                    <td style="text-align:right">@Model.MTDList.Where(x => x.DealerType == "GT" && x.ProductType == ProductType).Sum(x => x.Qty).ToString("N0")</td>
+                    <td style="text-align:right">@Model.MTDList.Where(x => x.DealerType == "MT" && x.ProductType == ProductType).Sum(x => x.Qty).ToString("N0")</td>
+                    <td style="text-align:right">@Model.MTDList.Where(x => x.ProductType == ProductType).Sum(x => x.Qty).ToString("N0")</td>
+                }
+                <td style="text-align:right">@Model.MTDList.Where(x => x.DealerType == "GT").Sum(x => x.Qty).ToString("N0")</td>
+                <td style="text-align:right">@Model.MTDList.Where(x => x.DealerType == "MT").Sum(x => x.Qty).ToString("N0")</td>
+                <td style="text-align:right">@Model.MTDList.Sum(x => x.Qty).ToString("N0")</td>
+
+                <td style="text-align:right">
+                    @if (Model.TotalSSRList.Where(x => x.DealerType == "GT").Sum(x => x.Qty) != 0)
+                    {
+                        <span>@Decimal.Round(Convert.ToDecimal(Model.MTDList.Where(x => x.DealerType == "GT").Sum(x => x.Qty)) / Convert.ToDecimal(Model.TotalSSRList.Where(x => x.DealerType == "GT").Sum(x => x.Qty)), 2)</span>
+                    }
+                </td>
+                <td style="text-align:right">
+                    @if (Model.TotalSSRList.Where(x => x.DealerType == "MT").Sum(x => x.Qty) != 0)
+                    {
+                        <span>@Decimal.Round(Convert.ToDecimal(Model.MTDList.Where(x => x.DealerType == "MT").Sum(x => x.Qty)) / Convert.ToDecimal(Model.TotalSSRList.Where(x => x.DealerType == "MT").Sum(x => x.Qty)), 2)</span>
+                    }
+                </td>
+                <td style="text-align:right">
+                    @if (Model.TotalSSRList.Sum(x => x.Qty) != 0)
+                    {
+                        <span>@Decimal.Round(Convert.ToDecimal(Model.MTDList.Sum(x => x.Qty)) / Convert.ToDecimal(Model.TotalSSRList.Sum(x => x.Qty)), 2)</span>
+                    }
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

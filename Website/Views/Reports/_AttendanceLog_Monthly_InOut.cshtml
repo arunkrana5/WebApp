@@ -1,0 +1,120 @@
+﻿@model  List<Attendance_Log.Monthly_INOUT>
+@{
+    DateTime dt;
+    DateTime.TryParse(ViewBag.Date, out dt);
+
+    DateTime baseDate = dt;
+    DateTime StartDate = baseDate.AddDays(1 - baseDate.Day);
+    DateTime EndDate = StartDate.AddMonths(1).AddSeconds(-1);
+}
+
+
+<div class="table-responsive">
+    <table id="ExportTable" class="table table-hover table-bordered text-nowrap key-buttons">
+        <thead>
+            <tr class="parentTH doubleH">
+
+                <th colspan="19"></th>
+                @foreach (var da in ClsCommon.EachDay(StartDate, EndDate))
+                {
+                    <th  colspan="4">@da.ToString("dd-MMM-yyyy")</th>
+                }
+            </tr>
+            <tr role="row" class="childTH ">
+                <th>S No.</th>
+                <th>Image</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Phone</th>
+                <th>Department</th>
+                <th>Designation</th>
+                <th>DOJ</th>
+                <th>Role</th>
+                <th>Region</th>
+                <th>State</th>
+                <th>City</th>
+                <th>Area</th>
+
+                <th>Dealer Name</th>
+                <th>Dealer Code</th>
+                <th>Dealer Type</th>
+                <th>Branch Name</th>
+             
+                <th>Status</th>
+                @foreach (var da in ClsCommon.EachDay(StartDate, EndDate))
+                {
+                    <th>Mark</th>
+                    <th>In</th>
+                    <th>Out</th>
+                    <th>Working</th>
+                }
+
+            </tr>
+        </thead>
+        <tbody>
+
+            @{ int Rowcount = 0;}
+            @foreach (var item in Model)
+            {
+                Rowcount++;
+            <tr>
+                <td>@Rowcount</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.EMPImageURL))
+                    {
+                        <a href="@item.EMPImageURL" target="_blank">
+                            <img class="img-responsive listimage" src="@item.EMPImageURL" />
+                        </a>
+                    }
+                </td>
+                <td>@item.EMPCode</td>
+                <td>@item.EMPName</td>
+                <td>@item.Gender</td>
+                <td>@item.Phone</td>
+                <td>@item.DeptName</td>
+                <td>@item.DesignName</td>
+                <td>@item.DOJ</td>
+                <td>@item.Role</td>
+                <td>@item.Region</td>
+                <td>@item.State</td>
+                <td>@item.City</td>
+                <td>@item.Area</td>
+                <td>@item.DealerName</td>
+                <td>@item.DealerCode</td>
+                <td>@item.DealerType</td>
+                <td>@item.BranchName</td>
+              
+                <td>@item.Status</td>
+                @foreach (var da in ClsCommon.EachDay(StartDate, EndDate))
+                {
+                    if (item.Days.ContainsKey(da.ToString("dd-MMM-yyyy")))
+                    {
+                        if (!string.IsNullOrEmpty(@item.Days[da.ToString("dd-MMM-yyyy")]))
+                        {
+                            if (@item.Days[da.ToString("dd-MMM-yyyy")].Contains('#'))
+                            {
+                                foreach (var ss in item.Days[da.ToString("dd-MMM-yyyy")].Split('#'))
+                                {
+                                    <td>@ss</td>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        }
+
+
+                    }
+                }
+
+            </tr>
+            }
+
+        </tbody>
+    </table>
+</div>

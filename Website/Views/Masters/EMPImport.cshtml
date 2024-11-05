@@ -1,0 +1,203 @@
+﻿@model IList<EMPImport.List>
+
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+
+<div class="page-header">
+    <div class="page-leftheader">
+        <h4 class="page-title">Employee Import List</h4>
+        <div class="page-leftheader-btn">
+
+        </div>
+    </div>
+</div>
+
+
+<div class="card">
+    <div class="row p-2">
+        <div class="col-md-12">
+            <div class="card-body">
+                @using (Ajax.BeginForm("EMPImport", "Masters",
+new { src = ViewBag.src },
+      new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+         new { @id = "EMPImportForm", @enctype = "multipart/form-data" })
+)
+                {
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 form-group">
+                            <label>Upload File<sup>*</sup></label>
+                            <input type="file" class="form-control" @(ViewBag.ListCount > 0 ? "disabled" : "") id="Fileupload" name="Fileupload">
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 form-group loaddownbtn">
+                            <button type="submit" class="btn btnupdate pull-left" @(ViewBag.ListCount > 0 ? "disabled" : "") onclick="return FindExtension();" name="Command" value="ImportData"><i class="fa fa-spinner"></i> Load</button>
+                            <div class="text-right">
+                                <a class=" btn-dsf pull-right" href="\Attachments\ImportSample\EmployeeImportSample.xlsx" target="_blank"><i class="fa fa-download"></i> Download Sample File</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12"><h4>Imported data</h4></div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="btn-rt-temp">
+                                <button type="submit" class="client-save btn-danger pull-left mx-1" @(ViewBag.ListCount > 0 ? "" : "disabled") name="Command" onclick="return ConfirmClearData();" value="ClearData"><i class="fa fa-trash"></i> Clear List</button>
+                                <button id="Aimport" class="bg-primary client-save pull-left" @(ViewBag.ListCount > 0 ? "" : "disabled") name="Command" onclick="return ConfirmImportData();" value="UploadData">Import</button>
+
+                                <a href="@Url.Action("EmployeeList",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Masters/EmployeeList") })" type="button" class="btn btndefault pull-right my-2">Back to Home</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                }
+            </div>
+
+            <div class="col-md-12">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="example" class="table table-bordered text-nowrap key-buttons">
+                            <thead>
+                                <tr>
+                                    <th>S.no.</th>
+                                    <th>Remarks</th>
+                                    <th>EMP Code</th>
+                                    <th>EMP Name</th>
+                                    <th>Phone</th>
+                                    <th>Email ID</th>
+                                    <th>Father Name</th>
+                                    <th>DOB</th>
+                                    <th>Gender</th>
+                                    <th>Design</th>
+                                    <th>Depart</th>
+                                    <th>DOJ</th>
+                                    <th>PAN</th>
+                                    <th>UAN</th>
+                                    <th>ESIC</th>
+                                    <th>Payment Mode</th>
+                                    <th>Country</th>
+                                    <th>Region</th>
+                                    <th>State</th>
+                                    <th>City</th>
+                                    <th>Location</th>
+                                    <th>Address 1</th>
+                                    <th>Address 2</th>
+                                    <th>Zip code</th>
+
+                                    <th>Account No</th>
+                                    <th>Bank Name</th>
+                                    <th>Branch Name</th>
+                                    <th>IFSC Code</th>
+
+                                    <th>User ID</th>
+                                    <th>Password</th>
+                                    <th>Role Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ int Count = 0;}
+                                @foreach (EMPImport.List item in Model)
+                                {
+                                    Count++;
+                                <tr>
+                                    <td>@Count</td>
+                                    <td style="@(item.Remarks=="Success"?"color:green":"color:red")">@item.Remarks</td>
+                                    <td>@item.EMPCode</td>
+                                    <td>@item.EMPName</td>
+                                    <td>@item.Phone</td>
+                                    <td>@item.EmailID</td>
+                                    <td>@item.FatherName</td>
+                                    <td>@item.DOB</td>
+                                    <td>@item.Gender</td>
+                                    <td>@item.Design</td>
+                                    <td>@item.Depart</td>
+                                    <td>@item.DOJ</td>
+                                    <td>@item.PAN</td>
+                                    <td>@item.UAN</td>
+                                    <td>@item.ESIC</td>
+                                    <td>@item.PaymentMode</td>
+                                    <td>@item.Country</td>
+                                    <td>@item.Region</td>
+                                    <td>@item.State</td>
+                                    <td>@item.City</td>
+                                    <td>@item.Location</td>
+                                    <td>@item.Address1</td>
+                                    <td>@item.Address2</td>
+                                    <td>@item.Zipcode</td>
+
+                                    <td>@item.AccountNo</td>
+                                    <td>@item.BankName</td>
+                                    <td>@item.BankBranch</td>
+                                    <td>@item.IFSCCode</td>
+                                    <td>@item.UserID</td>
+                                    <td>@item.Password</td>
+                                    <td>@item.RoleName</td>
+
+
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts    {
+    @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+    <script>
+        function FindExtension() {
+            var hdnFileLoad = '';
+            var len = document.getElementById('Fileupload').value.length;
+
+            hdnFileLoad = document.getElementById('Fileupload').value.substr(len - 4, 4);
+
+            if (len > 0) {
+                if (hdnFileLoad == 'xlsx' || hdnFileLoad == '.xls') {
+                    return true;
+                }
+                else {
+                    FailToaster('You can only upload .xlsx or .xls file.');
+                    return false;
+                }
+            }
+            else {
+                FailToaster('Please upload file.');
+                return false;
+            }
+        }
+        function ConfirmClearData() {
+            if (confirm('Are you sure want to delete data.')) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        function ConfirmImportData() {
+            if (confirm('Are you sure want to Import data.')) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        function OnSuccess(obj) {
+
+            if (obj.Status) {
+                CloseLoadingDialog();
+                SuccessToaster(obj.SuccessMessage);
+                window.location.reload(true);
+            }
+            else {
+                CloseLoadingDialog();
+                FailToaster(obj.SuccessMessage);
+
+            }
+        }
+    </script>
+
+}
+
+
+

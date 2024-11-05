@@ -1,0 +1,386 @@
+﻿@model MyTab.Approval
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="table-section">
+
+    @Html.Partial("ListHeader_Partial", "My Store Shuffling Requests")
+
+    <div class="row p-2">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+                        <div class="tabmargin">
+                            @Html.HiddenFor(x => x.Approved)
+                            <ul id="tabs" class="nav nav-tabs " role="tablist">
+                                <li class="nav-item"> <a tabvalue="0" class="nav-link ripplelink AnchorApproval @(Model.Approved == 0 ? "active" : "")" data-toggle="tab" role="tab"> Pending</a> </li>
+                                <li class="nav-item"> <a tabvalue="1" class="nav-link ripplelink AnchorApproval @(Model.Approved == 1 ? "active" : "") " data-toggle="tab" role="tab">Approved</a></li>
+                                <li class="nav-item"> <a tabvalue="2" class="nav-link ripplelink AnchorApproval @(Model.Approved == 2 ? "active" : "") " data-toggle="tab" role="tab">Rejected</a></li>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 ">
+                            <div class="table-responsive">
+                                <table id="tblDataTable" class="table table-bordered table-hover text-nowrap key-buttons">
+                                    <thead>
+                                        <tr>
+                                            <th>Doc No</th>
+                                            <th>Action</th>
+                                            <th>Doc Date</th>
+                                            <th>EMP  Code</th>
+                                            <th>EMP Name</th>
+                                            <th>Old Dealer Code</th>
+                                            <th>New Dealer Code</th>
+                                            <th>Reason</th>
+                                            <th>Change Date</th>
+                                            <th>Approved Remarks</th>
+                                            <th>Approved By</th>
+                                            <th>Created Date</th>
+                                            <th>Created By</th>
+                                            <th>Modified Date</th>
+                                            <th>Modified By</th>
+                                            <th>IPAddress</th>
+                                            <th>Entry Source</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal fade pop-dgn" id="ViewModal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+
+            <div class="modal-header blk-gdn-btn">
+                <h4 class="modal-title"><span class="mx-2"><i class="fas fa-print"></i></span>Add Shuffling Request </h4>
+                <div class="close" data-dismiss="modal">&times;</div>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div id="TagetDiv"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section scripts    {
+    @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+    <script>
+        $('.AnchorApproval').on('click', function (e) {
+
+            e.preventDefault();
+            e.stopPropagation();
+            var att = $(this).attr("tabvalue");
+            $(".AnchorApproval.active").removeClass("active");
+            $(this).addClass("active");
+            $("#Approved").val(att);
+            if (att == 0) {
+                $("#ApprovalDiv").show();
+            } else {
+                $("#ApprovalDiv").hide();
+            }
+            BindDataTable();
+        });
+
+     
+        $(document).ready(function () {
+            BindDataTable();
+        });
+        function BindDataTable()
+        {
+            var Approved = $("#Approved").val();
+            var src = EncryptJSON(@ViewBag.MenuID+"*/Operations/_MyStoreShufflingList*" + Approved)
+         $('#tblDataTable').DataTable({
+         "destroy": true,
+         "processing": true,
+         "serverSide": true,
+         "ajax": {
+             url: "/Operations/_MyStoreShufflingList?src=" + src,
+             type: "post",
+             data: { "Approved": Approved }
+         },
+             "columns": [
+                 {
+                     className: 'DocNo',
+                     data: 'DocNo',
+                     render: function (data, type, row) {
+
+                         if (type === 'display') {
+                             let HTML = `<input type='hidden' name='I' value="${row.ChangeID}" /><input type='hidden' name='N' value="${row.DocNo}" />`
+                             HTML += `<a title="Show Details" style="color:blue" OP="DealerChangeRequest" onclick="ShowMasterDetails(this)" data-toggle="tooltip">${row.DocNo}</a>`;
+                             return HTML
+                         }
+                         return data;
+                     }
+                 },
+              {
+                     className: 'ChangeID',
+                  data: 'ApprovedRemarks',
+                    render: function (data, type,row) {
+
+                        if (type === 'display' && Approved == 0) {
+                            let HTML = '<a onclick="DeleteEntry(this)" title="Delete Request" class="remove"><i class="fa fa-trash red-clr" aria-hidden="true"></i></a>';
+                            return HTML
+                        }
+                        return data;
+                     }
+                 },
+
+                 { "data": "DocDate" },
+                 { "data": "EMPCode" },
+                 { "data": "EMPName" },
+                 { "data": "OldDealerCode" },
+                 { "data": "NewDealerCode" },
+
+                 { "data": "Reason" },
+                 { "data": "ChangeDate" },
+                 { "data": "ApprovedRemarks" },
+                 { "data": "ApprovedBy" },
+                 { "data": "CreatedDate" },
+                 { "data": "CreatedBy" },
+                 { "data": "ModifiedDate" },
+                 { "data": "ModifiedBy" },
+                 { "data": "IPAddress" },
+                 { "data": "EntrySource" }
+     ]
+ });
+
+ }
+
+    function DeleteEntry(obj) {
+        var ID = $(obj).closest("tr").find("input:hidden[name=I]").val();
+        var Name = $(obj).closest("tr").find("input:hidden[name=N]").val();
+        var Msg = 'Are you sure want to delete ' + Name + ' ?';
+        ConfirmMsgBox(Msg, '', function () {
+            if (ID) {
+                var myobj = DelRecordJson(ID, 'DealerChangeRequest');
+                if (!myobj.Status) {
+                    FailToaster(myobj.SuccessMessage);
+
+                } else {
+                    SuccessToaster(myobj.SuccessMessage);
+                    BindDataTable();
+
+                }
+            }
+        });
+
+    }
+      function ListHeaderAdd(ID) {
+ if (ID == undefined)
+ {
+     ID = 0;
+ }
+		$.ajax({
+            url: "/Operations/_StoreShufflingAdd",
+         type: "Get",
+            data: { src: EncryptJSON(@ViewBag.MenuID+"*/Operations/_StoreShufflingAdd*" + ID) },
+         success: function (data)
+         {
+             $("#TagetDiv").empty();
+             $("#TagetDiv").html(data);
+             $('#ViewModal').modal({
+                 backdrop: 'static',
+                 keyboard: false
+             })
+             $(".applyselect").select2();
+              var form = $("form")
+         .removeData("validator")
+         .removeData("unobtrusiveValidation");
+             $.validator.unobtrusive.parse(form);
+			},
+			error: function (er) {
+				alert(er);
+
+			}
+		});
+     }
+
+        function OnSuccess(obj) {
+            if (obj.Status) {
+                SuccessToaster(obj.SuccessMessage);
+                window.location.reload();
+            }
+            else {
+                CloseLoadingDialog();
+                FailToaster(obj.SuccessMessage);
+
+            }
+        }
+
+        function FillState() {
+            var ID = $("#RegionID").find("option:selected").val();
+            if (ID != '') {
+                var data = GetDropDownList(ID, "State");
+                if (data != '') {
+                    $("#StateID").empty();
+                    $("#StateID").append($("<option />").val("").text("Select"));
+
+                    $("#CityID").empty();
+                    $("#CityID").append($("<option />").val("").text("Select"));
+
+                    $("#AreaID").empty();
+                    $("#AreaID").append($("<option />").val("").text("Select"));
+
+                    $(data).each(function () {
+                        $("#StateID").append($("<option />").val(this.ID).text(this.Name));
+                        $("#StateID").select2();
+
+                    });
+                    if ($("#hdnStateID").val() != 0) {
+                        $("#StateID").val($("#hdnStateID").val()).change();
+                    }
+                    CloseLoadingDialog();
+                } else {
+                    $("#StateID").empty();
+                    $("#StateID").append($("<option />").val("").text("Select"));
+
+                    $("#CityID").empty();
+                    $("#CityID").append($("<option />").val("").text("Select"));
+
+                    $("#AreaID").empty();
+                    $("#AreaID").append($("<option />").val("").text("Select"));
+                }
+            }
+            else {
+                $("#StateID").empty();
+                $("#StateID").append($("<option />").val("").text("Select"));
+
+                $("#CityID").empty();
+                $("#CityID").append($("<option />").val("").text("Select"));
+
+                $("#AreaID").empty();
+                $("#AreaID").append($("<option />").val("").text("Select"));
+            }
+        }
+
+
+
+        function FillCity() {
+            var ID = $("#StateID").find("option:selected").val();
+            if (ID != '') {
+                var data = GetDropDownList(ID, "City");
+                if (data != '') {
+                    $("#CityID").empty();
+                    $("#CityID").append($("<option />").val("").text("Select"));
+                    $("#AreaID").empty();
+                    $("#AreaID").append($("<option />").val("").text("Select"));
+                    $(data).each(function () {
+                        $("#CityID").append($("<option />").val(this.ID).text(this.Name));
+                        $("#CityID").select2();
+                    });
+                    if ($("#hdnCityID").val() != 0) {
+                        $("#CityID").val($("#hdnCityID").val()).change();
+                    }
+                    CloseLoadingDialog();
+                } else {
+                    $("#CityID").empty();
+                    $("#CityID").append($("<option />").val("").text("Select"));
+                    $("#AreaID").empty();
+                    $("#AreaID").append($("<option />").val("").text("Select"));
+                }
+            }
+            else {
+                $("#CityID").empty();
+                $("#CityID").append($("<option />").val("").text("Select"));
+                $("#AreaID").empty();
+                $("#AreaID").append($("<option />").val("").text("Select"));
+            }
+        }
+
+
+
+        function FillArea() {
+            var ID = $("#CityID").find("option:selected").val();
+            if (ID != '') {
+                var data = GetDropDownList(ID, "Area");
+                if (data != '') {
+                    $("#AreaID").empty();
+                    $("#AreaID").append($("<option />").val("").text("Select"));
+                    $(data).each(function () {
+                        $("#AreaID").append($("<option />").val(this.ID).text(this.Name));
+                        $("#AreaID").select2();
+
+                    });
+                    if ($("#hdnAreaID").val() != 0) {
+                        $("#AreaID").val($("#hdnAreaID").val()).change();
+                    }
+                    CloseLoadingDialog();
+                } else {
+                    $("#AreaID").empty();
+                    $("#AreaID").append($("<option />").val("").text("Select"));
+
+
+                }
+            } else {
+                $("#AreaID").empty();
+                $("#AreaID").append($("<option />").val("").text("Select"));
+
+
+            }
+            GetDealerSearch();
+
+        }
+
+    function GetDealerSearch() {
+       
+            var DealerTypeID = $("#DealerTypeID").find("option:selected").val();
+            var DealerCategoryID = $("#DealerCategoryID").find("option:selected").val();
+            var RegionID = $("#RegionID").find("option:selected").val();
+            var StateID = $("#StateID").find("option:selected").val();
+            var CityID = $("#CityID").find("option:selected").val();
+            var AreaID = $("#AreaID").find("option:selected").val();
+            var dataObject = JSON.stringify({
+                'DealerTypeID': DealerTypeID,
+                'DealerCategoryID': DealerCategoryID,
+                'RegionID': RegionID,
+                'StateID': StateID,
+                'CityID': CityID,
+                'AreaID': AreaID
+            });
+            if (dataObject) {
+                var data = GetDealerSearchJSON(dataObject);
+                if (data != '') {
+                    $("#NewDealerID").empty();
+                    $("#NewDealerID").append($("<option />").val("").text("Select"));
+                    $(data).each(function () {
+                        $("#NewDealerID").append($("<option />").val(this.ID).text(this.Name));
+                        $("#NewDealerID").select2();
+
+                    });
+                    CloseLoadingDialog();
+                } else {
+                    $("#NewDealerID").empty();
+                    $("#NewDealerID").append($("<option />").val("").text("Select"));
+                    CloseLoadingDialog();
+
+                }
+            } else {
+                $("#NewDealerID").empty();
+                $("#NewDealerID").append($("<option />").val("").text("Select"));
+
+        }
+       
+
+        }
+
+    </script>
+
+}

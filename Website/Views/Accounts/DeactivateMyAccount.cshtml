@@ -1,0 +1,135 @@
+﻿
+@model TerminateRequest.Add
+
+@{
+    Layout = null;
+    string PageName = ClsApplicationSetting.GetPageName();
+}
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@PageName </title>
+    <meta name="title" content="@PageName" />
+    <meta name="keywords" content="@PageName" />
+    <meta name="description" content="@PageName" />
+
+    <!----fonts-->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+
+    <!--fonts-->
+    <link rel="icon" href="@Url.Content("~/assets/design/images/brand/favicon.png")" type="image/png" sizes="50x50" media="(prefers-color-scheme: light)" />
+
+    <link rel="icon" href="@Url.Content("~/assets/design/images/brand/android-chrome-192x192.png")" type="image/png" sizes="50x50" media="(prefers-color-scheme: dark)" />
+
+    @*@Html.IncludeVersionedCss(Url.Content("~/assets/design/css/style.css"))*@
+    @Html.IncludeVersionedCss(Url.Content("~/assets/design/css/login.css"))
+    @Html.IncludeVersionedCss(Url.Content("~/assets/design/plugins/bootstrap/css/bootstrap.css"))
+
+    @Html.IncludeVersionedCss(Url.Content("~/assets/design/css/skins.css"))
+
+
+
+    @Html.IncludeVersionedCss(Url.Content("~/assets/design/plugins/fontawesome-free-6.2.0-web/css/all.css"))
+    @Html.IncludeVersionedCss(Url.Content("~/assets/design/plugins/fontawesome-free-6.2.0-web/css/all.min.css"))
+    <style>
+        .text-danger span {
+            color: #dc3545 !important;
+        }
+    </style>
+</head>
+
+
+<body class="default-sidebar">
+    <form>
+    </form>
+
+
+    <div class=" page-content ">
+        <div class="page-single-content">
+            <div class="card-body">
+                <div class="background">
+                    <div class="shape-lg"></div>
+                    <div class="shape-lg"></div>
+                </div>
+                @using (Html.BeginForm("DeactivateMyAccount", "Accounts",
+new { ReturnURL = ViewBag.ReturnURL }, FormMethod.Post,
+new
+{
+name = "LoginForm",
+id = "LoginForm",
+@class = "login-form",
+enctype = "multipart/form-data"
+}))
+                {
+                    <div class="form-lg" id="login-details">
+
+
+                        <div class="text-center">
+                            <img src="~/assets/design/images/brand/favicon.png" alt="logo" width="68px">
+                        </div>
+
+                        <div class="text-center">
+
+                            <h3 class="">Exit Process</h3>
+
+                        </div>
+                        <label for="username">User ID</label>
+                        @Html.TextBoxFor(model => model.USerID, new { @class = "form-control ", @autofocus = "true" })
+                        @Html.ValidationMessageFor(model => model.USerID, "", new { @class = "text-danger" })
+
+                        <label for="username">Last Working Day</label>
+                        @Html.TextBoxFor(model => model.LastWorkingDay, new { @class = "form-control", @type = "date" })
+                        @Html.ValidationMessageFor(model => model.LastWorkingDay, "", new { @class = "text-danger" })
+
+
+                        <label for="username">Reason</label>
+                        @Html.TextBoxFor(model => model.Reason, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Reason, "", new { @class = "text-danger" })
+
+                        <div class=" submit-div d-flex justify-content-center mt-3">
+                            <button name="Command" value="Submit" class="" type="submit">Submit</button>
+                        </div>
+
+
+                        <div class="">
+                            @if (TempData["LoginSuccess"] != null)
+                            {
+                                if (TempData["LoginSuccess"].ToString() != "")
+                                {
+                                    <div class="@(TempData["LoginSuccess"].ToString()=="Y"?"text-success":"text-danger") text-center error-login">
+                                        @TempData["LoginSuccessMsg"]
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="mt-2">
+                            <a href="/Accounts/Login" class=" forgot-password ">Back to Login</a>
+                        </div>
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    @Html.IncludeVersionedJs(Url.Content("/assets/design/plugins/bootstrap/popper.min.js"))
+    @Html.IncludeVersionedJs(Url.Content("/assets/design/plugins/bootstrap/js/bootstrap.min.js"))
+    @Html.IncludeVersionedJs(Url.Content("~/assets/design/js/vendors/jquery-3.5.1.min.js"))
+    @Html.IncludeVersionedJs(Url.Content("/assets/design/plugins/bootstrap/popper.min.js"))
+    @Html.IncludeVersionedJs(Url.Content("~/assets/design/plugins/fontawesome-free-6.2.0-web/js/all.js"))
+    @Html.IncludeVersionedJs(Url.Content("~/assets/design/plugins/fontawesome-free-6.2.0-web/js/all.min.js"))
+    @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+    <script>
+
+
+    </script>
+</body>
+
+
+
+</html>

@@ -1,0 +1,136 @@
+﻿
+@using System.Data
+@model  DataSet
+@{
+    int Headcount = 0;
+    bool IsApprovedValid = false;
+    DateTime dt, CurrentDate = DateTime.Now.Date;
+    DateTime.TryParse(ViewBag.Date, out dt);
+
+    var datesloop = new List<DateTime>();
+
+    DateTime baseDate = dt;
+    DateTime StartDate = baseDate.AddDays(1 - baseDate.Day);
+    DateTime EndDate = StartDate.AddMonths(1).AddSeconds(-1);
+    if (ClsApplicationSetting.GetSessionValue("Modify") == "True" && ViewBag.Approved == 0)
+    {
+        string AttendenceApprovalDates = ClsApplicationSetting.GetConfigValue("AttendenceApprovalDates");
+        if (string.IsNullOrEmpty(AttendenceApprovalDates))
+        {
+            AttendenceApprovalDates = StartDate.Day.ToString();
+        }
+
+        if (!AttendenceApprovalDates.Contains(','))
+        {
+            int intday = 0;
+            int.TryParse(AttendenceApprovalDates, out intday);
+            var myDate = new DateTime(CurrentDate.Year, CurrentDate.Month, intday);
+            datesloop.Add(myDate);
+        }
+        else
+        {
+            foreach (var item in AttendenceApprovalDates.Split(','))
+            {
+                int intday = 0;
+                int.TryParse(item, out intday);
+                var myDate = new DateTime(CurrentDate.Year, CurrentDate.Month, intday);
+                datesloop.Add(myDate);
+            }
+        }
+
+        if (datesloop.Contains(CurrentDate))
+        {
+            IsApprovedValid = true;
+        }
+    }
+
+}
+
+<div class="table-responsive">
+    <table id="example" class="table table-bordered text-nowrap key-buttons">
+        <thead>
+            <tr role="row">
+                @foreach (DataColumn item in Model.Tables[0].Columns)
+                {
+
+                    if (!item.ColumnName.Contains("_"))
+                    {
+                        Headcount++;
+                        if (Headcount == 2 && IsApprovedValid)
+                        {
+                            <th>Action</th>
+                        }
+                        <th>@item.ColumnName</th>
+                    }
+                }
+            </tr>
+        </thead>
+        <tbody>
+
+            @{ int Rowcount = 0; string Val = ""; Headcount = 0;}
+            @foreach (DataRow dtRow in Model.Tables[0].Rows)
+            {
+                Rowcount++;
+                Headcount = 0;
+                <tr role="row" class="@(Rowcount%2==0?"even":"odd")">
+
+                    @foreach (DataColumn dc in Model.Tables[0].Columns)
+                    {
+                        if (!dc.ColumnName.Contains("_"))
+                        {
+                            Headcount++;
+                            if (Headcount == 2 && IsApprovedValid)
+                            {
+                                <td>
+                                    <input type="hidden" name="I" value="@dtRow["_EMPID"].ToString()" />
+                                    <input type="hidden" name="N" value="@dtRow["EMPCODE"].ToString()" />
+                                    <input type="checkbox" class="newwidth" id="checkAll_@Rowcount" name="Chksingle" onclick="ClickCheck(this);" value="@dtRow["_EMPID"].ToString()" />
+                                    <label for="checkAll_@Rowcount"></label>
+
+                                </td>
+                            }
+                            if (dc.ColumnName.ToUpper().Contains("IMAGE"))
+                            {
+                                <td>
+                                    @if (!string.IsNullOrEmpty(dtRow[dc.ColumnName].ToString()))
+                                    {
+                                        <a href="@dtRow[dc.ColumnName]" target="_blank">
+
+                                            @Html.GetImage(dtRow[dc.ColumnName].ToString(), "", "img-responsive listimage")
+                                        </a>
+                                    }
+
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @dtRow[dc.ColumnName].ToString()
+                                </td>
+                            }
+                        }
+                    }
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+</div>
+<div class="row">
+    @if (IsApprovedValid && Rowcount > 0)
+    {
+        <div class="row d-flex justify-content-end  my-3">
+            <button type="button" class="btn apr-btn btnProcess" onclick="ShowApprovalBox(this)" name="Command" value="1">
+                <i class="fa fa-check" aria-hidden="true"></i>
+                Approve
+            </button>
+            <button type="button" class="btn rct-btn btnProcess" onclick="ShowApprovalBox(this)" name="Command" value="2">
+                <i class="fa fa-ban" aria-hidden="true"></i>
+                Reject
+            </button>
+        </div>
+    }
+</div>
+
+

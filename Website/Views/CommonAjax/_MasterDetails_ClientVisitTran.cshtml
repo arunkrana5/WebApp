@@ -1,0 +1,90 @@
+﻿@using System.Data
+@model  DataSet
+
+<div class="masterdetails">
+
+    <h4 class="page-title font-sm">Employee Details</h4>
+    @foreach (DataRow dtRow in Model.Tables[0].Rows)
+    {
+        <div class="row">
+            @foreach (DataColumn dc in Model.Tables[0].Columns)
+            {
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="floatingInput">@dc.ColumnName</label>
+                        <p>@dtRow[dc.ColumnName]</p>
+                    </div>
+                </div>
+
+
+            }
+        </div>
+    }
+    <h4 class="page-title font-sm">Check In/Out</h4>
+    @foreach (DataRow dtRow in Model.Tables[1].Rows)
+    {
+        <div class="row">
+            @foreach (DataColumn dc in Model.Tables[1].Columns)
+            {
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="floatingInput">@dc.ColumnName</label>
+                        @if (dc.ColumnName.ToLower().Contains("image"))
+                        {
+                            <p>
+                                <a href="@dtRow[dc.ColumnName]" target="_blank">
+                                    <img src="@dtRow[dc.ColumnName]" class="img-responsive listimage" />
+                                </a>
+                            </p>
+                        }
+                        else
+                        {
+                            <p>@dtRow[dc.ColumnName]</p>
+                        }
+                    </div>
+                </div>
+
+
+            }
+        </div>
+    }
+    <h4 class="page-title font-sm">Sales </h4>
+    <div class="table-responsive">
+        <table class="table mt-0">
+            <thead>
+                <tr role="row">
+                    @foreach (DataColumn item in Model.Tables[2].Columns)
+                    {
+                        <th>@item.ColumnName</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @{ int Rowcount = 0;}
+                @foreach (DataRow dtRow in Model.Tables[2].Rows)
+                {
+                    Rowcount++;
+                    <tr role="row" class="@(Rowcount%2==0?"even":"odd")">
+                        @foreach (DataColumn dc in Model.Tables[2].Columns)
+                        {
+                            <td>
+                                @if (dc.ColumnName.ToLower().Contains("image"))
+                                {
+                                    <a href="@dtRow[dc.ColumnName]" target="_blank">
+                                        <img src="@dtRow[dc.ColumnName]" class="img-responsive listimage" />
+                                    </a>
+                                }
+                                else
+                                {
+                                    <p> @dtRow[dc.ColumnName]</p>
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

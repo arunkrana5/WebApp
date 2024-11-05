@@ -1,0 +1,228 @@
+﻿@model Requirement.AddRequest
+
+@{
+    var Hiredby = new List<SelectListItem>
+{
+                new SelectListItem() {Text="Self", Value="Self"},
+                new SelectListItem() { Text="Thrivera", Value="Thrivera"}
+    };
+
+    var RequirementType = new List<SelectListItem>
+{
+                new SelectListItem() {Text="New", Value="New"},
+                new SelectListItem() { Text="Replacement", Value="Replacement"}
+    };
+}
+
+@using (Ajax.BeginForm("_AddRequest", "Recurit",
+    new { src = ViewBag.src },
+     new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnAddSuccess", OnBegin = "ShowLoadingDialog()" },
+        new { @id = "_AddRequestForm" })
+)
+{
+
+    <div class="row client-form p-2">
+        @if (Model.ReqID > 0)
+        {
+            <div class="  col-xl-3 col-md-4 col-sm-12">
+                <div class="form-group">
+                    <label class="form-label">Request No.</label>
+                    @Html.TextBoxFor(model => model.RequestNo, new { @class = "form-control", @readonly = "true" })
+                    @Html.ValidationMessageFor(model => model.RequestNo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class=" col-xl-3 col-md-4 col-sm-12">
+
+                <div class="form-group">
+                    <label class="form-label">Request Date</label>
+                    @Html.TextBoxFor(model => model.RequestDate, new { @class = "form-control", @readonly = "true" })
+                    @Html.ValidationMessageFor(model => model.RequestDate, "", new { @class = "text-danger" })
+
+                </div>
+            </div>
+        }
+        <div class=" col-xl-3 col-md-4 col-sm-12">
+
+            <div class="form-group">
+                <label class="form-label">Hired By</label>
+                @Html.DropDownListFor(n => n.HiredBy, new SelectList(Hiredby, "Value", "Text", Model.HiredBy), "Select HiredBy",
+                new { @class = "form-control applyselect" })
+                @Html.ValidationMessageFor(model => model.HiredBy, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+        <div class=" col-xl-3 col-md-4 col-sm-12">
+
+            <div class="form-group">
+                <label class="form-label">Requirement Type</label>
+                @Html.DropDownListFor(n => n.RequirementType, new SelectList(RequirementType, "Value", "Text", Model.HiredBy), "Select Requirement Type",
+                new { @class = "form-control applyselect" })
+                @Html.ValidationMessageFor(model => model.RequirementType, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class=" col-xl-3 col-md-4 col-sm-12">
+
+            <div class="form-group">
+                <label class="form-label">Region</label>
+                <input type="hidden" id="hdnRegionID" value="@Model.RegionID" />
+                @Html.DropDownListFor(n => n.RegionID, new SelectList(Model.RegionList, "ID", "Name", Model.RegionID), "Select Region",
+                new { @class = "form-control applyselect", @onchange = "FillState()" })
+                @Html.ValidationMessageFor(model => model.RegionID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class=" col-xl-3 col-md-4 col-sm-12">
+            <div class="form-group">
+                <label class="form-label">State</label>
+                <input type="hidden" id="hdnStateID" value="@Model.StateID" />
+                @Html.DropDownListFor(n => n.StateID, new SelectList(Model.StateList, "ID", "Name", Model.StateID), "Select State",
+                new { @class = "form-control applyselect", @onchange = "FillCity()" })
+                @Html.ValidationMessageFor(model => model.StateID, "", new { @class = "text-danger" })
+
+
+            </div>
+        </div>
+        <div class=" col-xl-3 col-md-4 col-sm-12">
+            <div class="form-group">
+                <label class="form-label">City</label>
+                <input type="hidden" id="hdnCityID" value="@Model.CityID" />
+                @Html.DropDownListFor(n => n.CityID, new SelectList(Model.CityList, "ID", "Name", Model.CityID), "Select City",
+                new { @class = "form-control applyselect", @Onchange = "FillBranch()" })
+                @Html.ValidationMessageFor(model => model.CityID, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+        <div class=" col-xl-3 col-md-4 col-sm-12">
+            <div class="form-group">
+                <label class="form-label">Branch</label>
+                <input type="hidden" id="hdnBranchID" value="@Model.BranchID" />
+                @Html.DropDownListFor(n => n.BranchID, new SelectList(Model.BranchList, "ID", "Name", Model.BranchID), "Select Branch",
+                new { @class = "form-control applyselect", @Onchange = "FillDealer()" })
+                @Html.ValidationMessageFor(model => model.BranchID, "", new { @class = "text-danger" })
+
+
+            </div>
+        </div>
+        <div class=" col-xl-3 col-md-4 col-sm-12">
+            <div class="form-group">
+                <label class="form-label">Dealer Name</label>
+                <input type="hidden" id="hdnDealerID" value="@Model.DealerID" />
+                @Html.DropDownListFor(n => n.DealerID, new SelectList(Model.DealerList, "ID", "Name", Model.DealerID), "Select Dealer",
+                new { @class = "form-control applyselect", @onchange = "GetDealerDetails(this)" })
+                @Html.ValidationMessageFor(model => model.DealerID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+       
+
+        <div class=" col-xl-3 col-md-4 col-sm-12">
+
+            <div class="form-group">
+                <label class="form-label">Dealer Potential</label>
+                @Html.TextBoxFor(model => model.Potential, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Potential, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+
+        <div class=" col-xl-3 col-md-4 col-sm-12" style="display:none">
+
+            <div class="form-group">
+                <label class="form-label">Candidate Name</label>
+                @Html.TextBoxFor(model => model.CandidateName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CandidateName, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+
+        <div class=" col-xl-3 col-md-4 col-sm-12" style="display:none">
+            <div class="form-group">
+                <label class="form-label">Candidate Phone</label>
+                @Html.TextBoxFor(model => model.CandidatePhone, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CandidatePhone, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+        <div class=" col-xl-3 col-md-4 col-sm-12" style="display:none">
+            <div class="form-group">
+                <label class="form-label">Candidate Email</label>
+                @Html.TextBoxFor(model => model.CandidateEmail, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CandidateEmail, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row " id="client-table">
+        <div class="col-xl-3">
+            @if (Model.REC_TargetList.Count > 0)
+            {
+                <table class="table table-bordered table-hover text-nowrap key-buttons ">
+                    <thead>
+                        <tr>
+                            <th>S.NO</th>
+                            <th>Product Type</th>
+                            <th>Target Qty</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.REC_TargetList.Count; i++)
+                        {
+                            <tr>
+                                <td>@(i+1)</td>
+                                <td>
+                                    @Html.HiddenFor(model => model.REC_TargetList[i].ProductType)
+                                    @Html.HiddenFor(model => model.REC_TargetList[i].TargetForID)
+                                    <span>@Model.REC_TargetList[i].ProductType </span>
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.REC_TargetList[i].Qty, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.REC_TargetList[i].Qty, "", new { @class = "text-danger" })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+        <div class="col-xl-3">
+            <table class="table table-responsive-sm">
+                <thead>
+                    <tr>
+                        <th colspan="2"> Dealer Details </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Name  </td>
+                        <td><span id="spnName"> @Model.DealerName </span></td>
+                    </tr>
+                    <tr>
+                        <td>Code  </td>
+                        <td><span id="spnCode"> @Model.DealerCode </span></td>
+                    </tr>
+                    <tr>
+                        <td>Category  </td>
+                        <td><span id="spnCategory"> @Model.DealerCategory </span></td>
+                    </tr>
+                    <tr>
+                        <td>Type  </td>
+                        <td><span id="spnDealerType"> @Model.DealerType </span></td>
+                    </tr>
+                    <tr>
+                        <td>Address  </td>
+                        <td><span id="spnDealerAddress"> @Model.DealerAddress </span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+    <div class="modal-footer">
+        <button type="button" class="btn client-close" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary client-save">Save</button>
+    </div>
+}

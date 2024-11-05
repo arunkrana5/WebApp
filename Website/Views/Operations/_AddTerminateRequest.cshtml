@@ -1,0 +1,68 @@
+﻿@model TerminateRequest.Add
+
+
+@using (Ajax.BeginForm("_AddTerminateRequest", "Operations",
+        new { src = ViewBag.src },
+         new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+            new { @id = "_AddTerminateRequestForm" })
+    )
+{
+
+
+    @Html.HiddenFor(x => Model.TerminateID)
+    @Html.HiddenFor(x => Model.EMPID)
+    
+    <input type="hidden" name="@Html.NameFor(x => x.Category)" value="Resignation" />
+    <div class="row p-2">
+        <div class="col-lg-3 form-group">
+            <label> UserID <sup>*</sup> </label>
+            <input type="text" value="@ClsApplicationSetting.GetSessionValue("UserID")" class="form-control" disabled />
+        </div>
+        <div class="col-lg-3 form-group">
+            <label> EMP Name <sup>*</sup> </label>
+            <input type="text" value="@ClsApplicationSetting.GetSessionValue("EMPName")" class="form-control" disabled />
+        </div>
+        <div class="col-lg-3 form-group">
+            <label> Designation <sup>*</sup> </label>
+            <input type="text" value="@ClsApplicationSetting.GetSessionValue("DesignName")" class="form-control" disabled />
+        </div>
+        <div class="col-lg-3 form-group">
+            <label> Dealer <sup>*</sup> </label>
+            <input type="text" value="@ClsApplicationSetting.GetSessionValue("DealerName")" class="form-control" disabled />
+        </div>
+        <div class="col-lg-3 form-group">
+            <label> Dealer Code <sup>*</sup> </label>
+            <input type="text" value="@ClsApplicationSetting.GetSessionValue("DealerCode")" class="form-control" disabled />
+        </div>
+        <div class="col-lg-3 form-group">
+            <label> Gender <sup>*</sup> </label>
+            <input type="text" value="@ClsApplicationSetting.GetSessionValue("Gender")" class="form-control" disabled />
+        </div>
+        <div class="col-lg-3 form-group">
+            <label> Role Name <sup>*</sup> </label>
+            <input type="text" value="@ClsApplicationSetting.GetSessionValue("RoleName")" class="form-control" disabled />
+        </div>
+        <div class="col-lg-3 form-group">
+            <label>Last working Day</label>
+            @Html.TextBoxFor(model => model.LastWorkingDay, new { @class = "form-control", @type = "Date" })
+            @Html.ValidationMessageFor(model => model.LastWorkingDay, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+            <label>Reason</label>
+            @Html.TextAreaFor(model => model.Reason, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Reason, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-12 form-group" id="chkNoticePeriod" style="display:none">
+            <label style="color:red">I agreed for the deduction of 15 days notice period salary from my F&F amount as per the policy because i do not want to serve the notice period<sup>*</sup></label>
+            <div class="can-toggle">
+                @Html.HiddenFor(model => model.SalaryDeductionConfirmation)
+                <input type="checkbox" id="chkIsServingNotice" onclick="fnIsServingNotice();">
+                <label for="chkIsServingNotice"></label>
+            </div>
+        </div>
+        <div class="col-lg-12 form-group text-right">
+            <button type="submit" class="btn client-save btn-primary" name="Command" value="Add"> Submit</button>
+        </div>
+
+    </div>
+}

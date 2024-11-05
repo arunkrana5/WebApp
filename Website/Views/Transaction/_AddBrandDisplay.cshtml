@@ -1,0 +1,75 @@
+﻿@model BrandDisplay.Add
+@section style{
+
+
+}
+
+@using (Ajax.BeginForm("_AddBrandDisplay", "Transaction",
+        new { src = ViewBag.src },
+         new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnAddSuccess", OnBegin = "ShowLoadingDialog()" },
+            new { @id = "_AddBrandDisplayForm", @enctype = "multipart/form-data" })
+    )
+{
+    <div class="row m-2">
+
+        <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+            <label>Date <sup>*</sup></label>
+            @Html.TextBoxFor(model => model.DocDate, new { @class = "form-control", @readonly = "readonly" })
+            @Html.ValidationMessageFor(model => model.DocDate, "", new { @class = "text-danger" })
+        </div>
+        @if (ClsApplicationSetting.GetSessionValue("RoleName") == "TL")
+        {
+            <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+                <label>Dealer <sup>*</sup></label>
+                @Html.DropDownListFor(n => n.DealerID, new SelectList(Model.DealerList, "ID", "Name", Model.DealerID), "Select Dealer",
+                         new { @class = "form-control applyselect" })
+                @Html.ValidationMessageFor(model => model.DealerID, "", new { @class = "text-danger" })
+            </div>
+        }
+        <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+            <label>Item Name</label>
+            @Html.DropDownListFor(n => n.ItemID, new SelectList(Model.ItemList, "ID", "Name", Model.ItemID), "Select Item",
+                new { @class = "form-control applyselect" })
+            @Html.ValidationMessageFor(model => model.ItemID, "", new { @class = "text-danger" })
+        </div>
+
+
+        <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+            <label>Qty</label>
+            @Html.DropDownListFor(n => n.Qty, new SelectList(Model.QtyList, "ID", "Name", Model.QtyList), "Select Qty",
+    new { @class = "form-control applyselect" })
+            @Html.ValidationMessageFor(model => model.Qty, "", new { @class = "text-danger" })
+        </div>
+
+
+
+        <div class="col-lg-6 col-sm-12 col-md-12 form-group">
+            <label>Remark</label>
+            @Html.TextAreaFor(model => model.Remarks, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-lg-12 form-group camerabtn text-center ">
+            <a title="click here for open camera" onclick="OpenCamera(this,'back')" style="color: #fff">
+                <i class="fa fa-camera" aria-hidden="true"></i>
+            </a>
+            <input type="hidden" name="@Html.NameFor(x => Model.ImageBase64String)" value="" />
+            <img src="~/assets/design/images/NoImage.jpeg" class="img-fluid " style="width:90%; height:auto" />
+
+        </div>
+
+
+
+        <div class="col-lg-12 form-group text-right">
+
+            @if (Model.BrandID > 0)
+            {
+                <button type="submit" class="btn client-save btn btn-primary" name="Command" value="Add"> Update</button>
+            }
+            else
+            {
+                <button type="submit" class="btn client-save btn-primary" name="Command" value="Add"> Submit</button>
+            }
+        </div>
+    </div>
+}

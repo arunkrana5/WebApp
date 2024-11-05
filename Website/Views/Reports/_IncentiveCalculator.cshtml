@@ -1,0 +1,100 @@
+﻿@using System.Data
+@model  DataSet
+@{
+    HashSet<string> ParentHead = new HashSet<string>();
+    List<KeyValuePair<string, int>> Mainlist = new List<KeyValuePair<string, int>>();
+    foreach (DataColumn item in Model.Tables[0].Columns)
+    {
+        if (item.ColumnName.Contains("#"))
+        {
+            ParentHead.Add(item.ColumnName.Split('#')[0]);
+        }
+    }
+
+    foreach (var P in ParentHead)
+    {
+        int count = 0;
+        foreach (DataColumn item in Model.Tables[0].Columns)
+        {
+
+            if (item.ColumnName.Contains(P))
+            {
+                count++;
+            }
+        }
+        Mainlist.Add(new KeyValuePair<string, int>(P, count));
+    }
+}
+<div class="table-responsive">
+    <table id="example" class="table table-bordered text-nowrap key-buttons table-hover">
+        <thead>
+            <tr class="doubleH">
+                <th colspan="29"></th>
+                @foreach (var v in Mainlist)
+                {
+                    <th colspan="@v.Value">@v.Key</th>
+                }
+            </tr>
+
+            <tr role="row">
+                <th>Sno</th>
+                @foreach (DataColumn item in Model.Tables[0].Columns)
+                {
+                    if (!item.ColumnName.Contains("_") && !item.ColumnName.Contains("#"))
+                    {
+                        <th>@item.ColumnName</th>
+
+                    }
+                }
+                @foreach (var v in Mainlist)
+                {
+                    foreach (DataColumn item in Model.Tables[0].Columns)
+                    {
+                        if (item.ColumnName.Contains(v.Key) && item.ColumnName.Contains("#"))
+                        {
+
+                            <th>@item.ColumnName.Split('#')[1]</th>
+
+                        }
+                    }
+                }
+
+            </tr>
+        </thead>
+        <tbody>
+
+            @{ int Rowcount = 0;}
+            @foreach (DataRow dtRow in Model.Tables[0].Rows)
+            {
+                Rowcount++;
+
+                <tr role="row" class="@(Rowcount%2==0?"even":"odd")">
+                    <td>@Rowcount</td>
+                    @foreach (DataColumn dc in Model.Tables[0].Columns)
+                    {
+                        if (!dc.ColumnName.Contains("_") && !dc.ColumnName.Contains("#"))
+                        {
+                            <td>@dtRow[dc.ColumnName]</td>
+                        }
+                    }
+
+                    @foreach (var v in Mainlist)
+                    {
+                        foreach (DataColumn dc in Model.Tables[0].Columns)
+                        {
+                            if (dc.ColumnName.Contains(v.Key) && dc.ColumnName.Contains("#"))
+                            {
+
+                                <td>@dtRow[dc.ColumnName].ToString()</td>
+
+                            }
+                        }
+                    }
+
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+</div>

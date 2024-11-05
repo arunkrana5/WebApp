@@ -1,0 +1,96 @@
+﻿@using System.Data
+@model  DataSet
+@{
+    int Headcount = 0;
+}
+@using (Ajax.BeginForm("_UpdateFinalAttendence", "Reports",
+        new { src = ViewBag.src },
+         new AjaxOptions { HttpMethod = "POST", OnSuccess = "UFASuccess", OnBegin = "ShowLoadingDialog()" },
+            new { @id = "_UpdateFinalAttendenceForm" })
+    )
+{
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+            <div class="table-responsive">
+                <table class="table table-bordered text-nowrap key-buttons">
+                    <thead>
+                        <tr role="row">
+                            @foreach (DataColumn item in Model.Tables[0].Columns)
+                            {
+
+                                if (!item.ColumnName.Contains("_"))
+                                {
+                                    <th>@item.ColumnName</th>
+                                }
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int Rowcount = 0; string Val = "";}
+                        @foreach (DataRow dtRow in Model.Tables[0].Rows)
+                        {
+                            Rowcount++;
+                            Headcount = 0;
+                            <tr role="row" class="@(Rowcount%2==0?"even":"odd")">
+
+                                @foreach (DataColumn dc in Model.Tables[0].Columns)
+                                {
+
+                                    if (!dc.ColumnName.Contains("_"))
+                                    {
+                                        Headcount++;
+                                        if (dc.ColumnName.ToUpper().Contains("IMAGE"))
+                                        {
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(dtRow[dc.ColumnName].ToString()))
+                                                {
+                                                    <a href="@dtRow[dc.ColumnName]" target="_blank">
+
+                                                        @Html.GetImage(dtRow[dc.ColumnName].ToString(), "", "img-responsive listimage")
+                                                    </a>
+                                                }
+
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            if (Headcount > 4)
+                                            {
+                                                <td>
+                                                    @if (Model.Tables[1].Select("Name='"+ dtRow[dc.ColumnName].ToString() + "'").Count()==0)
+                                                    {
+                                                        <a> @dtRow[dc.ColumnName].ToString()</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="hidden" name="hdnDate" value="@dc.ColumnName" />
+                                                        <select class="applyselect" name="StatusID" @(dtRow["_Approved"].ToString() == "1" ? "disabled" : "")>
+                                                            @foreach (DataRow item in Model.Tables[1].Rows)
+                                                            {
+                                                                <option @(dtRow[dc.ColumnName].ToString() == item["Name"].ToString() ? "selected" : "") value="@item["ID"].ToString()">@item["Name"].ToString()</option>
+                                                            }
+                                                        </select>
+                                                    }
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    @dtRow[dc.ColumnName].ToString()
+                                                </td>
+                                            }
+                                        }
+                                    }
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <label class="small"></label>
+            <button type="submit" class="btn btn-indigo" name="Command" value="Add"><i class="fa fa-paper-plane" aria-hidden="true"></i> Update</button>
+        </div>
+    </div>
+}

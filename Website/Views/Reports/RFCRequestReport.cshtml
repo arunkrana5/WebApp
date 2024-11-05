@@ -1,0 +1,99 @@
+﻿@model Tab.Approval
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+<div class="table-section">
+
+    @Html.Partial("ListHeader_Partial", "RFC Requests Report")
+
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <div class="">
+
+
+                        @using (Ajax.BeginForm("_RFCRequestReport", "Reports",
+                                new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Reports/_RFCRequestReport") },
+                                 new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+                                    new { @id = "_RFCRequestListForm" })
+                            )
+                        {
+                        <div class="row">
+
+                            <div class="col-sm-3 form-group">
+                                <label>Month <sup>*</sup></label>
+                                @Html.TextBoxFor(model => model.Month, new { @class = "form-control", @type = "Month" })
+                                @Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-3 form-group">
+                                <label>User Type <sup>*</sup></label>
+                                @Html.DropDownListFor(x => Model.Doctype, new SelectList(ViewBag.RoleDropdownList, "ID", "Name", Model.Doctype), "Select",
+                                new { @class = "form-control  applyselect  ddleaveType" })
+                            </div>
+
+                            <div class="col-sm-2 form-group d-flex align-items-end pt-1">
+                                <label class="small">&nbsp;</label>
+                                <button type="submit" id="btnSubmit" name="Command" value="Add" class="button ">
+                                    <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
+                                </button>
+                            </div>
+                        </div>
+                            <div class="tabmargin">
+                                @Html.HiddenFor(x => x.Approved)
+                                <ul id="tabs" class="nav nav-tabs " role="tablist">
+                                    <li class="nav-item"> <a tabvalue="0" class="nav-link ripplelink AnchorApproval @(Model.Approved == 0 ? "active" : "")" data-toggle="tab" role="tab"> Pending</a> </li>
+                                    <li class="nav-item"> <a tabvalue="1" class="nav-link ripplelink AnchorApproval @(Model.Approved == 1 ? "active" : "") " data-toggle="tab" role="tab">Approved</a></li>
+                                    <li class="nav-item"> <a tabvalue="2" class="nav-link ripplelink AnchorApproval @(Model.Approved == 2 ? "active" : "") " data-toggle="tab" role="tab">Rejected</a></li>
+                                </ul>
+
+                            </div>
+                        }
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="TargetDiv"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+        <script>
+            $('#Doctype').change(function () {
+                $("#btnSearch").click();
+            });
+            $('#Month').bind("change", function () {
+                $("#btnSearch").click();
+            });
+
+
+            $('.AnchorApproval').on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var att = $(this).attr("tabvalue");
+                $(".AnchorApproval.active").removeClass("active");
+                $(this).addClass("active");
+                $("#Approved").val(att);
+                $("#btnSearch").click();
+            });
+            function OnSuccess(obj) {
+                $("#TargetDiv").empty();
+                $("#TargetDiv").html(obj);
+                CloseLoadingDialog();
+                DatatableScripts();
+            }
+
+
+        </script>
+
+    }

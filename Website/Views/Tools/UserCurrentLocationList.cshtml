@@ -1,0 +1,69 @@
+﻿@model Tab.Approval
+
+@section style{
+    @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
+}
+
+<div class="table-section">
+    @Html.Partial("ListHeader_Partial", "User Current Location List")
+
+
+
+    <div class="card">
+
+        <div class="x_panel">
+            <div class="card-body">
+
+                @using (Ajax.BeginForm("_UserCurrentLocationList", "Tools",
+                   new { src = ClsCommon.Encrypt(ViewBag.MenuID.ToString() + "*/Tools/_UserCurrentLocationList") },
+                     new AjaxOptions { HttpMethod = "POST", OnSuccess = "BindTarget", OnBegin = "OnBegin()" },
+               new { @id = "_UserCurrentLocationListFrom" })
+               )
+                {
+                <div class="row" style="display:none">
+                    <div class="col-sm-2 form-group d-flex align-items-end">
+                        <label class="small">&nbsp;</label>
+                        <button type="submit" id="btnSearch" name="Command" value="Add" class="button ">
+                            <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
+                        </button>
+                    </div>
+
+                </div>
+                }
+                <div class="row">
+                    <div class="col-lg-12 ">
+                        <div id="TargetDiv">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
+
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+
+        <script>
+
+            $(document).ready(function () {
+                $("#btnSearch").click();
+            });
+
+            function OnBegin() {
+                $("#TargetDiv").empty();
+                $("#TargetDiv").html('<img src="/assets/design/images/loader.gif" class="imgloader" />');
+            }
+
+            function BindTarget(args) {
+                CloseLoadingDialog();
+                $("#TargetDiv").empty();
+                $("#TargetDiv").html(args);
+                DatatableScripts();
+            }
+        </script>
+    }

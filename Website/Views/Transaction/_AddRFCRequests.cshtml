@@ -1,0 +1,57 @@
+﻿@model RFCEntry.Add
+@section style{
+
+
+}
+
+@using (Ajax.BeginForm("_AddRFCRequests", "Transaction",
+        new { src = ViewBag.src },
+         new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnAddSuccess", OnBegin = "ShowLoadingDialog()" },
+            new { @id = "_AddRFCRequestsForm", @enctype = "multipart/form-data" })
+    )
+{
+
+    <div class="row p-2">
+
+
+        <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+            <label>Date <sup>*</sup></label>
+            @Html.TextBoxFor(model => model.DocDate, new { @class = "form-control", @Readonly = "readonly" })
+            @Html.ValidationMessageFor(model => model.DocDate, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+            <label>Attendence Date <sup>*</sup></label>
+            @Html.TextBoxFor(model => model.AttendenceDate, new { @class = "form-control", @type = "date", @Onchange = "FillAttendence(this)" })
+            @Html.ValidationMessageFor(model => model.AttendenceDate, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+            <label>Old Attendence<sup>*</sup></label>
+            @Html.DropDownListFor(n => n.Old_StatusID, new SelectList(Model.OldList, "ID", "Name", Model.Old_StatusID),
+                new { @class = "form-control applyselect" })
+            @Html.ValidationMessageFor(model => model.Old_StatusID, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+            <label>New Attendence<sup>*</sup></label>
+            @Html.DropDownListFor(n => n.New_StatusID, new SelectList(Model.NewStatusList, "ID", "Name", Model.New_StatusID), "Select Status",
+                new { @class = "form-control applyselect" })
+            @Html.ValidationMessageFor(model => model.New_StatusID, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+            <label>Catgeory<sup>*</sup></label>
+            @Html.DropDownListFor(n => n.Category, new SelectList(Model.RFCCategoryList, "Name", "Name", Model.Category), "Select Catgeory",
+                new { @class = "form-control applyselect" })
+            @Html.ValidationMessageFor(model => model.Category, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12 form-group">
+            <label>Reason <sup>*</sup></label>
+            @Html.TextBoxFor(model => model.Reason, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Reason, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-lg-12 form-group text-right">
+            <button type="submit" class="btn client-save btn-primary btn" name="Command" value="Add"> Submit</button>
+        </div>
+    </div>
+}

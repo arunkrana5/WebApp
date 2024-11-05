@@ -1,0 +1,88 @@
+﻿@model IList<Travel.ExpenseList>
+
+
+
+<div class="table-responsive">
+    <table id="example" class="table table-bordered table-hover table-wrapper-scroll-y my-custom-scrollbar table-striped text-nowrap key-buttons">
+        <thead>
+            <tr>
+                <th>S.no.</th>
+                @if (ViewBag.Approved == 0 && ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                {
+                    <th scope="col">Action</th>
+                }
+                <th scope="col">Status</th>
+                <th scope="col">Doc No</th>
+                <th scope="col">Doc Date</th>
+                <th scope="col">From City</th>
+                <th scope="col">To City</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">End Date</th>
+                <th scope="col">Mode</th>
+                <th scope="col">Remarks</th>
+
+                @if (ViewBag.Approved == 1)
+                {
+                    <th scope="col">Travel Exp</th>
+                    <th scope="col">Visit Exp</th>
+                    <th scope="col">Hotel Exp</th>
+                    <th scope="col">Other Exp</th>
+                    <th scope="col">Total</th>
+                }
+
+            </tr>
+
+        </thead>
+        <tbody>
+            @{ int count = 0;}
+            @foreach (Travel.ExpenseList item in Model)
+            {
+                count++;
+                <tr>
+                    <td>
+                        @count
+                        <input type="hidden" name="I" value="@item.TRID" />
+                        <input type="hidden" name="N" value="@item.DocNo" />
+                    </td>
+                    @if ((ViewBag.Approved == 0 || ViewBag.Approved == 2) && ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                    {
+                        <td>
+                            <a title="Add Expense" href="@Url.Action("AddTExpense", new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Travel/AddTExpense*"+ item.TRID+"*"+item.DocNo) })" data-toggle='tooltip'>
+                                @(ViewBag.Approved == 0?"Add":"Update") Expense
+                            </a>
+                        </td>
+                    }
+                    <td>
+                        <a title="View Request" href="@Url.Action("ViewTravelCompleteRequest", new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Travel/ViewTravelCompleteRequest*"+ item.TRID+"*"+item.DocNo+"*") })" data-toggle='tooltip'>
+                            @item.Status
+                        </a>
+
+                    </td>
+                    <td> <a title="View Approval Summary" onclick="Expense_ApprovalSummary(this);" data-toggle='tooltip'> @item.DocNo</a></td>
+                    <td>@item.DocDate</td>
+                    <td>@item.FromCity</td>
+                    <td>@item.ToCity</td>
+                    <td>@item.StartDate</td>
+                    <td>@item.EndDate</td>
+                    <td>@item.TravelMode</td>
+                    <td>@item.Remarks</td>
+
+                    @if (ViewBag.Approved == 1)
+                    {
+                        <td>@item.TravelExp_Amt</td>
+                        <td>@item.VisitExp_Amt</td>
+                        <td>@item.HotelExp_Amt</td>
+                        <td>@item.OtherExp_Amt</td>
+                        <td>@item.TotalExp_Amt</td>
+                    }
+
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+
+
+

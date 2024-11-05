@@ -1,0 +1,185 @@
+﻿<div class="table-section">
+    @model LeaveLog.View
+    @{
+        long EMPID = 0;
+        long.TryParse(ClsApplicationSetting.GetSessionValue("EMPID"), out EMPID);
+    }
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Leave</h5>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group slt-dgn">
+                        <label class="lbl-abs">Name</label>
+                        <p>@Model.LeaveLog.EMPName</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group slt-dgn">
+                        <label class="lbl-abs">Code</label>
+                        <p>@Model.LeaveLog.EMPCode</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group slt-dgn">
+                        <label class="lbl-abs">Doc No</label>
+                        <p>@Model.LeaveLog.DocNo</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group slt-dgn">
+                        <label class="lbl-abs">Doc Date</label>
+                        <p>@Model.LeaveLog.DocDate</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group slt-dgn">
+                        <label class="lbl-abs">Total Days</label>
+                        <p>@Model.LeaveLog.TotalDays</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group slt-dgn">
+                        <label class="lbl-abs">Status</label>
+                        <p>@Model.LeaveLog.Status</p>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group slt-dgn">
+                        <label class="lbl-abs">Reason</label>
+                        <p>@Model.LeaveLog.Reason</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (EMPID == 0)
+    {
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Leave Balance Details</h5>
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table mt-0">
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <th class="tw-100">Opening</th>
+                                    <th class="tw-100">Availed</th>
+                                    <th class="tw-100">Earned</th>
+                                    <th class="tw-100">Total Earned</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.LeaveBalList.Count != 0)
+                                {
+                                    foreach (var item in Model.LeaveBalList)
+                                    {
+                                        <tr>
+                                            <td>@item.MonthName</td>
+                                            <td>@item.Opening</td>
+                                            <td>@item.Availed</td>
+                                            <td>@item.Earned</td>
+                                            <td>@item.TotalEarned</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr class="text-center">
+                                        <td colspan="5">No Balance Found</td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Leave Transaction</h5>
+
+            @if (Model.TranDetails != null)
+            {
+                <div class="row">
+
+                    <div class="col-sm-12 form-group">
+
+                        <div class="table-responsive">
+                            <table class="table mt-0">
+                                <thead>
+                                    <tr>
+                                        <th class="w-30 text-center">S.No</th>
+                                        <th>Leave Date</th>
+                                        <th>Leave Type</th>
+                                        <th>Days</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{ int count = 0;}
+                                    @foreach (var item in Model.TranDetails)
+                                    {
+                                        count++;
+                                        <tr>
+                                            <td>@count</td>
+                                            <td>@item.LeaveDate</td>
+                                            <td>@item.LeaveType</td>
+                                            <td>@item.Days</td>
+
+                                        </tr>
+
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    @if (ClsApplicationSetting.GetSessionValue("Modify") == "True" && Model.LeaveLog.Approved == 0 && EMPID != Model.LeaveLog.EMPID)
+                    {
+                        using (Ajax.BeginForm("ApproveLeave", "Leave",
+                            new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Leave/ApproveLeave" + "*" + Model.LeaveLog.LogID) },
+                             new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnLeaveSuccess", OnBegin = "ShowLoadingDialog()" },
+                                new { @id = "_ApproveLeaveForm" })
+                        )
+                        {
+                            <div class="col-sm-12 form-group ">
+                                <label>Approver Reason</label>
+                                <textarea name="ApproveRemarks" class="form-control" Placeholder="Approver Reason"></textarea>
+                            </div>
+                            <div class="col-sm-12 text-center mt-3 d-flex justify-content-end">
+                                <button type="button" class="btn cnl-btn ripplelink " data-dismiss="modal"><i class="fa fa-times"></i>Close</button>
+                                <button type="submit" class="btn apr-btn " name="Command" value="1">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                    Approve
+                                </button>
+                                <button type="submit" class="btn rct-btn " name="Command" value="2">
+                                    <i class="fa fa-ban" aria-hidden="true"></i>
+                                    Reject
+                                </button>
+                            </div>
+
+                        }
+                    }
+
+                    @if (Model.LeaveLog.Approved > 0)
+                    {
+                        <div class="col-sm-12 form-group ">
+                            <label>Approver Reason</label>
+                            <p>@Model.LeaveLog.ApprovedRemarks</p>
+
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+

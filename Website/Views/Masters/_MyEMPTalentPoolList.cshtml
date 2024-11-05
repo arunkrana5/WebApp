@@ -1,0 +1,63 @@
+﻿@model IList<EMPTalentPool.List>
+
+<div class="table-responsive">
+    <table id="tblDataTable" class="table table-bordered text-nowrap key-buttons">
+        <thead>
+            <tr>
+                <th>S.no.</th>
+                <th>Action</th>
+                <th>Doc No</th>
+                <th>Name</th>
+                <th>Mobile</th>
+                <th>Email</th>
+                <th>Age</th>
+                <th>Counter Name</th>
+                <th>Location</th>
+                <th>Total Experience </th>
+                <th>Current Company</th>
+                <th>Tenure With Company</th>
+                <th>Current Salary</th>
+                <th>Expected Salary</th>
+                <th>Pincode</th>
+                <th>Created Date</th>
+                <th>IP Address</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @{ int count = 0;}
+            @foreach (var item in Model)
+            {
+                count++;
+            <tr>
+                <td> @count </td>
+                <td>
+                    <a title="Edit" href="@Url.Action("AddMyEMPTalentPool", new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*/Masters/AddMyEMPTalentPool*" + item.TPID) })" data-toggle='tooltip'> <i class="fa-solid fa-pen-to-square  checkgreen" aria-hidden="true"></i> </a>
+                </td>
+                <td>
+                    <input type="hidden" name="I" value="@item.TPID" />
+                    <input type="hidden" name="N" value="@item.DocNo" />
+                    <a title="Show Details" OP="EMPTalentpool" onclick="ShowMasterDetails(this)" data-toggle="tooltip">
+                        @item.DocNo
+                    </a>
+                </td>
+                <td>@item.Name</td>
+                <td>@item.Mobile</td>
+                <td>@item.Email</td>
+                <td>@item.Age</td>
+                <td>@item.CounterName</td>
+                <td>@item.Location</td>
+                <td>@item.TotalExperience</td>
+                <td>@item.CurrentCompany</td>
+                <td>@item.TenureWithCompany</td>
+                <td>@item.CurrentSalary</td>
+                <td>@item.ExpectedSalary</td>
+                <td>@item.Pincode</td>
+                <td>@item.CreatedDate</td>
+                <td>@item.IPAddress</td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+</div>

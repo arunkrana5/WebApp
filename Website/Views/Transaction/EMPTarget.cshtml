@@ -1,0 +1,156 @@
+﻿
+    @model IList<Target.List>
+    @section style{
+
+
+    }
+
+<div class="table-section">
+    <div class="page-header">
+        <div class="page-leftheader">
+            <h4 class="page-title">Employee Target</h4>
+        </div>
+
+    </div>
+
+    @using (Ajax.BeginForm("EMPTarget", "Transaction",
+            new { src = ViewBag.src },
+             new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+                new { @id = "EMPTargetForm", @enctype = "multipart/form-data" })
+        )
+    {
+        <div class="row">
+            <div class="col-lg-12 ">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="">
+                            <a class="btn btn-primary" onclick="ListHeaderAdd(@ViewBag.EMPID)">
+                                <i class="fa fa-plus"></i> Add Target
+                            </a>
+                            <div class="table-responsive">
+                                <table id="example" class="table table-bordered text-nowrap key-buttons">
+                                    <thead>
+                                        <tr>
+                                            <th>S.no.</th>
+                                            <th>Name</th>
+                                            <th>Code</th>
+                                            <th>Target Date</th>
+                                            <th>Doctype</th>
+                                            <th>Target For</th>
+                                            <th>Qty</th>
+                                        </tr>
+
+                                    </thead>
+                                    <tbody>
+                                        @{ int count = 0;}
+                                        @for (int i = 0; i < Model.Count; i++)
+                                        {
+                                            count++;
+                                            <tr>
+                                                <td>
+                                                    @Html.HiddenFor(model => model[i].TargetID)
+                                                    @Html.HiddenFor(model => model[i].EMPID)
+                                                    @Html.HiddenFor(model => model[i].EMPCode)
+                                                    @Html.HiddenFor(model => model[i].EMPName)
+                                                    @Html.HiddenFor(model => model[i].Doctype)
+                                                    @Html.HiddenFor(model => model[i].TargetDate)
+                                                    @Html.HiddenFor(model => model[i].TargetFor_ID)
+
+                                                    <label>@count</label>
+                                                </td>
+                                                <td>@Model[i].EMPName </td>
+                                                <td>@Model[i].EMPCode </td>
+                                                <td>@Model[i].TargetDate </td>
+                                                <td>@Model[i].Doctype </td>
+                                                <td>@Model[i].TargetFor_Name </td>
+                                                <td>
+                                                    @Html.TextBoxFor(model => Model[i].Qty, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => Model[i].Qty, "", new { @class = "text-danger" })
+                                                </td>
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <button name="Command" value="Add" class="btn btn-indigo" type="submit">Save changes</button>
+                <a href="@Url.Action("EMPTargetList",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Transaction/EMPTargetList") })" type="button" class="btn btn-sm  btn-success pull-right">Back</a>
+            </div>
+        </div>
+    }
+
+
+
+    <div class="modal fade pop-dgn" id="ViewModal">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+
+                <div class="modal-header blk-gdn-btn">
+                    <h4 class="modal-title"><span class="mx-2"><i class="fas fa-print"></i></span>Add Target </h4>
+                    <div class="close" data-dismiss="modal">&times;</div>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div id="TagetDiv"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+    @section scripts    {
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+        <script>
+
+         function ListHeaderAdd(ID) {
+        if (ID == undefined)
+        {
+            ID = 0;
+        }
+			$.ajax({
+                url: "/Transaction/_AddEMPTarget",
+                type: "Get",
+                data: { src: EncryptJSON(@ViewBag.MenuID+"*" + "/Transaction/_AddEMPTarget" + "*" + ID) },
+                success: function (data)
+                {
+                    $("#TagetDiv").empty();
+                    $("#TagetDiv").html(data);
+                    $('#ViewModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    })
+                    $(".applyselect").select2();
+                     var form = $("form")
+                .removeData("validator")
+                .removeData("unobtrusiveValidation");
+                    $.validator.unobtrusive.parse(form);
+				},
+				error: function (er) {
+					alert(er);
+
+				}
+			});
+            }
+
+
+        function OnSuccess(obj) {
+            if (obj.Status) {
+                SuccessToaster(obj.SuccessMessage);
+                window.location.href = obj.RedirectURL;
+            }
+            else {
+                CloseLoadingDialog();
+                FailToaster(obj.SuccessMessage);
+
+            }
+        }
+        </script>
+    }

@@ -1,0 +1,87 @@
+﻿
+<div class="table-section">
+    @model ManageActivities.Attendance
+
+    @{
+
+    }
+
+    @using (Ajax.BeginForm("ManageAttendance", "Tools",
+            new { src = ViewBag.src },
+             new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
+                new { @id = "ManageAttendanceForm" })
+        )
+    {
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Manage Attendance</div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                        <label>EMP Code <small class="sm-war">[ For multiple can be Comma (,) Seperated ]</small></label>
+                        @Html.TextAreaFor(model => model.EMPCode, new { @class = "form-control txtareabig" })
+                        @Html.ValidationMessageFor(model => model.EMPCode, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 form-group">
+                        <label>Date<sup>*</sup></label>
+                        @Html.TextBoxFor(model => model.Date, new { @class = "form-control", @type = "datetime-local" })
+                        @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 form-group">
+                        <label>Status<sup>*</sup></label>
+                        @Html.DropDownListFor(n => n.StatusID, new SelectList(Model.AttendenceStatusList, "ID", "Name"), "Select Status",
+                            new { @class = "form-control applyselect" })
+                        @Html.ValidationMessageFor(model => model.StatusID, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+                        <label>Notes </label>
+                        @Html.TextAreaFor(model => model.Notes, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-lg-12 form-group">
+                        <button type="button" class="btn client-close" onclick="ShowLoadingDialog(); window.location = '@Url.Action("ManageActivities",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Tools/ManageActivities") })';">Cancel</button>
+
+                        <button type="submit" class="btn client-save btn-primary" name="Command" value="Add"> Submit</button>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="divResult"> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    </div>
+    @section scripts    {
+
+        @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
+        <script>
+
+            function OnSuccess(obj) {
+                $("#divResult").empty();
+                if (obj.Status) {
+                    var TablHTML = "<table class='tblSuccess'><tbody>";
+                    var array = obj.SuccessMessage.split(",");
+                    $.each(array, function (i) {
+                        TablHTML += "<tr><td>" + (i + 1) + ". " + array[i] + "</td></tr>"
+                    });
+                    TablHTML += "</tbody></table>";
+                    $("#divResult").html(TablHTML);
+                    CloseLoadingDialog();
+                }
+                else {
+                    FailToaster(obj.SuccessMessage);
+                    CloseLoadingDialog();
+
+                }
+            }
+
+        </script>
+    }

@@ -1,0 +1,89 @@
+﻿@model  EmployeeDocuments
+@{ 
+    if(Model.DocumentList.Count==0)
+    {
+        List<EMPDocumentList> List = new List<EMPDocumentList>();
+        EMPDocumentList obj = new EMPDocumentList();
+        List.Add(obj) ;
+        Model.DocumentList = List;
+    }
+}
+@using (Ajax.BeginForm("_EmployeeDocuments", "Masters",
+          new { src = ViewBag.src },
+           new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnDocSuccess", OnBegin = "ShowLoadingDialog()" },
+              new { @id = " ", @enctype = "multipart/form-data" })
+      )
+{
+    <div class="col-md-12 col-12">
+        <div class="table-responsive">
+            <table id="tableEMPDoc" cellpadding="1" cellspacing="1" class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Sr. No.</th>
+                        <th>File Name</th>
+                        <th>Description</th>
+                        <th>Upload</th>
+                        <th>Download</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        int Count = 0;
+                        for (int i = 0; i < Model.DocumentList.Count; i++)
+                        {
+                            Count++;
+                    <tr>
+                        <td>
+                            <label id="lbl_@Count"> @Count</label>
+                            @Html.HiddenFor(model => Model.DocumentList[i].Attach_ID, new { @class = "hdnID" })
+                        </td>
+                      
+                        <td>
+                            @Html.DropDownListFor(n => Model.DocumentList[i].FileName, new SelectList(ViewBag.EmployeeDocType, "Name", "Name", Model.DocumentList[i].FileName), "Select", new { @class = "form-control  applyselect" })
+                            @Html.ValidationMessageFor(model => Model.DocumentList[i].FileName, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            @Html.TextAreaFor(model => model.DocumentList[i].Description, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => Model.DocumentList[i].Description, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(x => Model.DocumentList[i].upload, new { @type = "file" })
+                            @Html.ValidationMessageFor(model => Model.DocumentList[i].upload, "", new { @class = "text-danger" })
+
+                           
+                            @Html.ValidationMessageFor(model => model.DocumentList[i].upload, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            @if (Model.DocumentList[i].Attach_ID > 0)
+                            {
+                            <a class="shfile" href="@Model.DocumentList[i].FilePath" target="_blank">@Model.DocumentList[i].FileName</a>
+                            }
+                        </td>
+                        <td>
+                            @if (Count == 1)
+                            {
+                                <a class="remove"><i class="fa fa-window-close" aria-hidden="true"></i></a>
+                            }
+                            else
+                            {
+                                <a onclick="DeleteRow(this)" class="remove"><i class="fa fa-window-close red-clr" aria-hidden="true"></i></a>
+                            }
+
+                        </td>
+                    </tr>
+                        }
+
+                    }
+                </tbody>
+            </table>
+            <div class="text-right">
+                <a onclick="AddNewRow(this)" class="btn btn-indigo">Add Row</a>
+                <button type="submit" class="btn btn-primary" name="Command" value="Add"><i class="fa fa-paper-plane" aria-hidden="true"></i> Update</button>
+            </div>
+        </div>
+
+    </div>
+
+}
