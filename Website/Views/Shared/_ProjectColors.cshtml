@@ -1,0 +1,81 @@
+﻿
+@{
+    string CompanyCode = ClsApplicationSetting.GetSessionValue("CompanyCode");
+}
+@if (CompanyCode?.ToLower() == "mitsubishi")
+{
+    <style>
+        :root {
+            --btnbg: #ed1b2e;
+            --bgdark: #d00012;
+            --bglight: #ff4d5d;
+            --bgbtnlight: #ff5a69;
+            --bgmain: #ff0000;
+            --darkredshed: #f42f41;
+            --lightredshed: #ff3600;
+            --lightshade: #eeeeee;
+            --darkshade: #ffd8db;
+        }
+    </style>
+}
+else if (CompanyCode?.ToLower() == "kaff")
+{
+    <style>
+        /*  /---Grey color Start---/*/
+        :root {
+            --btnbg: #3a3a3a;
+            --bgdark: #3a3a3a;
+            --bglight: #727270;
+            --bgbtnlight: #9d9d9d;
+            --bgmain: #2a2a2a;
+            --darkredshed: #232323;
+            --lightredshed: #9d9d9d;
+        }
+        /*/---grey color End---/*/
+    </style>
+}
+else if (CompanyCode?.ToLower() == "ogeneral")
+{
+    <style>
+        /*/---Brown color Start---/*/
+        /*:root {
+            --btnbg: #2d1208;
+            --bgdark: #2d1208;
+            --bglight: #5b3018;
+            --bgbtnlight: #5b3018;
+            --bgmain: #2a2a2a;
+            --darkredshed: #5b3018;
+            --lightredshed: #492322;
+        }*/
+        /*/---Brown color End---/*/
+        :root {
+            --btnbg: #ed1b2e;
+            --bgdark: #d00012;
+            --bglight: #ff4d5d;
+            --bgbtnlight: #ff5a69;
+            --bgmain: #ff0000;
+            --darkredshed: #f42f41;
+            --lightredshed: #ff3600;
+            --lightshade: #eeeeee;
+            --darkshade: #ffd8db;
+        }
+    </style>
+}
+else
+{
+    <style>
+     /*   /---Blue color Start---/*/
+        :root {
+            --btnbg: #1845ad;
+            --bgdark: #00309f;
+            --bglight: #23a2f6;
+            --bgbtnlight: #23a2f6;
+            --bgmain: #0000ff;
+            --darkredshed: #1845ad;
+            --lightredshed: #23a2f6;
+            --lightshade: #e8f4ff;
+            --darkshade: #c9e6ff;
+        }
+      /*  /---Blue color End---/*/
+    </style>
+}

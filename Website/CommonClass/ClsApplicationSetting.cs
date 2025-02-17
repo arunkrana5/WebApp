@@ -217,7 +217,25 @@ public class ClsApplicationSetting
         string PhysicalPath = GetConfigValue("ApplicationPhysicalPath");
         string InnerPath = "";
         string functionReturnValue = "";
-        if (pathFor.ToLower() == "images")
+        if (pathFor.ToLower() == "recruit")
+        {
+            InnerPath = "/Attachments/Recruit";
+            if (!Directory.Exists(PhysicalPath + InnerPath))
+            {
+                Directory.CreateDirectory(PhysicalPath + InnerPath);
+            }
+            functionReturnValue = PhysicalPath + InnerPath;
+        }
+        if (pathFor.ToLower() == "banner")
+        {
+            InnerPath = "/Attachments/Banner";
+            if (!Directory.Exists(PhysicalPath + InnerPath))
+            {
+                Directory.CreateDirectory(PhysicalPath + InnerPath);
+            }
+            functionReturnValue = PhysicalPath + InnerPath;
+        }
+        else if (pathFor.ToLower() == "images")
         {
             InnerPath = "/assets/design/images";
             if (!Directory.Exists(PhysicalPath + InnerPath))
@@ -331,15 +349,6 @@ public class ClsApplicationSetting
             }
             functionReturnValue = PhysicalPath + InnerPath;
         }
-        else if (pathFor.ToLower() == "recruit")
-        {
-            InnerPath = "/Attachments/Recruit/";
-            if (!Directory.Exists(PhysicalPath + InnerPath))
-            {
-                Directory.CreateDirectory(PhysicalPath + InnerPath);
-            }
-            functionReturnValue = PhysicalPath + InnerPath;
-        }
         else if (pathFor.ToLower() == "pdfexport")
         {
             InnerPath = "/Attachments/ExportPDF/";
@@ -371,7 +380,28 @@ public class ClsApplicationSetting
         {
             string Year = DateTime.Now.Year.ToString();
             string Month = DateTime.Now.Month.ToString("d2");
-            InnerPath = "/Attachments/PJPDoc/" + Year + "/" + Month+"/"+ EMPCODE;
+            InnerPath = "/Attachments/PJPDoc/" + Year + "/" + Month + "/" + EMPCODE;
+            if (!Directory.Exists(PhysicalPath + InnerPath))
+            {
+                Directory.CreateDirectory(PhysicalPath + InnerPath);
+            }
+            functionReturnValue = PhysicalPath + InnerPath;
+        }
+        else if (pathFor.ToLower() == "candidatedata")
+        {
+            InnerPath = "/Attachments/CandidateData/";
+            if (!Directory.Exists(PhysicalPath + InnerPath))
+            {
+                Directory.CreateDirectory(PhysicalPath + InnerPath);
+            }
+            functionReturnValue = PhysicalPath + InnerPath;
+        }
+        else if (pathFor.ToLower() == "workforce")
+        {
+            string Year = DateTime.Now.Year.ToString();
+            string Month = DateTime.Now.Month.ToString("d2");
+
+            InnerPath = "/Attachments/WorkForce/" + Year + "/" + Month;
             if (!Directory.Exists(PhysicalPath + InnerPath))
             {
                 Directory.CreateDirectory(PhysicalPath + InnerPath);
@@ -913,6 +943,38 @@ public class ClsApplicationSetting
         return result;
     }
 
+    public static PostResponse UploadBannerToFolder(HttpPostedFileBase File, string Doctype)
+    {
+        PostResponse result = new PostResponse();
+        result.SuccessMessage = "No action Taken";
+        string PhysicalPath = "";
+        try
+        {
+            var rv = ClsApplicationSetting.ValidateFile(File);
+            if (!rv.IsValid)
+            {
+                result.SuccessMessage = rv.Message;
+                return result;
+            }
+            PhysicalPath = GetPhysicalPath(Doctype);
+            PhysicalPath = Path.Combine(PhysicalPath, rv.FileName + "" + rv.FileExt);
+            result.AdditionalMessage = rv.FileName + "" + rv.FileExt;
+            result.Status = true;
+            if (rv.IsImage)
+            {
+                File.SaveAs(PhysicalPath);
+            }
+            else
+            {
+                File.SaveAs(PhysicalPath);
+            }
+        }
+        catch (Exception ex)
+        {
+            Common_SPU.LogError("Error during UploadAttachment. The query was executed :", ex.ToString(), "", "ClsApplicationSetting", "ClsApplicationSetting", 0, "");
+        }
+        return result;
+    }
 
     public static PostResponse UploadAttachment(UploadAttachment Modal)
     {
@@ -1057,6 +1119,7 @@ public class ClsApplicationSetting
                     {
                         Modal.File.SaveAs(PhysicalPath);
                     }
+                    result.AdditionalMessage = rv.FileName + "" + rv.FileExt;
                 }
                 else if (Modal.Doctype.ToLower() == "pjpdoc")
                 {
@@ -1064,6 +1127,29 @@ public class ClsApplicationSetting
                     rv.ExpenseType = Modal.Token;
                     PhysicalPath = GetPhysicalPath("pjpdoc", Convert.ToString(Modal.LoginID));
                     result = Common_SPU.fnSetPJPDocuments(rv);
+                    PhysicalPath = Path.Combine(PhysicalPath, rv.FileName + "" + rv.FileExt);
+                    if (System.IO.File.Exists(PhysicalPath))
+                    {
+                        System.IO.File.Delete(PhysicalPath);
+                    }
+                    if (rv.IsImage)
+                    {
+                        if (!ResizeImage(Modal.File, PhysicalPath, 1200, 1200))
+                        {
+                            Modal.File.SaveAs(PhysicalPath);
+                        }
+                    }
+                    else
+                    {
+                        Modal.File.SaveAs(PhysicalPath);
+                    }
+                }
+                else if (Modal.TableName.ToLower() == "workforce")
+                {
+                    rv.Message = Modal.Message;
+                    rv.ExpenseType = Modal.Token;
+                    PhysicalPath = GetPhysicalPath("workforce", Convert.ToString(Modal.LoginID));
+                    result = Common_SPU.fnSetWorkForceDocuments(rv);
                     PhysicalPath = Path.Combine(PhysicalPath, rv.FileName + "" + rv.FileExt);
                     if (System.IO.File.Exists(PhysicalPath))
                     {

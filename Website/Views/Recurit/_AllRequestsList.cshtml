@@ -1,29 +1,50 @@
-﻿@model List<Requirement.RequestList>
-<div class="table-section">
+﻿@model IList<Requirement.RequestList>
+@{
+    string CompanyCode = ClsApplicationSetting.GetSessionValue("CompanyCode");
+}
+<div class="table-section" style="margin-top: -10px;">
     <div class="row">
-        <div class="col-xl-12">
-            <table id="example" class="table table-hover text-nowrap key-buttons table-responsive-sm">
+        <div class="col-xl-12 table-responsive">
+            <table id="example" class="table table-bordered table-hover text-nowrap key-buttons dataTable no-footer">
                 <thead>
                     <tr>
                         <th>SNo.</th>
-
+                        <th>Status</th>
                         <th>Application Offered</th>
                         <th>Request No.</th>
                         <th>Request Date</th>
+                        <th>Hired For</th>
+                        @if (!String.IsNullOrEmpty(CompanyCode))
+                        {
+                            if (CompanyCode.ToLower() == "thriverainhouse")
+                            {
+                                <th>Assign To</th>
+                            }
+                        }
                         <th>Hired Type</th>
+                        <th>Dealer Code</th>
                         <th>Dealer Name</th>
                         <th>Region</th>
                         <th>State</th>
                         <th>Branch</th>
+                        <th>Created By</th>
+                        <th>Created Date</th>
                     </tr>
                 </thead>
                 <tbody>
                     @{ int count = 0;}
-                    @foreach (var item in Model)
+                    @foreach (Requirement.RequestList item in Model)
                     {
                         count++;
                         <tr>
-                            <td> @count</td>
+                            <td>
+                                <input type="hidden" name="I" value="@item.ReqID" />
+                                <input type="hidden" name="N" value="@item.RequestNo" />
+                                @count
+                            </td>
+                            <td>
+                                <a title="click here to view status" onclick="ViewStatus(this)">View Status</a>
+                            </td>
                             <td class="text-green">
                                 @if (item.Approved == 0)
                                 {
@@ -41,18 +62,27 @@
                             </td>
 
                             <td>@item.RequestDate</td>
+                            <td>@item.HiredFor</td>
+                            @if (!String.IsNullOrEmpty(CompanyCode))
+                            {
+                                if (CompanyCode.ToLower() == "thriverainhouse")
+                                {
+                                    <td>@item.AssignTo</td>
+                                }
+                            }
                             <td>@item.HiredBy</td>
+                            <td>@item.DealerCode</td>
                             <td>@item.DealerName</td>
                             <td>@item.Region</td>
-                            <td>@item.Region</td>
+                            <td>@item.State</td>
                             <td>@item.Branch</td>
-
+                            <td>@item.CreatedBy</td>
+                            <td>@item.CreatedDate</td>
                         </tr>
                     }
 
                 </tbody>
             </table>
         </div>
-
     </div>
 </div>

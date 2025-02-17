@@ -28,6 +28,7 @@
             public string IPAddress { get; set; }
             public string RouteNumber { get; set; }
             public string VisitType { get; set; }
+            public string IsHiringOpen { get; set; }
         }
     }
 

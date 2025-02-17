@@ -66,6 +66,7 @@ namespace DataModal.Models
         public string Param1 { get; set; }
         public string Param2 { get; set; }
         public long LoginID { get; set; }
+        public long RoleID { get; set; }
         public string IPAddress { get; set; }
 
     }
@@ -97,6 +98,16 @@ namespace DataModal.Models
         public long LoginID { get; set; }
         public string IPAddress { get; set; }
         public string Reason { get; set; }
+
+    }
+    public class GetGraphResponse
+    {
+        public long LoginID { get; set; }
+        public long RegionID { get; set; }
+        public long BranchID { get; set; }
+        public string InputDate { get; set; }
+        public string Doctype { get; set; }
+        public string IPAddress { get; set; }
 
     }
 
@@ -184,7 +195,17 @@ namespace DataModal.Models
             public long LoginID { get; set; }
             public string IPAddress { get; set; }
         }
-
+        public class JsonData
+        {
+            public string ViewAsString { get; set; }
+            public bool Status { get; set; }
+            public int StatusCode { get; set; }
+            public string SuccessMessage { get; set; }
+            public string RedirectURL { get; set; }
+            public long ID { get; set; }
+            public string AdditionalMessage { get; set; }
+            public dynamic Data { get; set; }
+        }
 
 
     }

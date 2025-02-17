@@ -25,14 +25,14 @@
                                     @Html.TextBoxFor(model => model.Month, new { @class = "form-control", @type = "Month" })
                                     @Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="col-sm-3 form-group">
+                                <div class="col-sm-3 form-group roleuserdropdown">
                                     <label>User Type <sup>*</sup></label>
-                                    @Html.DropDownListFor(x => Model.RoleID, new SelectList(ViewBag.RoleDropdownList, "ID", "Name", Model.RoleID), "Select",
-                                    new { @class = "form-control  applyselect  ddleaveType" })
+                                    @Html.DropDownListFor(x => Model.RoleID, new SelectList(ViewBag.RoleDropdownList, "ID", "Name", Model.RoleID),
+                                    new { @class = "form-control  applyselect " })
                                 </div>  
                                 <div class="col-sm-2 form-group d-flex align-items-end pt-1">
                                     <label class="small">&nbsp;</label>
-                                    <button type="submit" id="btnSubmit" name="Command" value="Add" class="button ">
+                                    <button type="submit" id="btnSearch" name="Command" value="Add" class="button ">
                                         <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
                                     </button>
                                 </div>
@@ -111,9 +111,12 @@
         @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
 
         <script>
+            $(document).ready(function () {
+                $("#btnSearch").click();
+            });
 
-            $('#Doctype').change(function () {
-                $("#btnSubmit").click();
+            $('#RoleID').change(function () {
+                $("#btnSearch").click();
             });
 
             function OnBegin() {
@@ -122,7 +125,7 @@
             }
 
             $('#Month').bind("change", function () {
-                $("#btnSubmit").click();
+                $("#btnSearch").click();
             });
 
             $('.AnchorApproval').on('click', function (e) {
@@ -132,7 +135,7 @@
                 $(".AnchorApproval.active").removeClass("active");
                 $(this).addClass("active");
                 $("#Approved").val(att);
-                $("#btnSubmit").click();
+                $("#btnSearch").click();
             });
             function OnSuccess(obj) {
                 $("#TargetDiv").empty();
@@ -154,7 +157,7 @@
             function OnApproveAttendenceSuccess(obj) {
                 if (obj.Status) {
                     SuccessToaster(obj.SuccessMessage);
-                    $("#btnSubmit").click();
+                    $("#btnSearch").click();
                     $("#ViewModal").modal('hide');
                     CloseLoadingDialog();
                 }

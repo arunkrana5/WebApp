@@ -283,7 +283,7 @@
 
     .app.light-mode .app-header .header-brand .header-brand-img.mobile-logo {
         margin-top: 4px;
-        width: 82px;
+        width: auto;
     }
 
     .app-header .header-brand {
@@ -791,10 +791,18 @@
             height: auto !important;
             margin-bottom: 20px;
         }
-
     .camerabtn {
-        text-align: right;
+        text-align: center;
         position: relative;
+        width: 100%;
+        float: none;
+        margin: 0px auto;
+        padding: 0;
+        margin-top: 6px;
+    }
+.modal-content-demo .camerabtn {
+        width: 75%;
+        margin: 0px auto;
     }
 
         .camerabtn a {
@@ -803,7 +811,7 @@
             line-height: 40px;
             position: absolute;
             right: 0;
-            top: -15px;
+            top: -8px;
             background: #4454c3;
             display: inline-block;
             text-align: center;
@@ -817,9 +825,13 @@
             }
 
         .camerabtn img {
-            width: 80%;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
-
+    .table-section .card.p-4 {
+        padding: 0px 5px !important;
+    }
     .table .camerabtn {
         margin-bottom: 5px;
         margin-top: 20px;

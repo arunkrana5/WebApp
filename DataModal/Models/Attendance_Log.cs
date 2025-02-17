@@ -45,6 +45,10 @@ namespace DataModal.Models
             public string Out_Notes { get; set; }
             public string Out_PunchDistance { get; set; }
             public string EntrySource { get; set; }
+            public string In_Lat { get; set; }
+            public string In_Long { get; set; }
+            public string Out_Lat { get; set; }
+            public string Out_Long { get; set; }
         }
 
         public class PunchStatus

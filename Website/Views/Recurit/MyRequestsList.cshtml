@@ -2,102 +2,117 @@
 @section style{
     @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
 }
-
+@{
+    string CompanyCode = ClsApplicationSetting.GetConfigValue("Company");
+}
+<input type="hidden" id="hd_CompanyCode" value="@CompanyCode" />
 <div class="table-section">
-
     <div id="LoadDashboard"></div>
-
-
     <div class="row">
         <div class="col-lg-12 ">
             <div class="card">
                 <div class="card-body">
-                    <div class="">
+                    <div class="row">
+                        <div class="col-sm-2 form-group">
+                            <label class="small">&nbsp;</label>
+                            <button style="display:none" type="submit" id="btnSearch" name="Command" value="Add" class="btn btndefault pull-right form-control">
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tabmargin">
+                        @Html.HiddenFor(x => x.Approved)
+                        <ul id="tabs" class="nav nav-tabs " role="tablist">
+                            <li class="nav-item"> <a tabvalue="0" class="nav-link ripplelink AnchorApproval @(Model.Approved == 0 ? " active" : "" )" data-toggle="tab" role="tab"> Pending</a> </li>
+                            <li class="nav-item"> <a tabvalue="1" class="nav-link ripplelink AnchorApproval @(Model.Approved == 1 ? " active" : "" ) " data-toggle="tab" role="tab">Processed</a></li>
 
-
-                        @using (Ajax.BeginForm("_MyRequestsList", "Recurit",
-                        new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Recurit/_MyRequestsList") },
-                        new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
-                        new { @id = "_RequestsListForm" })
-                        )
-                        {
-                            <div class="row">
-                                <div class="col-sm-2 form-group">
-                                    <label class="small">&nbsp;</label>
-                                    <button style="display:none" type="submit" id="btnSearch" name="Command" value="Add" class="btn btndefault pull-right form-control">
-                                        Search
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="tabmargin">
-                                @Html.HiddenFor(x => x.Approved)
-                                <ul id="tabs" class="nav nav-tabs " role="tablist">
-                                    <li class="nav-item"> <a tabvalue="0" class="nav-link ripplelink AnchorApproval @(Model.Approved == 0 ? " active" : "" )" data-toggle="tab" role="tab"> Pending</a> </li>
-                                    <li class="nav-item"> <a tabvalue="1" class="nav-link ripplelink AnchorApproval @(Model.Approved == 1 ? " active" : "" ) " data-toggle="tab" role="tab">Processed</a></li>
-
-                                </ul>
-
-                            </div>
-                        }
-
+                        </ul>
+                    </div>
+                    <div class="table-section" style="margin-top: -10px;">
                         <div class="row">
-                            <div class="col-md-12">
-                                <div id="TargetDiv"></div>
+                            <div class="col-xl-12 table-responsive">
+                                <table id="example" class="table table-bordered table-hover text-nowrap key-buttons dataTable no-footer">
+                                    <thead>
+                                        <tr>
+                                            <th>Action</th>
+                                            <th>Status</th>
+                                            <th>Application Offered</th>
+                                            <th>Request No.</th>
+                                            <th>Request Date</th>
+                                            <th>Hired For</th>
+                                            @if (!String.IsNullOrEmpty(CompanyCode))
+                                            {
+                                                if (CompanyCode.ToLower() == "thriverainhouse")
+                                                {
+                                            <th>Assign To</th>
+                                                }
+                                            }
+                                            <th>Hired Type</th>
+                                            <th>Dealer Code</th>
+                                            <th>Dealer Name</th>
+                                            <th>Region</th>
+                                            <th>State</th>
+                                            <th>Branch</th>
+                                            <th>Created By</th>
+                                            <th>Created Date</th>
+                                        </tr>
+                                    </thead>
+                                </table>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
-    <div class="modal fade " id="ViewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document" style="min-width:90%">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add Request</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true" style="color:#fff;">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div id="ModalTargetDiv"></div>
-                </div>
-
+</div>
+<div class="modal fade " id="ViewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document" style="min-width:90%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Request</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="color:#fff;">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="ModalTargetDiv"></div>
             </div>
         </div>
     </div>
-    <div class="modal fade " id="RequestStatusModal" tabindex="-1" role="dialog" aria-labelledby="RequestStatusModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="RequestStatusModalLabel">View Status</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true" style="color:#fff;">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div id="RequestStatusDiv"></div>
-                </div>
-
+</div>
+<div class="modal fade " id="RequestStatusModal" tabindex="-1" role="dialog" aria-labelledby="RequestStatusModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="RequestStatusModalLabel">View Status</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="color:#fff;">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="RequestStatusDiv"></div>
             </div>
         </div>
     </div>
+</div>
 </div>
 @section scripts    {
     @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
 
     @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
 
-    <script>
+<script>
 
         $(document).ready(function () {
-            $("#btnSearch").click();
             GetDashborad();
+            $('#hd_CompanyCode').val() == "ThriveraInhouse" ? BindDataTableInhouse() : BindDataTable();
+            $("#btnSearch").on('click', function () {
+                $('#hd_CompanyCode').val() == "ThriveraInhouse" ? BindDataTableInhouse() : BindDataTable();
+            });
 
-            ("#btnAddglobal").hide();
-            ("#btnAddglobal").show();
+            //("#btnAddglobal").hide();
+            //("#btnAddglobal").show();
         });
         $('.AnchorApproval').on('click', function (e) {
             e.preventDefault();
@@ -108,48 +123,41 @@
             $("#Approved").val(att);
             $("#btnSearch").click();
         });
-        function OnSuccess(obj) {
-            $("#TargetDiv").empty();
-            $("#TargetDiv").html(obj);
-            CloseLoadingDialog();
-            DatatableScripts();
-        }
-
-        function ListHeaderAdd(ID) {
-            if (ID == undefined) {
-                ID = 0;
+        function ListHeaderAdd(BranchCode,isEditMode,ReqID=0) {
+            if (BranchCode == undefined) {
+                BranchCode = "";
             }
             $.ajax({
                 url: "/Recurit/_AddRequest",
                 type: "Get",
-                data: { src: EncryptJSON(@ViewBag.MenuID+"*/Recurit/_AddRequest*" + ID)
-        },
-        success: function (data) {
-            $("#ModalTargetDiv").empty();
-            $("#ModalTargetDiv").html(data);
-            $('#ViewModal').modal({
-                backdrop: 'static',
-                keyboard: false
-            })
-            $(".applyselect").select2();
-            FillState();
-            var form = $("form")
-                .removeData("validator")
-                .removeData("unobtrusiveValidation");
-            $.validator.unobtrusive.parse(form);
-        },
-        error: function (er) {
-            alert(er);
+                data: {
+                    src: EncryptJSON(@ViewBag.MenuID+"*/Recurit/_AddRequest*" + BranchCode + "*" + isEditMode + "*" + ReqID)
+                },
+                success: function (data) {
+                    $("#ModalTargetDiv").empty();
+                    $("#ModalTargetDiv").html(data);
+                    $('#ViewModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    })
+                    $(".applyselect").select2();
+                    var form = $("form")
+                        .removeData("validator")
+                        .removeData("unobtrusiveValidation");
+                    $.validator.unobtrusive.parse(form);
+                },
+                error: function (er) {
+                    alert(er);
 
-        }
-                });
                 }
+            });
+        }
 
 
         function OnAddSuccess(obj) {
             if (obj.Status) {
                 SuccessToaster(obj.SuccessMessage);
-                window.location.reload();
+                window.location.reload(true);
             }
             else {
                 CloseLoadingDialog();
@@ -158,164 +166,44 @@
             }
         }
 
-
-        function FillState() {
-            var ID = $("#RegionID").find("option:selected").val();
-            if (ID != '') {
-                var data = GetDropDownList(ID, "State");
-                if (data != '') {
-                    $("#StateID").empty();
-                    $("#StateID").append($("<option />").val("").text("Select"));
-                    $("#CityID").empty();
-                    $("#CityID").append($("<option />").val("").text("Select"));
-                    $("#BranchID").empty();
-                    $("#BranchID").append($("<option />").val("").text("Select"));
-                    $("#DealerID").empty();
-                    $("#DealerID").append($("<option />").val("").text("Select"));
-
-                    $(data).each(function () {
-                        $("#StateID").append($("<option />").val(this.ID).text(this.Name));
-                        $("#StateID").select2();
-
-                    });
-                    if ($("#hdnStateID").val() != 0) {
-                        $("#StateID").val($("#hdnStateID").val()).change();
-                    }
-                    CloseLoadingDialog();
-                    FillCity();
-                } else {
-                    $("#CityID").empty();
-                    $("#CityID").append($("<option />").val("").text("Select"));
-                    $("#BranchID").empty();
-                    $("#BranchID").append($("<option />").val("").text("Select"));
-                    $("#DealerID").empty();
-                    $("#DealerID").append($("<option />").val("").text("Select"));
-                }
-            }
-            else {
-                $("#CityID").empty();
-                $("#CityID").append($("<option />").val("").text("Select"));
-                $("#BranchID").empty();
-                $("#BranchID").append($("<option />").val("").text("Select"));
-                $("#DealerID").empty();
-                $("#DealerID").append($("<option />").val("").text("Select"));
-            }
-        }
-
-
-
-        function FillCity() {
-            var ID = $("#StateID").find("option:selected").val();
-            if (ID != '') {
-                var data = GetDropDownList(ID, "City");
-                if (data != '') {
-                    $("#CityID").empty();
-                    $("#CityID").append($("<option />").val("").text("Select"));
-                    $("#BranchID").empty();
-                    $("#BranchID").append($("<option />").val("").text("Select"));
-                    $("#DealerID").empty();
-                    $("#DealerID").append($("<option />").val("").text("Select"));
-                    $(data).each(function () {
-                        $("#CityID").append($("<option />").val(this.ID).text(this.Name));
-                        $("#CityID").select2();
-                    });
-                    if ($("#hdnCityID").val() != 0) {
-                        $("#CityID").val($("#hdnCityID").val()).change();
-                    }
-                    CloseLoadingDialog();
-                    FillBranch();
-                } else {
-                    $("#CityID").empty();
-                    $("#CityID").append($("<option />").val("").text("Select"));
-                    $("#BranchID").empty();
-                    $("#BranchID").append($("<option />").val("").text("Select"));
-                    $("#DealerID").empty();
-                    $("#DealerID").append($("<option />").val("").text("Select"));
-                }
-            }
-            else {
-                $("#CityID").empty();
-                $("#CityID").append($("<option />").val("").text("Select"));
-                $("#BranchID").empty();
-                $("#BranchID").append($("<option />").val("").text("Select"));
-                $("#DealerID").empty();
-                $("#DealerID").append($("<option />").val("").text("Select"));
-            }
-        }
-
-
-        function FillBranch() {
-            var ID = $("#CityID").find("option:selected").val();
-            if (ID != '') {
-                var data = GetDropDownList(ID, "BranchByCityID");
-                if (data != '') {
-                    $("#BranchID").empty();
-                    $("#BranchID").append($("<option />").val("").text("Select"));
-                    $("#DealerID").empty();
-                    $("#DealerID").append($("<option />").val("").text("Select"));
-                    $(data).each(function () {
-                        $("#BranchID").append($("<option />").val(this.ID).text(this.Name));
-                        $("#BranchID").select2();
-
-                    });
-                    if ($("#hdnBranchID").val() != 0) {
-                        $("#BranchID").val($("#hdnBranchID").val()).change();
-                    }
-                    CloseLoadingDialog();
-                    FillDealer();
-                } else {
-                    $("#BranchID").empty();
-                    $("#BranchID").append($("<option />").val("").text("Select"));
-                    $("#DealerID").empty();
-                    $("#DealerID").append($("<option />").val("").text("Select"));
-
-
-                }
-            } else {
-                $("#BranchID").empty();
-                $("#BranchID").append($("<option />").val("").text("Select"));
-                $("#DealerID").empty();
-                $("#DealerID").append($("<option />").val("").text("Select"));
-            }
-        }
-
         function FillDealer() {
-            var ID = $("#BranchID").find("option:selected").val();
-            if (ID != '') {
-                var data = GetDropDownList(ID, "DealerBranchWise");
+            ShowLoadingDialog();
+            var BranchCode = $("#BranchCode").find("option:selected").val();
+            if (BranchCode != '') {
+                var data = GetDropDownListByCode(BranchCode, "DealerBranchWise_Recruitment");
                 if (data != '') {
 
-                    $("#DealerID").empty();
-                    $("#DealerID").append($("<option />").val("").text("Select"));
+                    $("#DealerCode").empty();
+                    $("#DealerCode").append($("<option />").val("").text("Select"));
                     $(data).each(function () {
-                        $("#DealerID").append($("<option />").val(this.ID).text(this.Name));
-                        $("#DealerID").select2();
+                        $("#DealerCode").append($("<option />").val(this.Other).text(this.Name));
+                        $("#DealerCode").select2();
 
                     });
-                    if ($("#hdnDealerID").val() != 0) {
-                        $("#DealerID").val($("#hdnDealerID").val()).change();
+                    if ($("#hdnDealerCode").val() != "") {
+                        $("#DealerCode").val($("#hdnDealerCode").val()).change();
                     }
-                    CloseLoadingDialog();
                 } else {
-                    $("#DealerID").empty();
-                    $("#DealerID").append($("<option />").val("").text("Select"));
+                    $("#DealerCode").empty();
+                    $("#DealerCode").append($("<option />").val("").text("Select"));
                 }
             } else {
-                $("#DealerID").empty();
-                $("#DealerID").append($("<option />").val("").text("Select"));
+                $("#DealerCode").empty();
+                $("#DealerCode").append($("<option />").val("").text("Select"));
             }
+            CloseLoadingDialog();
         }
 
 
         function GetDealerDetails(obj) {
-            let DealerID = $(obj).find("option:selected").val();
+            let DealerCode = $(obj).find("option:selected").val();
             var dataObject = JSON.stringify({
-                'ID': DealerID,
+                'Code': DealerCode,
             });
             $.ajax({
-                url: '/CommonAjax/GetDealerDetailsJson',
+                url: '/CommonAjax/GetDealerDetailsByCodeJson',
                 type: "Get",
-                data: { "DealerID":DealerID},
+                data: { "DealerCode":DealerCode},
                 success: function (data) {
                     $("#spnName").html(data.DealerName);
                     $("#spnCode").html(data.DealerCode);
@@ -330,9 +218,8 @@
             });
         }
 
-        function DeleteRequest(obj) {
-            var ID = $(obj).closest("tr").find("input:hidden[name=I]").val();
-            var Name = $(obj).closest("tr").find("input:hidden[name=N]").val();
+        function DeleteRequest(obj,Name) {
+            var ID = obj;
             var Msg = 'Are you sure want to delete ' + Name + ' ?';
             ConfirmMsgBox(Msg, '', function () {
                 if (ID) {
@@ -350,48 +237,281 @@
 
         }
 
-    function GetDashborad()
-    {
-		$.ajax({
-            url: "/Recurit/_BranchWiseEMP_Dashboard",
-         type: "Get",
-            data: { src: EncryptJSON(@ViewBag.MenuID+"*/Recurit/_BranchWiseEMP_Dashboard") },
-         success: function (data)
-         {
-             $("#LoadDashboard").empty();
-             $("#LoadDashboard").html(data);
-		 },
-         error: function (er)
-         {
-			alert(er);
-			}
-		});
+        function GetDashborad() {
+	    	$.ajax({
+                url: "/Recurit/_BranchWiseEMP_Dashboard",
+                type: "Get",
+                data: { src: EncryptJSON(@ViewBag.MenuID+"*/Recurit/_BranchWiseEMP_Dashboard") },
+                success: function (data)
+                {
+                    $("#LoadDashboard").empty();
+                    $("#LoadDashboard").html(data);
+	    	    },
+                error: function (er)
+                {
+	    		    alert(er);
+	    		}
+	    	});
         }
 
         function ViewStatus(obj)
         {
-            var ID = $(obj).closest("tr").find("input:hidden[name=I]").val();
+            var ID = obj;
             var Name = $(obj).closest("tr").find("input:hidden[name=N]").val();
-	$.ajax({
-        url: "/Recurit/_RequestStatus",
-     type: "Get",
-        data: { src: EncryptJSON(@ViewBag.MenuID+"*/Recurit/_RequestStatus*" + ID) },
-     success: function (data)
-     {
-         $("#RequestStatusDiv").empty();
-         $("#RequestStatusDiv").html(data);
-         $('#RequestStatusModal').modal({
-             backdrop: 'static',
-             keyboard: false
-         })
-	 },
-     error: function (er)
-     {
-		alert(er);
-		}
-	});
- }
+	        $.ajax({
+                url: "/Recurit/_RequestStatus",
+                type: "Get",
+                data: { src: EncryptJSON(@ViewBag.MenuID+"*/Recurit/_RequestStatus*" + ID) },
+                success: function (data)
+                {
+                    $("#RequestStatusDiv").empty();
+                    $("#RequestStatusDiv").html(data);
+                    $('#RequestStatusModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    })
+	            },
+                error: function (er)
+                {
+	        	    alert(er);
+	        	}
+	        });
+        }
+        function BindDataTable() {
+            var count = 0;
+            var Approved = $('#Approved').val();
+            var src = EncryptJSON(@ViewBag.MenuID+"*/Recurit/_MyRequestsList*" + Approved)
+            $('#example').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "destroy": true,
+                "ajax": {
+                    url: "/Recurit/_MyRequestsList?src=" + src,
+                    type: "post"
+                },
+                "columns": [
+                    {
+                        data: 'ApplicationOffered',
+                        render: function (data, type, row) {
+                            if (type === 'display') {
+                                let html = ``;
+                                let application = EncryptJSON(@ViewBag.MenuID+"*/Recurit/AddApplication*" + row.ReqID);
+                                if (row.Approved == 0 && row.ApplicationOffered == 0) {
+                                    html = `<a onclick="DeleteRequest(` + row.ReqID + `,'` + row.RequestNo +`')" title="Delete Request" data-toggle='tooltip' data-original-title="Delete Request" class="remove"><i class="fa fa-trash red-clr" aria-hidden="true"></i></a>
+                                    <a title="Edit" onclick="ListHeaderAdd('`+ row.Branch + `',1,`+ row.ReqID +`)" data-toggle='tooltip'><i class="fa-solid fa-pen-to-square checkgreen"></i> </a>`;
+                                }
+                                else {
+                                    html = '';
+                                }
+                                return html
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        className: 'Status',
+                        data: 'Status',
+                        render: function (data, type, row) {
+                            if (type === 'display') {
+                                let HTML = `<a title="click here to view status" onclick="ViewStatus(`+ row.ReqID +`)">View Status</a>`;
+                                return HTML
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: 'ApplicationOffered',
+                        render: function (data, type, row) {
+                            if (type === 'display') {
+                                let offered = ``;
+                                let application = EncryptJSON(@ViewBag.MenuID+"*/Recurit/AddApplication*" + row.ReqID);
+                                if (row.Approved == 0) {
+                                    offered = `<a class="btn btn-default text-center" title="Add" href="/Recurit/AddApplication?src=` + application + `" data-toggle='tooltip'>` + row.ApplicationOffered + `</a>`
+                                }
+                                else {
+                                    offered = `<a class="btn btn-default text-center" title="Add" data-toggle='tooltip'>` + row.ApplicationOffered + `</a>`
+                                }
+                                return offered
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: 'RequestNo',
+                        render: function (data, type, row) {
+                            if (type === 'display') {
+                                let html = ``;
+                                let src = ``;
+                                if (row.Approved == 0 && row.ApplicationOffered > 0) {
+                                    src = EncryptJSON(@ViewBag.MenuID+"*/Recurit/ApprovedApplication*" + row.ReqID);
+                                    html = `<a title="View" title="Add" class="text-red" href="/Recurit/ApprovedApplication?src=` + src + `" data-toggle='tooltip'>` + row.RequestNo + `</ a>`
+                                }
+                                else {
+                                    src = EncryptJSON(@ViewBag.MenuID+"*/Recurit/ViewCompleteRequirement*" + row.ReqID);
+                                    html = `<a title="View" title="Add" class="text-red" href="/Recurit/ViewCompleteRequirement?src=` + src + `" data-toggle='tooltip'>` + row.RequestNo + `</ a>`
+                                }
 
-    </script>
+                                return html
+                            }
+                            return data;
+                        }
+                    },
+                    { "data": "RequestDate" },
+                    { "data": "HiredFor" },
+                    { "data": "RequirementType" },
+                    { "data": "DealerCode" },
+                    { "data": "DealerName" },
+                    { "data": "Region" },
+                    { "data": "State" },
+                    { "data": "Branch" },
+                    { "data": "CreatedBy" },
+                    { "data": "CreatedDate" },
+                ],
+                dom: "lBfrtip",
+                lengthMenu: [
+                    [10, 25, 50, 100],
+                    ['10 rows', '25 rows', '50 rows', '100 rows']
+                ],
+                buttons: [
+                    {
+                        extend: "copy",
+                        className: "btn-sm"
+                    }, {
+                        extend: "csv",
+                        className: "btn-sm"
+                    }, {
+                        extend: "pdf",
+                        className: "btn-sm"
+                    }, {
+                        extend: "print",
+                        className: "btn-sm"
+                    },
+                    {
+                        extend: "pageLength",
+                        className: "btn-sm"
+                    }
+
+                ]
+            });
+        }
+        function BindDataTableInhouse() {
+            var count = 0;
+            var Approved = $('#Approved').val();
+            var src = EncryptJSON(@ViewBag.MenuID+"*/Recurit/_MyRequestsList*" + Approved)
+            $('#example').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "destroy": true,
+                "ajax": {
+                    url: "/Recurit/_MyRequestsList?src=" + src,
+                    type: "post"
+                },
+                "columns": [
+                    {
+                        data: 'ApplicationOffered',
+                        render: function (data, type, row) {
+                            if (type === 'display') {
+                                let html = ``;
+                                let application = EncryptJSON(@ViewBag.MenuID+"*/Recurit/AddApplication*" + row.ReqID);
+                                if (row.Approved == 0 && row.ApplicationOffered == 0) {
+                                    html = `<a onclick="DeleteRequest(` + row.ReqID + `,'` + row.RequestNo +`')" title="Delete Request" data-toggle='tooltip' data-original-title="Delete Request" class="remove"><i class="fa fa-trash red-clr" aria-hidden="true"></i></a>
+                                        <a title="Edit" onclick="ListHeaderAdd('`+ row.Branch + `',1,`+ row.ReqID +`)" data-toggle='tooltip'><i class="fa-solid fa-pen-to-square checkgreen"></i>   </    a>`;
+                                }
+                                else {
+                                    html = '';
+                                }
+                                return html
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        className: 'Status',
+                        data: 'Status',
+                        render: function (data, type, row) {
+                            if (type === 'display') {
+                                let HTML = `<a title="click here to view status" onclick="ViewStatus(`+ row.ReqID +`)">View Status</a>`;
+                                return HTML
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: 'ApplicationOffered',
+                        render: function (data, type, row) {
+                            if (type === 'display') {
+                                let offered = ``;
+                                let application = EncryptJSON(@ViewBag.MenuID+"*/Recurit/AddApplication*" + row.ReqID);
+                                if (row.Approved == 0) {
+                                    offered = `<a class="btn btn-default text-center" title="Add" href="/Recurit/AddApplication?src=` + application + `" data-toggle='tooltip'>` + row.ApplicationOffered + `</a>`
+                                }
+                                else {
+                                    offered = `<a class="btn btn-default text-center" title="Add" data-toggle='tooltip'>` + row.ApplicationOffered + `</a>`
+                                }
+                                return offered
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: 'RequestNo',
+                        render: function (data, type, row) {
+                            if (type === 'display') {
+                                let html = ``;
+                                let src = ``;
+                                if (row.Approved == 0 && row.ApplicationOffered > 0) {
+                                    src = EncryptJSON(@ViewBag.MenuID+"*/Recurit/ApprovedApplication*" + row.ReqID);
+                                    html = `<a title="View" title="Add" class="text-red" href="/Recurit/ApprovedApplication?src=` + src + `" data-toggle='tooltip'>` + row.RequestNo + `</ a>`
+                                }
+                                else {
+                                    src = EncryptJSON(@ViewBag.MenuID+"*/Recurit/ViewCompleteRequirement*" + row.ReqID);
+                                    html = `<a title="View" title="Add" class="text-red" href="/Recurit/ViewCompleteRequirement?src=` + src + `" data-toggle='tooltip'>` + row.RequestNo + `</ a>`
+                                }
+                    
+                                return html
+                            }
+                            return data;
+                        }
+                    },
+                    { "data": "RequestDate" },
+                    { "data": "HiredFor" },
+                    { "data": "AssignTo" },
+                    { "data": "RequirementType" },
+                    { "data": "DealerCode" },
+                    { "data": "DealerName" },
+                    { "data": "Region" },
+                    { "data": "State" },
+                    { "data": "Branch" },
+                    { "data": "CreatedBy" },
+                    { "data": "CreatedDate" },
+                ],
+                dom: "lBfrtip",
+                lengthMenu: [
+                    [10, 25, 50, 100],
+                    ['10 rows', '25 rows', '50 rows', '100 rows']
+                ],
+                buttons: [
+                    {
+                        extend: "copy",
+                        className: "btn-sm"
+                    }, {
+                        extend: "csv",
+                        className: "btn-sm"
+                    }, {
+                        extend: "pdf",
+                        className: "btn-sm"
+                    }, {
+                        extend: "print",
+                        className: "btn-sm"
+                    },
+                    {
+                        extend: "pageLength",
+                        className: "btn-sm"
+                    }
+
+                ]
+            });
+        }
+</script>
 
 }

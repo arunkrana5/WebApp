@@ -48,5 +48,35 @@ namespace DataModal.Models
             public long LoginID { get; set; }
             public string IPAddress { get; set; }
         }
+        public class ImportLeaveBalance
+        { 
+            public string EMPCode { get; set; }
+            public int LeaveBalance { get; set; } 
+            public int Month { get; set; }
+            public int Year { get; set; }
+            public long LoginID { get; set; }
+            public string IPAddress { get; set; }
+            public string CreatedDate { get; set; }
+            public string CreatedBy { get; set; }
+        }
+        public class PendingLeave
+        {
+            [Required(ErrorMessage = "Doc No Can't be Blank")]
+            public string DocNo { get; set; }
+
+            [Required(ErrorMessage = "Reason Can't be Blank")]
+            public string Reason { get; set; }
+            public long LoginID { get; set; }
+            public string IPAddress { get; set; }
+        }
+        public class AssignTo
+        {
+            [Required(ErrorMessage = "Request No Can't be Blank")]
+            public string RequestNos { get; set; }
+            [Required(ErrorMessage = "Assign To Can't be Blank")]
+            public int AssignToID { get; set; }
+            public long LoginID { get; set; }
+            public string IPAddress { get; set; }
+        }
     }
 }

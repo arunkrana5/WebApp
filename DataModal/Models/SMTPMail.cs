@@ -53,4 +53,16 @@ namespace DataModal.Models
         public string UserID { get; set; }
         public string EmailID { get; set; }
     }
+    public class MailDetails
+    {
+        public string TemplateName { get; set; }
+        public string MailBody { get; set; }
+        public string Subject { get; set; }
+        public string CCMail { get; set; }
+        public string BCCMail { get; set; }
+        public string SMSBody { get; set; }
+        public string ToEmail { get; set; }
+        public string CC { get; set; }
+        public string BCC { get; set; }
+    }
 }

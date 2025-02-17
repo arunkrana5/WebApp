@@ -1,0 +1,19 @@
+﻿@model IList<Banner.List>
+@if (Model != null && Model.Count() > 0)
+{
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+
+            <div class="card marqueehome">
+
+                @foreach (var item in Model.Where(x => x.Doctype == "Marquee"))
+                {
+                    <div class="marquee py-2">
+                        <span class="marquee-text">@item.Heading</span>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+}

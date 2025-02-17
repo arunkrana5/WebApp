@@ -27,6 +27,8 @@ namespace Website.Controllers
         }
         public ActionResult Login(string ReturnURL)
         {
+            var CompanyCode = ClsApplicationSetting.GetConfigValue("Company");
+            ClsApplicationSetting.SetSessionValue("CompanyCode", CompanyCode);
             ViewBag.ReturnURL = ReturnURL;
             AdminUser.Login Modal = new AdminUser.Login();
             return View(Modal);
@@ -212,7 +214,7 @@ namespace Website.Controllers
             {
                 Modal.LoginID = LoginID;
                 Modal.IPAddress = IPAddress;
-               // Result = Account.fnSetTerminationRequest(Modal);
+                // Result = Account.fnSetTerminationRequest(Modal);
             }
             TempData["LoginSuccess"] = (Result.Status ? "Y" : "N");
             TempData["LoginSuccessMsg"] = Result.SuccessMessage;

@@ -674,22 +674,22 @@ namespace Website.Controllers
                         return Json(Result, JsonRequestBehavior.AllowGet);
                     }
                 }
-                //if (Modal.ExpenseUpload != null)
-                //{
-                //    UploadAttachment attachModal = new UploadAttachment();
-                //    attachModal.File = Modal.ExpenseUpload;
-                //    attachModal.LoginID = LoginID;
-                //    attachModal.IPAddress = IPAddress;
-                //    attachModal.AttachID = Modal.ExpenseAttachmentID;
-                //    attachModal.Doctype = "TL";
-                //    var Attach = ClsApplicationSetting.UploadAttachment(attachModal);
-                //    Modal.ExpenseAttachmentID = Attach.ID;
-                //    if (!Attach.Status)
-                //    {
-                //        Result.SuccessMessage = Attach.SuccessMessage;
-                //        return Json(Result, JsonRequestBehavior.AllowGet);
-                //    }
-                //}
+                if (Modal.ExpenseUpload != null)
+                {
+                    UploadAttachment attachModal = new UploadAttachment();
+                    attachModal.File = Modal.ExpenseUpload;
+                    attachModal.LoginID = LoginID;
+                    attachModal.IPAddress = IPAddress;
+                    attachModal.AttachID = Modal.ExpenseAttachmentID;
+                    attachModal.Doctype = "TL";
+                    var Attach = ClsApplicationSetting.UploadAttachment(attachModal);
+                    Modal.ExpenseAttachmentID = Attach.ID;
+                    if (!Attach.Status)
+                    {
+                        Result.SuccessMessage = Attach.SuccessMessage;
+                        return Json(Result, JsonRequestBehavior.AllowGet);
+                    }
+                }
                 Result = Transaction.fnSetPJPEntry(Modal);
                 if (Result.Status && Modal.BrandEntryList != null)
                 {
@@ -1439,7 +1439,7 @@ namespace Website.Controllers
             string Company = ClsApplicationSetting.GetConfigValue("Company");
             if (Company.ToLower() == "daikin" && Modal.BrandEntryList.Any(x => string.IsNullOrEmpty(x.ImageBase64String)))
             {
-                Result.SuccessMessage = "Counter Display can't be blank";
+                Result.SuccessMessage = "Brand list can't be blank";
                 return Json(Result, JsonRequestBehavior.AllowGet);
             }
             if (ModelState.IsValid)

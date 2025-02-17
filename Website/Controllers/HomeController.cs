@@ -2,9 +2,12 @@
 using DataModal.Models;
 using DataModal.ModelsMaster;
 using DataModal.ModelsMasterHelper;
+using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Cmp;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using Website.CommonClass;
@@ -14,20 +17,24 @@ namespace Website.Controllers
     [CheckLoginOnly]
     public class HomeController : Controller
     {
-        // GET: Home
         long LoginID = 0;
+        long RoleID = 0;
         string IPAddress = "";
         GetResponse getResponse;
         IHomeHelper Home;
+        IMasterHelper _master;
         public HomeController()
         {
 
             getResponse = new GetResponse();
             long.TryParse(ClsApplicationSetting.GetSessionValue("LoginID"), out LoginID);
+            long.TryParse(ClsApplicationSetting.GetSessionValue("RoleID"), out RoleID);
             IPAddress = ClsApplicationSetting.GetIPAddress();
             getResponse.IPAddress = IPAddress;
             getResponse.LoginID = LoginID;
+            getResponse.RoleID = RoleID;
             Home = new HomeModal();
+            _master = new MasterModal();
 
         }
         public string RenderRazorViewToString(string viewName, object model)
@@ -67,6 +74,15 @@ namespace Website.Controllers
             }
             else if (!string.IsNullOrEmpty(RoleName))
             {
+                GetDropDownResponse respdrop = new GetDropDownResponse();
+                respdrop.Doctype = "SalesGraphFilter";
+                var dropdownData = Common_SPU.GetDropDownList(respdrop);
+                ViewBag.RegionList = dropdownData.Select(x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.ID.ToString()
+                }).ToList();
+                ViewBag.InputDate = DateTime.Now.ToString("yyyy-MM");
                 return View("Dashboard_Common");
             }
             else
@@ -85,6 +101,19 @@ namespace Website.Controllers
         {
             getResponse.Doctype = Doctype;
             return PartialView(Common_SPU.GetSSRListToday(getResponse));
+        }
+        public ActionResult _Banners(string Doctype)
+        {
+            getResponse.Doctype = "Banner";
+            var result = _master.GetBannerList(getResponse);
+            return PartialView(result);
+        }
+
+        public ActionResult _Marquee(string Doctype)
+        {
+            getResponse.Doctype = "Marquee";
+            var result = _master.GetBannerList(getResponse);
+            return PartialView(result);
         }
         [HttpPost]
         public ActionResult _DailySales(GetResponse Modal)
@@ -419,6 +448,50 @@ namespace Website.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public ActionResult _ProductSalesGraph(GetGraphResponse getGraphResponse)
+        { 
+            getGraphResponse.Doctype = "ProductSalesGraph";
+            getGraphResponse.LoginID = LoginID;
+            var result = _master.GetSalesGraphData(getGraphResponse); 
+            ViewBag.ProductSalesData = JsonConvert.SerializeObject(result.ProductSalesList); 
+            return PartialView();
+        }
 
+        [HttpPost]
+        public ActionResult _SalesGrowthGraph(GetGraphResponse getGraphResponse)
+        {
+            getGraphResponse.Doctype = "SalesGrowthData";
+            getGraphResponse.LoginID = LoginID;
+            var result = _master.GetSalesGrowthData(getGraphResponse);
+            ViewBag.SalesGrowthData = JsonConvert.SerializeObject(result.SalesGrowthList);
+            return PartialView();
+        }
+
+        [HttpPost]
+        public ActionResult _BranchWiseSalesGraph(GetGraphResponse getGraphResponse)
+        {
+            getGraphResponse.Doctype = "BranchWiseSales";
+            getGraphResponse.LoginID = LoginID;
+            var result = _master.GetBranchWiseSales(getGraphResponse);
+            ViewBag.BranchWiseSalesData = JsonConvert.SerializeObject(result.BranchWiseSalesList);
+            return PartialView();
+        }
+        [HttpPost]
+        public ActionResult _ISDCountGraph(GetGraphResponse getGraphResponse)
+        {
+            getGraphResponse.Doctype = "ISDCountGraph";
+            getGraphResponse.LoginID = LoginID;
+            var result = _master.GetISDCountGraph(getGraphResponse);
+            ViewBag.ISDCountGraphData = JsonConvert.SerializeObject(result.ISDCountGraphList);
+            return PartialView();
+        }
+        public JsonResult GetRegionWiseBranchListJson(GetDropDownResponse Modal)
+        {
+            List<DropDownlist> Result = new List<DropDownlist>();
+            Modal.LoginID = LoginID;
+            Result = Common_SPU.GetDropDownList(Modal);
+            return Json(Result, JsonRequestBehavior.AllowGet);
+        }
     }
 }

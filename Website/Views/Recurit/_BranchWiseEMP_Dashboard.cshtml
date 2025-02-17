@@ -1,52 +1,50 @@
 ﻿@model IList<Requirement.BranchWiseEMP_Dashboard>
-    <style>
-        .FixedHeightContainer {
-            height: 250px;
-            width: 250px;
-            margin-left: auto;
-            margin-right: auto;
-            width: 50%;
-            margin-bottom:20px;
-        }
+<style>
+    .FixedHeightContainer {
+        max-height: 250px;
+        width: 250px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 99%;
+    }
 
-        .table {
-            height: 150px;
-            overflow: auto;
-            background: #fff;
-        }
-    </style>
+    .table {
+        height: 150px;
+        overflow: auto;
+        background: #fff;
+    }
+</style>
 <div class="table-responsive center FixedHeightContainer">
     <table class="table table-bordered table-hover table-wrapper-scroll-y my-custom-scrollbar  table-striped text-nowrap key-buttons">
         <thead>
             <tr>
-                <th>Branch Name</th>
-
-                <th>Max Employee</th>
-                <th>Active Employee</th>
-                <th>Pending</th>
-                <th>Add</th>
+                <th style="text-align:center; width:50%;">Branch Name</th>
+                <th style="text-align:center;">Add</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @if (Model != null)
             {
-                <tr>
-                    <td>@item.BranchName</td>
-
-                    <td>@item.MaxEMPCount</td>
-                    <td>@item.ActiveEMP</td>
-                    <td>@item.PendingCount</td>
-                    <td>
-                        @if (ClsApplicationSetting.GetSessionValue("Write") == "True" && item.PendingCount != 0)
-                        {
-                            <a id="btnAddglobal" class="btn btndefault  " onclick="ListHeaderAdd();">
-                                <i class="fa fa-plus"></i> Add
-                            </a>
-                        }
-                    </td>
-                </tr>
+                if (Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td style="text-align:center;">
+                                <a class="btn btndefault">@item.BranchName</a>
+                            </td>
+                            <td style="text-align:center;">
+                                @if (ClsApplicationSetting.GetSessionValue("Write") == "True" && item.PendingCount > 0)
+                                {
+                                    <a id="btnAddglobal" class="btn btndefault" onclick="ListHeaderAdd('@item.BranchCode',0)">
+                                        <i class="fa fa-plus"></i> Add
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
             }
-
         </tbody>
     </table>
 </div>

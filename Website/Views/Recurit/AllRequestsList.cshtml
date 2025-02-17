@@ -2,79 +2,359 @@
 @section style{
     @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
 }
+@{
+    string CompanyCode = ClsApplicationSetting.GetConfigValue("Company");
+}
+<input type="hidden" id="hd_CompanyCode" value="@CompanyCode" />
 <div class="table-section">
-   
+    @Html.Partial("ListHeader_Partial", "All Requirements List")
+    <div id="RequirementDashboard">
+
+    </div>
     <div class="row">
         <div class="col-lg-12 ">
             <div class="card">
                 <div class="card-body">
-                    <div class="">
-
-
-                        @using (Ajax.BeginForm("_AllRequestsList", "Recurit",
-                        new { src = ClsCommon.Encrypt(ViewBag.MenuID + "*" + "/Recurit/_AllRequestsList") },
-                        new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnBegin = "ShowLoadingDialog()" },
-                        new { @id = "_AllRequestsListForm" })
-                        )
-                        {
-                            <div class="row">
-                                <div class="col-sm-2 form-group">
-                                    <label class="small">&nbsp;</label>
-                                    <button style="display:none" type="submit" id="btnSearch" name="Command" value="Add" class="btn btndefault pull-right form-control">
-                                        Search
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="tabmargin">
-                                @Html.HiddenFor(x => x.Approved)
-                                <ul id="tabs" class="nav nav-tabs " role="tablist">
-                                    <li class="nav-item"> <a tabvalue="0" class="nav-link ripplelink AnchorApproval @(Model.Approved == 0 ? " active" : "" )" data-toggle="tab" role="tab"> Pending</a> </li>
-                                    <li class="nav-item"> <a tabvalue="1" class="nav-link ripplelink AnchorApproval @(Model.Approved == 1 ? " active" : "" ) " data-toggle="tab" role="tab">Processed</a></li>
-                                </ul>
-
-                            </div>
-                        }
-
+                    <div class="row" style="display:none;">
+                        <div class="col-sm-2 form-group">
+                            <label class="small">&nbsp;</label>
+                            <button style="display:none" type="submit" id="btnSearch" name="Command" value="Add" class="btn btndefault pull-right form-control">
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tabmargin">
+                        @Html.HiddenFor(x => x.Approved)
+                        <ul id="tabs" class="nav nav-tabs " role="tablist">
+                            <li class="nav-item"> <a tabvalue="0" class="nav-link ripplelink AnchorApproval @(Model.Approved == 0 ? " active" : "" )" data-toggle="tab" role="tab"> Pending</a> </li>
+                            <li class="nav-item"> <a tabvalue="1" class="nav-link ripplelink AnchorApproval @(Model.Approved == 1 ? " active" : "" ) " data-toggle="tab" role="tab">Processed</a></li>
+                        </ul>
+                    </div>
+                    <div class="table-section" style="margin-top: -10px;">
                         <div class="row">
-                            <div class="col-md-12">
-                                <div id="TargetDiv"></div>
+                            <div class="col-xl-12 table-responsive">
+                                <table id="example" class="table table-bordered table-hover text-nowrap key-buttons dataTable no-footer">
+                                    <thead>
+                                        <tr>
+                                            <th>SNo.</th>
+                                            <th>Status</th>
+                                            <th>Application Offered</th>
+                                            <th>Request No.</th>
+                                            <th>Request Date</th>
+                                            <th>Hired For</th>
+                                            @if (!String.IsNullOrEmpty(CompanyCode))
+                                            {
+                                                if (CompanyCode.ToLower() == "thriverainhouse")
+                                                {
+                                                    <th>Assign To</th>
+                                                }
+                                            }
+                                            <th>Hired Type</th>
+                                            <th>Dealer Code</th>
+                                            <th>Dealer Name</th>
+                                            <th>Region</th>
+                                            <th>State</th>
+                                            <th>Branch</th>
+                                            <th>Created By</th>
+                                            <th>Created Date</th>
+                                        </tr>
+                                    </thead>
+                                </table>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
 
     </div>
-   
+    <div class="modal fade " id="RequestStatusModal" tabindex="-1" role="dialog" aria-labelledby="RequestStatusModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="RequestStatusModalLabel">View Status</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" style="color:#fff;">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="RequestStatusDiv"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade pop-dgn" id="ViewModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header blk-gdn-btn">
+                <h4 class="modal-title"><i class="fas fa-print"></i><span id="spnHead"></span></h4>
+                <div class="close" data-dismiss="modal">&times;</div>
+            </div>
+            <div class="modal-body">
+                <div id="TagetDiv"></div>
+            </div>
+        </div>
+    </div>
+
 </div>
 @section scripts    {
     @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
 
     @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
 
-    <script>
+<script>
 
-        $(document).ready(function () {
-            $("#btnSearch").click();
+    function ListHeaderOtherExport() {
+        var url = "/Export/ResumeReport_Export";
+        var src = EncryptJSON(@ViewBag.MenuID+"*" + "/Export/ResumeReport_Export");
+       window.location.href = url + "?src=" + src;
+    }
+
+    $(document).ready(function () {
+        GetRequirementDashboard();
+        $('#hd_CompanyCode').val() == "ThriveraInhouse" ? BindDataTableInhouse() : BindDataTable();
+        $("#btnSearch").on('click', function () {
+            $('#hd_CompanyCode').val() == "ThriveraInhouse" ? BindDataTableInhouse() : BindDataTable();
         });
-        $('.AnchorApproval').on('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            var att = $(this).attr("tabvalue");
-            $(".AnchorApproval.active").removeClass("active");
-            $(this).addClass("active");
-            $("#Approved").val(att);
-            $("#btnSearch").click();
+    });
+    $('.AnchorApproval').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var att = $(this).attr("tabvalue");
+        $(".AnchorApproval.active").removeClass("active");
+        $(this).addClass("active");
+        $("#Approved").val(att);
+        $("#btnSearch").click();
+    });
+    function ViewStatus(obj)
+    {
+        var ID = obj;
+        $.ajax({
+            url: "/Recurit/_RequestStatus",
+            type: "Get",
+            data: { src: EncryptJSON(@ViewBag.MenuID+"*/Recurit/_RequestStatus*" + ID) },
+            success: function (data)
+            {
+                $("#RequestStatusDiv").empty();
+                $("#RequestStatusDiv").html(data);
+                $('#RequestStatusModal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                })
+            },
+            error: function (er)
+            {
+        	    alert(er);
+        	}
         });
-        function OnSuccess(obj) {
-            $("#TargetDiv").empty();
-            $("#TargetDiv").html(obj);
-            CloseLoadingDialog();
-            DatatableScripts();
-        }
-
-    </script>
-
+    }
+    function ListHeaderExport() {
+        var url = "/Export/RequirementList_Export";
+        var src = EncryptJSON(@ViewBag.MenuID+"*" + "/Export/RequirementList_Export")
+        window.location.href = url + "?src=" + src;
+    }
+    function GetRequirementDashboard() {
+        $("#RequirementDashboard").html('<img src="/assets/design/images/1496.gif" class="imgloader"/>');
+        $.ajax({
+            url: "/Recurit/_RequirementDashboard?src=" + EncryptJSON(@ViewBag.MenuID +"*" + "/Recurit/_RequirementDashboard"),
+            type: "Post",
+            contentType: 'application/json',
+            async: true,
+            success: function (data) {
+                $("#RequirementDashboard").empty();
+                $("#RequirementDashboard").html(data);
+                //console.log(data);
+            },
+            error: function (er) {
+                console.log(er);
+            }
+        });
+    }
+    function BindDataTable() {
+        var count = 0;
+        var Approved = $('#Approved').val();
+        var src = EncryptJSON(@ViewBag.MenuID+"*/Recurit/_AllRequestsList*" + Approved);
+        $('#example').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "destroy": true,
+            "ajax": {
+                url: "/Recurit/_AllRequestsList?src=" + src,
+                type: "post"
+            },
+            "columns": [
+                { "data": "RowNum" },
+                {
+                    className: 'Status',
+                    data: 'Status',
+                    render: function (data, type, row) {
+                        if (type === 'display') {
+                            let HTML = `<a title="click here to view status" onclick="ViewStatus(`+ row.ReqID +`)">View Status</a>`;
+                            return HTML
+                        }
+                        return data;
+                    }
+                },
+                {
+                    data: 'ApplicationOffered',
+                    render: function (data, type, row) {
+                        if (type === 'display') {
+                            let offered = ``;
+                            let application = EncryptJSON(@ViewBag.MenuID+"*/Recurit/AddApplication*" + row.ReqID);
+                            if (row.Approved == 0) {
+                                offered = `<a class="btn btn-default text-center" title="Add" href="/Recurit/AddApplication?src=` + application + `" data-toggle='tooltip'>` + row.ApplicationOffered + `</a>`
+                            }
+                            else {
+                                offered = `<a class="btn btn-default text-center" title="Add" data-toggle='tooltip'>` + row.ApplicationOffered + `</a>`
+                            }
+                            return offered
+                        }
+                        return data;
+                    }
+                },
+                {
+                    data: 'RequestNo',
+                    render: function (data, type, row) {
+                        if (type === 'display') {
+                            let html = ``;
+                            let src = EncryptJSON(@ViewBag.MenuID+"*/Recurit/ViewCompleteRequirement*" + row.ReqID);
+                            html = `<a title="View" class="text-red" title="Add" href="/Recurit/ViewCompleteRequirement?src=` + src + `" data-toggle='tooltip'>` + row.RequestNo + `</ a>`
+                            return html
+                        }
+                        return data;
+                    }
+                },
+                { "data": "RequestDate" },
+                { "data": "HiredFor" },
+                { "data": "RequirementType" },
+                { "data": "DealerCode" },
+                { "data": "DealerName" },
+                { "data": "Region" },
+                { "data": "State" },
+                { "data": "Branch" },
+                { "data": "CreatedBy" },
+                { "data": "CreatedDate" },
+            ],
+            dom: "lBfrtip",
+            lengthMenu: [
+                [10, 25, 50, 100],
+                ['10 rows', '25 rows', '50 rows', '100 rows']
+            ],
+            buttons: [
+                {
+                    extend: "copy",
+                    className: "btn-sm"
+                }, {
+                    extend: "csv",
+                    className: "btn-sm"
+                }, {
+                    extend: "pdf",
+                    className: "btn-sm"
+                }, {
+                    extend: "print",
+                    className: "btn-sm"
+                },
+                {
+                    extend: "pageLength",
+                    className: "btn-sm"
+                }
+            ]
+        });
+    }
+    function BindDataTableInhouse() {
+    var count = 0;
+    var Approved = $('#Approved').val();
+    var src = EncryptJSON(@ViewBag.MenuID+"*/Recurit/_AllRequestsList*" + Approved);
+    $('#example').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "destroy": true,
+        "ajax": {
+            url: "/Recurit/_AllRequestsList?src=" + src,
+            type: "post"
+        },
+        "columns": [
+            { "data": "RowNum" },
+            {
+                className: 'Status',
+                data: 'Status',
+                render: function (data, type, row) {
+                    if (type === 'display') {
+                        let HTML = `<a title="click here to view status" onclick="ViewStatus(`+ row.ReqID +`)">View Status</a>`;
+                        return HTML
+                    }
+                    return data;
+                }
+            },
+            {
+                data: 'ApplicationOffered',
+                render: function (data, type, row) {
+                    if (type === 'display') {
+                        let offered = ``;
+                        let application = EncryptJSON(@ViewBag.MenuID+"*/Recurit/AddApplication*" + row.ReqID);
+                        if (row.Approved == 0) {
+                            offered = `<a class="btn btn-default text-center" title="Add" href="/Recurit/AddApplication?src=` + application + `" data-toggle='tooltip'>` + row.ApplicationOffered + `</a>`
+                        }
+                        else {
+                            offered = `<a class="btn btn-default text-center" title="Add" data-toggle='tooltip'>` + row.ApplicationOffered + `</a>`
+                        }
+                        return offered
+                    }
+                    return data;
+                }
+            },
+            {
+                data: 'RequestNo',
+                render: function (data, type, row) {
+                    if (type === 'display') {
+                        let html = ``;
+                        let src = EncryptJSON(@ViewBag.MenuID+"*/Recurit/ViewCompleteRequirement*" + row.ReqID);
+                        html = `<a title="View" title="Add" class="text-red" href="/Recurit/ViewCompleteRequirement?src=` + src + `" data-toggle='tooltip'>` + row.RequestNo + `</ a>`
+                        return html
+                    }
+                    return data;
+                }
+            },
+            { "data": "RequestDate" },
+            { "data": "HiredFor" },
+            { "data": "AssignTo" },
+            { "data": "RequirementType" },
+            { "data": "DealerCode" },
+            { "data": "DealerName" },
+            { "data": "Region" },
+            { "data": "State" },
+            { "data": "Branch" },
+            { "data": "CreatedBy" },
+            { "data": "CreatedDate" },
+        ],
+        dom: "lBfrtip",
+        lengthMenu: [
+            [10, 25, 50, 100],
+            ['10 rows', '25 rows', '50 rows', '100 rows']
+        ],
+        buttons: [
+            {
+                extend: "copy",
+                className: "btn-sm"
+            }, {
+                extend: "csv",
+                className: "btn-sm"
+            }, {
+                extend: "pdf",
+                className: "btn-sm"
+            }, {
+                extend: "print",
+                className: "btn-sm"
+            },
+            {
+                extend: "pageLength",
+                className: "btn-sm"
+            }
+        ]
+    });
+    
+}
+</script>
 }

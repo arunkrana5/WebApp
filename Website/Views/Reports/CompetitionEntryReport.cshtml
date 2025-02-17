@@ -32,7 +32,7 @@
                             </div>
                             <div class="col-sm-2 form-group d-flex align-items-end pt-1">
                                 <label class="small">&nbsp;</label>
-                                <button type="submit" id="btnSubmit" name="Command" value="Add" class="button ">
+                                <button type="submit" id="btnSearch" name="Command" value="Add" class="button ">
                                     <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
                                 </button>
                             </div>
@@ -62,7 +62,9 @@
         @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
 
         <script>
-
+            $(document).ready(function () {
+                $("#btnSearch").click();
+            });
           function ListHeaderExport() {
               var url = "/Export/CompetitionEntryReport_Export";
              var StartDate = $("#StartDate").val();
@@ -91,7 +93,7 @@
             $("#TargetDiv").empty();
             $("#TargetDiv").html(obj);
             CloseLoadingDialog();
-            ExportTableDatatableScripts();
+            DatatableScripts();
         }
         $('#Month').bind("change", function () {
             $("#btnSearch").click();

@@ -1,16 +1,32 @@
-﻿@media(max-width:900px) and (min-width:200px){
+﻿
+#profile-section .dropdown-profile2 {
+    position: absolute;
+    top: 10px !important;
+    left: 0px;
+}
+@media(max-width:900px) and (min-width:200px){
+
     .welcomePage{
         height:auto;
     }
+    #profile-section .dropdown-profile2 {
+        position: absolute;
+        top: 40px !important;
+        right: 0 !important;
+        left: auto !important;
+        transform: initial !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 28px !important;
+    }
+
+    .select2-container .select2-selection--single .select2-selection__rendered {
+        padding-left: 15px !important;
+    }
+
 }
 
-#profile-section .dropdown-profile2 {
-    position: absolute;
-   
-    top: 10px !important;
-    left: 0px;
-   
-}
+
 
 @media  (min-width:800px){
     #profile-section .dropdown-profile2 {
@@ -154,11 +170,21 @@
 
 
 @media (max-width:480px) and (min-width:280px) {
-    .mat-cards .mat-clr-stat-card {
-        height:92px;
+    .dataTables_wrapper .dt-buttons .btn-sm {
+        padding: 6px 8px;
     }
-    .blocki{
-        height:92px;
+    .mat-cards .mat-clr-stat-card {
+        height: auto;
+    }
+    .mat-clr-stat-card .card-block .cst-cont {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .blocki {
+        height: auto;
+    }
+    .modal.show .modal-dialog {
+        max-width: 100%;
     }
     .lower-count .card-block {
         padding: 13px;
@@ -179,7 +205,20 @@
     .count-cards{
         width:87px;
     }
-}
+    .lower-count .card-block {
+        width: 140px;
+        background-color: #fff;
+        padding: 8px;
+        height: 75px;
+        border-radius: 8px;
+        box-shadow: none;
+        margin-bottom: 0px;
+        box-shadow: none;
+    }
+    .counter-section .card {
+        margin-bottom: 12px;
+    }
+    }
 
 
 
@@ -204,19 +243,25 @@
 
 @media (max-width:280px){
     .lower-count .card-block {
-        padding: 13px;
+        padding: 8px;
         width: 84px;
-        height: 100px;
+        height: 75px;
         border-radius: 8px;
         background-color: inherit;
         box-shadow: none;
-        margin-bottom: 20px;
+        margin-bottom: 0px;
         box-shadow: none;
     }
 }
-
-
-/*-----------------------form control overflow--------------------*/
-.tmScroll .select2-container--default .select2-selection--multiple {
-    height: auto;
+@media (max-width:330px) {
+    .count-cards {
+        width: 82px;
+    }
+    .lower-count .card-block {
+        width: 122px;
+    }
 }
+    /*-----------------------form control overflow--------------------*/
+    .tmScroll .select2-container--default .select2-selection--multiple {
+        height: auto;
+    }

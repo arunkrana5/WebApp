@@ -47,7 +47,7 @@
 }
 /*-----Welcome page*/
 .app-content {
-    margin-top: 45px;
+    margin-top: 52px;
 }
 #app-sidebar3 .menu_section .side-menu {
     font-size: 32px;
@@ -147,7 +147,9 @@
 .btnOk :hover {
     background-color: #006400;
 }
-
+toplistcount .column1 {
+    padding: 0px 0px;
+}
 .btn-imp {
     border-bottom: 4px solid #00a896;
     border-top: 0;
@@ -314,11 +316,11 @@ lose-btn {
     background-color:none;
 }*/
 .count-cards {
-    width:110px;
+    width:90px;
     background-color: #fff;
     border-radius:8px;
     margin-top:2px;
-    margin-bottom:30px;
+    margin-bottom:20px;
     box-shadow: 0 1px 20px 0 rgb(69 90 100 / 8%);
 }
 .dh_p {

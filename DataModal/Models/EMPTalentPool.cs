@@ -62,9 +62,13 @@ namespace DataModal.Models
 
             [Required(ErrorMessage = "TenureWithCompany Can't be Blank")]
             public string TenureWithCompany { get; set; }
-
+            [Required(ErrorMessage = "Mobile Number Can't be Blank")]
+            [DataType(DataType.PhoneNumber)]
+            [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid phone number")]
             public string Mobile { get; set; }
+            [Required(ErrorMessage = "Current Salary Can't be Blank")]
             public decimal? CurrentSalary { get; set; }
+            [Required(ErrorMessage = "Expected Salary Can't be Blank")]
             public decimal? ExpectedSalary { get; set; }
             public string Pincode { get; set; }
             public int IsActive { get; set; }
@@ -78,6 +82,7 @@ namespace DataModal.Models
             public string Error { get; set; }
 
             public List<Attachments> AttachmentsList { get; set; }
+            public List<DropDownlist> ExperienceList { get; set; }
         }
         public class Add
         {
@@ -103,7 +108,9 @@ namespace DataModal.Models
 
             [Required(ErrorMessage = "TenureWithCompany Can't be Blank")]
             public string TenureWithCompany { get; set; }
-
+            [Required(ErrorMessage = "Mobile Number Can't be Blank")]
+            [DataType(DataType.PhoneNumber)]
+            [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid phone number")]
             public string Mobile { get; set; }
             public decimal? CurrentSalary { get; set; }
             public decimal? ExpectedSalary { get; set; }
@@ -132,6 +139,7 @@ namespace DataModal.Models
             [Required(ErrorMessage = "City Can't be Blank")]
             public int? City { get; set; }
             public string Trade_Experience { get; set; }
+            [Required(ErrorMessage = "Qualification Can't be Blank")]
             public string Qualification { get; set; }
             public string CW_Company { get; set; }
             public string CW_Address { get; set; }
@@ -144,6 +152,8 @@ namespace DataModal.Models
             public List<DropDownlist> DealerList { get; set; }
             public List<DropDownlist> StateList { get; set; }
             public List<DropDownlist> CityList { get; set; }
+            public List<DropDownlist> QualficationList { get; set; }
+            public List<DropDownlist> ExperienceList { get; set; }
         }
         public class Attachments
         {

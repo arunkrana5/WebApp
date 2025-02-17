@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Mvc;
 using Website.CommonClass;
 
@@ -975,6 +976,104 @@ namespace Website.Controllers
                 Modal.Param1 = IDs.TrimEnd(',');
                 Modal.Param2 = Remarks;
                 Result = Common_SPU.fnSetClearUserDevice(Modal);
+            }
+            return Json(Result, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult ImportLeaveBalance(string src)
+        {
+            ViewBag.src = src;
+            string[] GetQueryString = ClsApplicationSetting.DecryptQueryString(src);
+            ViewBag.GetQueryString = GetQueryString;
+            ViewBag.MenuID = GetQueryString[0];
+            List<ManageActivities.ImportLeaveBalance> Result = new List<ManageActivities.ImportLeaveBalance>();
+            Result = Tools.GetLeaveBalanceImportList(getResponse);
+            ViewBag.ListCount = Result.Count;
+            return View(Result);
+        }
+        [HttpPost]
+        public ActionResult ImportLeaveBalance(HttpPostedFileBase Fileupload, string Command, string src)
+        {
+            PostResponse Result = new PostResponse();
+            Result.SuccessMessage = "Not completed";
+            ViewBag.src = src;
+            string[] GetQueryString = ClsApplicationSetting.DecryptQueryString(src);
+            ViewBag.GetQueryString = GetQueryString;
+            ViewBag.MenuID = GetQueryString[0];
+            if (Command == "ImportData")
+            {
+
+                string PhysicalPath = ClsApplicationSetting.GetPhysicalPath("import");
+                var fileExt = System.IO.Path.GetExtension(Fileupload.FileName);
+                var FileName = "LeaveBalanceImport_" + DateTime.Now.ToString("dd-MMM-yyyy") + fileExt;
+                var targetPath = Path.Combine(PhysicalPath, FileName);
+                Fileupload.SaveAs(targetPath);
+                Result = Tools.LeaveBalanceImport_UploadData(Fileupload, getResponse);
+
+            }
+            else if (Command == "ClearData")
+            {
+                Result = Tools.ClearLeaveBalanceImportTemp(getResponse);
+            }
+            else if (Command == "UploadData")
+            {
+                Result = Tools.UpdateLeaveBalanceData(getResponse);
+            }
+            return Json(Result, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult PendingLeave(string src)
+        {
+            ViewBag.src = src;
+            string[] GetQueryString = ClsApplicationSetting.DecryptQueryString(src);
+            ViewBag.GetQueryString = GetQueryString;
+            ViewBag.MenuID = GetQueryString[0];
+            ManageActivities.PendingLeave Modal = new ManageActivities.PendingLeave();
+            return View(Modal);
+        }
+        [HttpPost]
+        public ActionResult PendingLeave(string src, ManageActivities.PendingLeave Modal)
+        {
+            PostResponse Result = new PostResponse();
+            ViewBag.src = src;
+            string[] GetQueryString = ClsApplicationSetting.DecryptQueryString(src);
+            ViewBag.GetQueryString = GetQueryString;
+            ViewBag.MenuID = GetQueryString[0];
+            Result.SuccessMessage = "Can't Update";
+            if (ModelState.IsValid)
+            {
+                Modal.LoginID = LoginID;
+                Modal.IPAddress = IPAddress;
+                Modal.DocNo = Modal.DocNo.Trim();
+                Result = Tools.fnSet_PendingLeave(Modal);
+            }
+            return Json(Result, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult ManageAssignTo(string src)
+        {
+            ViewBag.src = src;
+            string[] GetQueryString = ClsApplicationSetting.DecryptQueryString(src);
+            ViewBag.GetQueryString = GetQueryString;
+            ViewBag.MenuID = GetQueryString[0];
+            ManageActivities.AssignTo Modal = new ManageActivities.AssignTo();
+            GetDropDownResponse getDropDownResponse = new GetDropDownResponse();
+            getDropDownResponse.Doctype = "AssignTo";
+            ViewBag.AssignToList = Common_SPU.GetDropDownList(getDropDownResponse);
+            return View(Modal);
+        }
+        [HttpPost]
+        public ActionResult ManageAssignTo(string src, ManageActivities.AssignTo Modal)
+        {
+            PostResponse Result = new PostResponse();
+            ViewBag.src = src;
+            string[] GetQueryString = ClsApplicationSetting.DecryptQueryString(src);
+            ViewBag.GetQueryString = GetQueryString;
+            ViewBag.MenuID = GetQueryString[0];
+            Result.SuccessMessage = "Can't Update";
+            if (ModelState.IsValid)
+            {
+                Modal.LoginID = LoginID;
+                Modal.IPAddress = IPAddress;
+                Modal.RequestNos = Regex.Replace(Modal.RequestNos, @"\s+", "").Trim(',');
+                Result = Tools.fnSet_AssignTo(Modal);
             }
             return Json(Result, JsonRequestBehavior.AllowGet);
         }

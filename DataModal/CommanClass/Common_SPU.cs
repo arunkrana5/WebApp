@@ -2273,7 +2273,7 @@ namespace DataModal.CommanClass
             {
                 SqlParameter[] oparam = new SqlParameter[2];
                 oparam[0] = new SqlParameter("@LoginID", Modal.LoginID);
-                oparam[1] = new SqlParameter("@Month", Modal.StartDate); 
+                oparam[1] = new SqlParameter("@Month", Modal.StartDate);
                 ds = clsDataBaseHelper.ExecuteDataSet("spu_GetPJPReport_Export", oparam);
             }
             catch (Exception ex)
@@ -2553,6 +2553,197 @@ namespace DataModal.CommanClass
             catch (Exception ex)
             {
 
+            }
+            return ds;
+
+        }
+        public static Requirement.Application.List GetEMPTalentByDoc(GetResponse modal)
+        {
+            Requirement.Application.List result = new Requirement.Application.List();
+            try
+            {
+                using (IDbConnection DBContext = new SqlConnection(ClsCommon.ConnectionString()))
+                {
+                    var param = new DynamicParameters();
+                    param.Add("@DocNo", dbType: DbType.String, value: modal.Doctype, direction: ParameterDirection.Input);
+                    param.Add("@LoginId", dbType: DbType.Int64, value: modal.LoginID, direction: ParameterDirection.Input);
+                    DBContext.Open();
+                    using (var reader = DBContext.QueryMultiple("spu_GetEmpTalentByDocNo", param: param, commandType: CommandType.StoredProcedure))
+                    {
+                        result = reader.Read<Requirement.Application.List>().FirstOrDefault();
+                        if (result == null)
+                        {
+                            result = new Requirement.Application.List();
+                        }
+                    }
+                    DBContext.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Common_SPU.LogError("Error during spu_GetEmpTalentByDocNo. The query was executed :", ex.ToString(), "spu_GetEmpTalentByDocNo()", "Common_SPU", "Common_SPU", modal.LoginID, modal.IPAddress);
+
+            }
+            return result;
+        }
+
+        public static Dealer.List GetDealerByCode(string DealerCode)
+        {
+
+            Dealer.List result = new Dealer.List();
+
+            try
+            {
+                if (!String.IsNullOrEmpty(DealerCode))
+                {
+                    using (var con = new SqlConnection(ClsCommon.ConnectionString()))
+                    {
+                        return con.Query<Dealer.List>("SELECT * FROM Dealer_View WHERE DealerCode=@DealerCode",
+                            param: new { DealerCode }).FirstOrDefault();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Common_SPU.LogError(ex.Message.ToString(), ex.ToString(), "GetDealerList", "spu_GetDealerList", "DataModal", 0, "");
+            }
+            return result;
+        }
+        public static DataSet GetRequirementRequest_Export(Tab.Approval Modal)
+        {
+            DataSet ds = new DataSet();
+            try
+            {
+                DateTime dt;
+                DateTime.TryParse(Modal.Month, out dt);
+                SqlParameter[] oparam = new SqlParameter[1];
+                oparam[0] = new SqlParameter("@LoginID", Modal.LoginID);
+                ds = clsDataBaseHelper.ExecuteDataSet("spu_GetRequirementRequest_Export", oparam);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return ds;
+        }
+        public static DataSet GetResumeReport(Tab.Approval Modal)
+        {
+            DataSet ds = new DataSet();
+            try
+            {
+                DateTime dt;
+                DateTime.TryParse(Modal.Month, out dt);
+                SqlParameter[] oparam = new SqlParameter[4];
+                oparam[0] = new SqlParameter("@Month", dt.Month);
+                oparam[1] = new SqlParameter("@Year", dt.Year);
+                oparam[2] = new SqlParameter("@LoginID", Modal.LoginID);
+                oparam[3] = new SqlParameter("@Approved", Modal.Approved);
+                ds = clsDataBaseHelper.ExecuteDataSet("spu_GetRequirementResumeReport", oparam);
+            }
+            catch (Exception ex)
+            {
+            }
+            return ds;
+
+        }
+        public static DataSet GetResumeReport_Export(Tab.Approval Modal)
+        {
+            DataSet ds = new DataSet();
+            try
+            {
+                DateTime dt;
+                DateTime.TryParse(Modal.Month, out dt);
+                SqlParameter[] oparam = new SqlParameter[3];
+                oparam[0] = new SqlParameter("@Month", dt.Month);
+                oparam[1] = new SqlParameter("@Year", dt.Year);
+                oparam[2] = new SqlParameter("@LoginID", Modal.LoginID);
+                ds = clsDataBaseHelper.ExecuteDataSet("spu_GetRequirementResumeReport_Export", oparam);
+            }
+            catch (Exception ex)
+            {
+            }
+            return ds;
+
+        }
+        public static DataSet GetRequirementDashboard(GetResponse Modal)
+        {
+            DataSet ds = new DataSet();
+            try
+            {
+                SqlParameter[] oparam = new SqlParameter[1];
+                oparam[0] = new SqlParameter("@LoginID", Modal.LoginID);
+                ds = clsDataBaseHelper.ExecuteDataSet("spu_GetRecruitmentDashboardData", oparam);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return ds;
+
+        }
+        public static PostResponse fnSetWorkForceDocuments(FileResponse Modal)
+        {
+            PostResponse result = new PostResponse();
+
+            using (SqlConnection con = new SqlConnection(ClsCommon.ConnectionString()))
+            {
+                try
+                {
+                    con.Open();
+                    using (SqlCommand command = new SqlCommand("spu_SetWorkForce_Attachments", con))
+                    {
+                        SqlDataAdapter da = new SqlDataAdapter();
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.Add("@DocID", SqlDbType.Int).Value = Modal.ID ?? 0;
+                        command.Parameters.Add("@DocType", SqlDbType.VarChar).Value = Modal.Doctype ?? "";
+                        command.Parameters.Add("@filename", SqlDbType.VarChar).Value = Modal.FileName ?? "";
+                        command.Parameters.Add("@contenttype", SqlDbType.VarChar).Value = Modal.FileExt ?? "";
+                        command.Parameters.Add("@WorkForceID", SqlDbType.Int).Value = Modal.tableid ?? 0;
+                        command.Parameters.Add("@Description", SqlDbType.VarChar).Value = Modal.Description ?? "";
+                        command.Parameters.Add("@createdby", SqlDbType.Int).Value = Modal.LoginID;
+                        command.Parameters.Add("@IPAddress", SqlDbType.VarChar).Value = Modal.IPAddress;
+                        command.CommandTimeout = 0;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                result.ID = Convert.ToInt64(reader["RET_ID"]);
+                                result.StatusCode = Convert.ToInt32(reader["STATUS"]);
+                                result.SuccessMessage = reader["MESSAGE"].ToString();
+                                if (result.StatusCode > 0)
+                                {
+                                    result.Status = true;
+                                }
+                            }
+                        }
+
+                    }
+                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    con.Close();
+                    Common_SPU.LogError("Error during spu_SetWorkForce_Attachments. The query was executed :", ex.ToString(), "spu_SetWorkForce_Attachments()", "Common_SPU", "Common_SPU", Modal.LoginID, Modal.IPAddress);
+                    result.StatusCode = -1;
+                    result.SuccessMessage = ex.Message.ToString();
+                }
+            }
+            return result;
+
+        }
+        public static DataSet GetWorkForceData(Tab.Approval Modal)
+        {
+            DataSet ds = new DataSet();
+            try
+            {
+                SqlParameter[] oparam = new SqlParameter[3];
+                oparam[0] = new SqlParameter("@WorkForceID", Modal.ID);
+                oparam[1] = new SqlParameter("@LoginID", Modal.LoginID);
+                oparam[2] = new SqlParameter("@DocType", Modal.Doctype);
+                ds = clsDataBaseHelper.ExecuteDataSet("spu_GetWorkForceData_Mail", oparam);
+            }
+            catch (Exception ex)
+            {
             }
             return ds;
 

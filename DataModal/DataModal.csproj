@@ -16,7 +16,7 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BouncyCastle.Cryptography" Version="2.3.0" />
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.4.0" />
     <PackageReference Include="Dapper" Version="2.1.35" />
     <PackageReference Include="Enums.NET" Version="4.0.2" />
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
@@ -45,8 +45,5 @@
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
     <PackageReference Include="xunit.abstractions" Version="2.0.3" />
     <PackageReference Include="xunit.extensibility.core" Version="2.7.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Models\PushMailItems.cs" />
   </ItemGroup>
 </Project>

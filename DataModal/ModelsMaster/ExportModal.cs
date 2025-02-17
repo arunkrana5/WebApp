@@ -67,7 +67,7 @@ namespace DataModal.ModelsMaster
                                 if (dc.ColumnName.Contains("Image"))
                                 {
                                     ICell cell = DyRows.CreateCell(CellCount);
-                                    cell.SetCellValue("Image Link");
+                                    cell.SetCellValue(ClsCommon.GetWebsiteURL() + "/" + dtRow[dc].ToString());
                                     XSSFHyperlink link = new XSSFHyperlink(HyperlinkType.Url);
                                     link.Address = ClsCommon.GetWebsiteURL() + "/" + dtRow[dc].ToString();
                                     cell.Hyperlink = (link);
@@ -331,6 +331,50 @@ namespace DataModal.ModelsMaster
                         }
                     }
                 }
+                else if (Doctype.Contains("ISD Sales Summary"))
+                {
+                    intColomnIndex = new int[] { 2, 3, 4, 5, 6, 7, 8, 9 };
+                    var r2 = sheet.CreateRow(0);
+
+                    int HeadCount = 0;
+                    foreach (DataColumn item in result.Columns)
+                    {
+                        if (!item.ColumnName.Contains("_") && !item.ColumnName.Contains("Image"))
+                        {
+                            r2.CreateCell(HeadCount, CellType.String).SetCellValue(item.ColumnName);
+                            r2.Cells[HeadCount].CellStyle = (HeadCount > 23 ? BGYellow : BGGreen);
+                            HeadCount++;
+                        }
+                    }
+                    // Bind header End
+                    rowCount = 0; CellCount = 0;
+
+                    foreach (DataRow dtRow in result.Rows)
+                    {
+                        rowCount++;
+                        RowBG = (rowCount % 2 == 1 ? BGdeafult : BGGray);
+                        IRow DyRows = sheet.CreateRow(rowCount);
+                        CellCount = 0;
+                        foreach (DataColumn dc in result.Columns)
+                        {
+                            if (!dc.ColumnName.Contains("_") && !dc.ColumnName.Contains("Image"))
+                            {
+                                ICell cell = DyRows.CreateCell(CellCount);
+                                cell.SetCellValue(dtRow[dc].ToString());
+                                cell.CellStyle = RowBG;
+                                if (intColomnIndex.Contains(CellCount + 1))
+                                {
+                                    cell.SetCellType(CellType.Numeric);
+                                    float Amount = 0;
+                                    float.TryParse(dtRow[dc].ToString(), out Amount);
+                                    cell.SetCellValue(Amount);
+                                }
+                                CellCount++;
+                            }
+
+                        }
+                    }
+                }
                 else
                 {
                     var r2 = sheet.CreateRow(0);
@@ -452,6 +496,75 @@ namespace DataModal.ModelsMaster
                                     int.TryParse(dtRow[dc].ToString(), out qty);
                                     cell.SetCellValue(qty);
                                 }
+                                cell.CellStyle = RowBG;
+                                CellCount++;
+                            }
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Common_SPU.LogError("Error during GetWorkbookSheet_ISDSummary. The query was executed :", ex.ToString(), "GetWorkbookSheet_ISDSummary()", "Export", "Export", 0, "");
+            }
+
+            return sheet;
+        }
+
+        public ISheet GetWorkbookSheet_Common(IWorkbook workbook, DataTable result, string Doctype)
+        {
+            var sheet = workbook.CreateSheet(Doctype);
+            try
+            {
+                var BGGreen = SetCellColor("BGGreen", workbook);
+                var BGYellow = SetCellColor("BGYellow", workbook);
+                var BGGray = SetCellColor("BGGray", workbook);
+                var BGdeafult = SetCellColor("", workbook);
+                int rowCount = 0, CellCount = 0;
+                var RowBG = BGdeafult;
+                var r2 = sheet.CreateRow(0);
+                int HeadCount = 0;
+                foreach (DataColumn item in result.Columns)
+                {
+                    if (!item.ColumnName.Contains("_"))
+                    {
+
+                        r2.CreateCell(HeadCount, CellType.String).SetCellValue(item.ColumnName);
+                        r2.Cells[HeadCount].CellStyle = BGGreen;
+                        HeadCount++;
+                    }
+                }
+                foreach (DataRow dtRow in result.Rows)
+                {
+                    rowCount++;
+                    RowBG = (rowCount % 2 == 1 ? BGdeafult : BGGray);
+                    IRow DyRows = sheet.CreateRow(rowCount);
+                    CellCount = 0;
+                    foreach (DataColumn dc in result.Columns)
+                    {
+                        if (!dc.ColumnName.Contains("_"))
+                        {
+
+                            if (dc.ColumnName.Contains("Image"))
+                            {
+                                ICell cell = DyRows.CreateCell(CellCount);
+                                cell.SetCellValue("Image Link");
+                                XSSFHyperlink link = new XSSFHyperlink(HyperlinkType.Url);
+                                link.Address = ClsCommon.GetWebsiteURL() + "/" + dtRow[dc].ToString();
+                                cell.Hyperlink = (link);
+                                ICellStyle hlink_style = workbook.CreateCellStyle();
+                                IFont hlink_font = workbook.CreateFont();
+                                hlink_font.Underline = FontUnderlineType.Single;
+                                hlink_font.Color = HSSFColor.Blue.Index;
+                                hlink_style.SetFont(hlink_font);
+                                cell.CellStyle = (hlink_style);
+                                CellCount++;
+                            }
+                            else
+                            {
+                                ICell cell = DyRows.CreateCell(CellCount);
+                                cell.SetCellValue(dtRow[dc].ToString());
                                 cell.CellStyle = RowBG;
                                 CellCount++;
                             }
@@ -1204,10 +1317,25 @@ namespace DataModal.ModelsMaster
                 r1.CreateCell(HeadCount, CellType.String).SetCellValue("In Distance");
                 r1.Cells[HeadCount].CellStyle = BGYellow;
                 HeadCount++;
+
+                r1.CreateCell(HeadCount, CellType.String).SetCellValue("In Lattitude");
+                r1.Cells[HeadCount].CellStyle = BGYellow;
+                HeadCount++;
+                r1.CreateCell(HeadCount, CellType.String).SetCellValue("In Longitude");
+                r1.Cells[HeadCount].CellStyle = BGYellow;
+                HeadCount++;
+
                 r1.CreateCell(HeadCount, CellType.String).SetCellValue("Out Time");
                 r1.Cells[HeadCount].CellStyle = BGYellow;
                 HeadCount++;
                 r1.CreateCell(HeadCount, CellType.String).SetCellValue("Out Distance");
+                r1.Cells[HeadCount].CellStyle = BGYellow;
+                HeadCount++;
+
+                r1.CreateCell(HeadCount, CellType.String).SetCellValue("Out Lattitude");
+                r1.Cells[HeadCount].CellStyle = BGYellow;
+                HeadCount++;
+                r1.CreateCell(HeadCount, CellType.String).SetCellValue("Out Longitude");
                 r1.Cells[HeadCount].CellStyle = BGYellow;
                 HeadCount++;
 
@@ -1311,6 +1439,16 @@ namespace DataModal.ModelsMaster
                     cellINP.CellStyle = RowBG;
                     CellCount++;
 
+                    ICell cellINLat = DyRows.CreateCell(CellCount);
+                    cellINLat.SetCellValue(row.In_Lat.ToString());
+                    cellINLat.CellStyle = RowBG;
+                    CellCount++;
+
+                    ICell cellINLong = DyRows.CreateCell(CellCount);
+                    cellINLong.SetCellValue(row.In_Long.ToString());
+                    cellINLong.CellStyle = RowBG;
+                    CellCount++;
+
                     ICell cellOTT = DyRows.CreateCell(CellCount);
                     cellOTT.SetCellValue(row.Out_Time.ToString());
                     cellOTT.CellStyle = RowBG;
@@ -1321,6 +1459,16 @@ namespace DataModal.ModelsMaster
                     float.TryParse(row.Out_PunchDistance, out Out_PunchDistance);
                     cell25.SetCellValue(Out_PunchDistance);
                     cell25.CellStyle = RowBG;
+                    CellCount++;
+
+                    ICell cellOTLat = DyRows.CreateCell(CellCount);
+                    cellOTLat.SetCellValue(row.Out_Lat.ToString());
+                    cellOTLat.CellStyle = RowBG;
+                    CellCount++;
+
+                    ICell cellOTLong = DyRows.CreateCell(CellCount);
+                    cellOTLong.SetCellValue(row.Out_Long.ToString());
+                    cellOTLong.CellStyle = RowBG;
                     CellCount++;
 
                 }
@@ -2801,6 +2949,21 @@ namespace DataModal.ModelsMaster
                                 cell.CellStyle = (hlink_style);
                                 CellCount++;
                             }
+                            else if (dc.ColumnName.Contains("Resume"))
+                            {
+                                ICell cell = DyRows.CreateCell(CellCount);
+                                cell.SetCellValue("Resume Link");
+                                XSSFHyperlink link = new XSSFHyperlink(HyperlinkType.Url);
+                                link.Address = ClsCommon.GetWebsiteURL() + "/" + dtRow[dc].ToString();
+                                cell.Hyperlink = (link);
+                                ICellStyle hlink_style = workbook.CreateCellStyle();
+                                IFont hlink_font = workbook.CreateFont();
+                                hlink_font.Underline = FontUnderlineType.Single;
+                                hlink_font.Color = HSSFColor.Blue.Index;
+                                hlink_style.SetFont(hlink_font);
+                                cell.CellStyle = (hlink_style);
+                                CellCount++;
+                            }
                             else
                             {
                                 ICell cell = DyRows.CreateCell(CellCount);
@@ -2962,6 +3125,58 @@ namespace DataModal.ModelsMaster
             }
             return ds;
 
+        }
+
+        public ISheet GetWorkbookSheet_Shorted(IWorkbook workbook, DataTable result, string Doctype)
+        {
+            var sheet = workbook.CreateSheet(Doctype);
+            try
+            {
+                var BGGreen = SetCellColor("BGGreen", workbook);
+                var BGYellow = SetCellColor("BGYellow", workbook);
+                var BGGray = SetCellColor("BGGray", workbook);
+                var BGdeafult = SetCellColor("", workbook);
+                var r2 = sheet.CreateRow(0);
+                int HeadCount = 0;
+                // Bind header Start
+                foreach (DataColumn item in result.Columns)
+                {
+                    r2.CreateCell(HeadCount, CellType.String).SetCellValue(item.ColumnName.Replace("@", ""));
+                    r2.Cells[HeadCount].CellStyle = (HeadCount > 5 ? BGYellow : BGGreen);
+                    HeadCount++;
+                }
+                // Bind header End
+                int rowCount = 0, CellCount = 0;
+                var RowBG = BGdeafult;
+                foreach (DataRow dtRow in result.Rows)
+                {
+                    rowCount++;
+                    RowBG = (rowCount % 2 == 1 ? BGdeafult : BGGray);
+                    IRow DyRows = sheet.CreateRow(rowCount);
+                    CellCount = 0;
+                    foreach (DataColumn dc in result.Columns)
+                    {
+
+                        ICell cell = DyRows.CreateCell(CellCount);
+                        cell.SetCellValue(dtRow[dc].ToString());
+                        cell.CellStyle = RowBG;
+                        if (dc.ColumnName.Contains('@'))
+                        {
+                            cell.SetCellType(CellType.Numeric);
+                            float Amount = 0;
+                            float.TryParse(dtRow[dc].ToString(), out Amount);
+                            cell.SetCellValue(Amount);
+                        }
+                        CellCount++;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Common_SPU.LogError("Error during GetWorkbookSheet_Shorted. The query was executed :", ex.ToString(), "GetWorkbookSheet_Shorted()", "Export", "Export", 0, "");
+            }
+
+            return sheet;
         }
     }
 }

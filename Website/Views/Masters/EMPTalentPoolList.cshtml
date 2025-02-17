@@ -1,4 +1,4 @@
-﻿@model EMPTalentPool.Filter 
+﻿@model EMPTalentPool.Filter
 @section style{
     @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
 }
@@ -13,7 +13,7 @@
                     <div class="">
                         <input type="hidden" id="hdnImportUrl" name="hdnImportUrl" value="@Url.Action("EMPTalentPoolImport",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Masters/EMPTalentPoolImport") })" />
                         <input type="hidden" id="hdnAddUrl" name="hdnAddUrl" value="@Url.Action("AddEMPTalentPool",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Masters/AddEMPTalentPool*0") })" />
-                        <div class="row p-2">
+                        <div class="row p-2" style="display:none">
 
                             <div class="col-md-2">
                                 @Html.DropDownListFor(model => model.States, new SelectList(Model.StateList, "ID", "Name"), "Select State",
@@ -51,69 +51,54 @@
                             </ul>
                         </div>
                     </div>
-                        <div class="row">
-                            <div class="col-lg-12 ">
-                                <div class="table-responsive">
-                                    <table id="tblDataTable" class="table table-bordered table-hover text-nowrap key-buttons">
-                                        <thead>
-                                            <tr>
-
-                                                <th>DocNo</th>
-                                                <th>Action</th>
-                                                <th>Doc No</th>
-                                                <th>Name</th>
-                                                <th>Mobile</th>
-                                                <th>Email</th>
-                                                <th>DOB</th>
-                                                <th>Age</th>
-                                                <th>CounterName</th>
-                                                <th>Location</th>
-                                                <th>State Name</th>
-                                                <th>Pincode</th>
-                                                <th>TotalExperience</th>
-                                                <th>CurrentCompany</th>
-                                                <th>TenureWithCompany</th>
-                                                <th>CurrentSalary</th>
-                                                <th>ExpectedSalary</th>
-                                                <th>Inserted Date</th>
-                                                <th>Inserted by</th>
-                                                <th>Updated Date</th>
-                                                <th>Updated by</th>
-                                                <th>IP Address</th>
-                                                <th>Entry Source</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
+                    <div class="row">
+                        <div class="col-lg-12 ">
+                            <div class="table-responsive">
+                                <table id="tblDataTable" class="table table-bordered table-hover text-nowrap key-buttons">
+                                    <thead>
+                                        <tr>
+                                            <th>DocNo</th>
+                                            <th>Action</th>
+                                            <th>Name</th>
+                                            <th>Mobile</th>
+                                            <th>CounterName</th>
+                                            <th>Location</th>
+                                            <th>State Name</th>
+                                            <th>TotalExperience</th>
+                                            <th>CurrentCompany</th>
+                                            <th>CurrentSalary</th>
+                                            <th>ExpectedSalary</th>
+                                            <th>Inserted Date</th>
+                                            <th>Inserted by</th>
+                                        </tr>
+                                    </thead>
+                                </table>
                             </div>
-
-
                         </div>
 
-                        <div class="row" id="ApprovalDiv">
-                            @if (ClsApplicationSetting.GetSessionValue("Modify") == "True")
-                            {
-                                <div class="col-sm-12 d-flex justify-content-end  my-3">
-                                    <button type="button" class="btn apr-btn btnProcess" onclick="ShowApprovalBox(this)" name="Command" value="1">
-                                        <i class="fa fa-check" aria-hidden="true"></i>
-                                        Approve
-                                    </button>
-                                    <button type="button" class="btn rct-btn btnProcess" onclick="ShowApprovalBox(this)" name="Command" value="2">
-                                        <i class="fa fa-ban" aria-hidden="true"></i>
-                                        Reject
-                                    </button>
-                                </div>
-                            }
-                        </div>
 
                     </div>
+
+                    <div class="row" id="ApprovalDiv">
+                        @if (ClsApplicationSetting.GetSessionValue("Modify") == "True")
+                        {
+                            <div class="col-sm-12 d-flex justify-content-end  my-3">
+                                <button type="button" class="btn apr-btn btnProcess" onclick="ShowApprovalBox(this)" name="Command" value="1">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                    Approve
+                                </button>
+                                <button type="button" class="btn rct-btn btnProcess" onclick="ShowApprovalBox(this)" name="Command" value="2">
+                                    <i class="fa fa-ban" aria-hidden="true"></i>
+                                    Reject
+                                </button>
+                            </div>
+                        }
+                    </div> 
                 </div>
             </div>
         </div>
-
-    </div>
-
-</div>
+    </div> 
+</div> 
 <div class="modal fade pop-dgn" id="ViewModal">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -142,12 +127,10 @@
                             Submit
                         </button>
                     </div>
-                }
-
+                } 
             </div>
         </div>
-    </div>
-
+    </div> 
 </div>
 @section scripts    {
     @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
@@ -181,7 +164,7 @@
             BindDataTable();
         });
 
-     
+
         $(document).ready(function () {
             $("#btnSearch").click();
         });
@@ -233,28 +216,18 @@
                          }
                          return data;
                      }
-                 },
-             { "data": "DocNo" },
+                 }, 
              { "data": "Name" },
              { "data": "Mobile" },
-             { "data": "Email" },
-             { "data": "DOB" },
-             { "data": "Age" },
              { "data": "CounterName" },
                  { "data": "Location" },
                  { "data": "StateName" },
-             { "data": "Pincode" },
              { "data": "TotalExperience" },
              { "data": "CurrentCompany" },
-             { "data": "TenureWithCompany" },
              { "data": "CurrentSalary" },
              { "data": "ExpectedSalary" },
              { "data": "CreatedDate" },
-             { "data": "CreatedBy" },
-             { "data": "ModifiedDate" },
-             { "data": "ModifiedBy" },
-             { "data": "IPAddress" },
-             { "data": "EntrySource" }
+             { "data": "CreatedBy" }
      ]
  });
 

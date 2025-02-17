@@ -1,0 +1,57 @@
+﻿@model  ProductSalesGraph
+<style>
+    select.form-control, select.form-control:focus, select.form-control:hover {
+        border: 1px solid #cccccc;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+</style>
+<div id="isdcount-bar" style="height: 302px"></div>
+<script>
+    function DrawISDCountGraphChart() {
+        var itemsList = @Html.Raw(ViewBag.ISDCountGraphData);
+        //console.log(itemsList);
+
+        const branches = [...new Set(itemsList.map(row => row.Branch))];
+        //console.log(branches);
+
+        const years = [...new Set(itemsList.map(row => row.Year))];
+        //console.log(years);
+
+
+        const columns = years.map(year => {
+            const data = itemsList.filter(row => row.Year === year).map(row => row.Qty);
+            return [`${year}`, ...data];
+        });
+        //console.log(columns);
+
+        const categories = branches;
+        var chart = c3.generate({
+            bindto: '#isdcount-bar', // id of chart wrapper
+            data: {
+                columns: columns,
+                type: 'bar', // default type of chart
+                colors: {
+                    [`${years[0]}`]: 'deeppink',
+                    [`${years[1]}`]: 'green'
+                },
+            },
+            axis: {
+                x: {
+                    type: 'category',
+                    categories: categories // Add branches as categories
+                }
+            },
+            bar: {
+                width: 16
+            },
+            legend: {
+                show: true // Show legend
+            },
+            padding: {
+                bottom: 0,
+                top: 0
+            }
+        });
+    }
+</script>

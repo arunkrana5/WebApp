@@ -58,6 +58,9 @@ namespace Website.Controllers
             ViewBag.MenuID = GetQueryString[0];
             Tab.Approval Modal = new Tab.Approval();
             Modal.Month = DateTime.Now.ToString("yyyy-MM");
+            GetDropDownResponse respdrop = new GetDropDownResponse();
+            respdrop.Doctype = "RoleList_Filter";
+            ViewBag.RoleDropdownList = Common_SPU.GetDropDownList(respdrop);
             return View(Modal);
         }
         public ActionResult _ApproverLeaveList(string src, Tab.Approval Modal)

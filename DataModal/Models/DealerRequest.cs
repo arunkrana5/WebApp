@@ -36,6 +36,8 @@ namespace DataModal.Models
             public string CreatedDate { get; set; }
             public string CreatedBy { get; set; }
             public string IPAddress { get;set; }
+            public string RouteNumber { get; set; }
+            public string VisitType { get; set; }
         }
         public class Add
         {
@@ -87,6 +89,10 @@ namespace DataModal.Models
             public List<DropDownlist> AreaList { get; set; }
             public List<DropDownlist> DealerCategoryList { get; set; }
             public List<DropDownlist> DealerTypeList { get; set; }
+            [RegularExpression("^[0-9]+$", ErrorMessage = "Route Number must be numeric.")]
+            public string RouteNumber { get; set; }
+            public string VisitType { get; set; }
+            public List<DropDownlist> VisitTypeList { get; set; }
 
         }
     }

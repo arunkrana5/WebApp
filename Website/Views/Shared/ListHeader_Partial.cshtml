@@ -20,6 +20,12 @@
                     @*btn btnupdate btn-l*@
                     <i class="fa-solid fa-file-export"></i> Export
                 </a>
+                if (ViewBag.OtherExport == "True")
+                {
+                    <a id="anchListExcelOtherExport" onclick="ListHeaderOtherExport();" class=" ripplelink btn-exp">
+                        <i class="fa-solid fa-file-import"></i> Application Export
+                    </a>
+                }
             }
             @if (ClsApplicationSetting.GetSessionValue("Import") == "True")
             {

@@ -160,6 +160,22 @@
                                 @Html.TextBoxFor(model => model.BillingName, new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.BillingName, "", new { @class = "text-danger" })
                             </div>
+                            <div class="col-lg-2 form-group">
+                                <label>
+                                    Route Number    <sup>*</sup>
+                                </label>
+                                @Html.TextBoxFor(model => model.RouteNumber, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.RouteNumber, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-lg-2 form-group">
+                                <label>
+                                    Visit Type <sup>*</sup>
+                                </label>
+                                @Html.DropDownListFor(n => n.VisitType, new SelectList(Model.VisitTypeList, "Name", "Name", Model.VisitType), "Select",
+new { @class = "form-control mb-0  applyselect" })
+                                @Html.ValidationMessageFor(model => model.VisitType, "", new { @class = "text-danger" })
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-12">

@@ -1,10 +1,13 @@
 ﻿
 @model Requirement.FullView
-@{ 
+@{
     <style>
         .chkdiv input {
             width: auto;
             vertical-align: sub;
+        }
+        #client-table table th {
+            color: white;
         }
     </style>
 }
@@ -142,9 +145,8 @@
                     <div class="d-flex justify-content-between my-1">
                         <div class="client-tb-title">
                             <p>Application Offered</p>
-                            <small style="color:red">Note:- checked application will considered as approved rest as rejected. once you will hit submit and close button, this request will be closed.</small>
+                            
                         </div>
-                       
                     </div>
                     <div class="row">
                         <div class="col-xl-12">
@@ -154,12 +156,14 @@
                                         <th>SNo.</th>
                                         <th>Action</th>
                                         <th>Remarks</th>
-                                        <th>Name</th>
                                         <th>Phone</th>
                                         <th>EmailID</th>
-                                        <th>Qualification</th>
+                                        <th>Net Pay</th>
+                                        <th>DOJ</th>
+                                        <th>Name</th>
                                         <th>Experience</th>
-                                        <th>Salary</th>
+                                        <th>Current Salary</th>
+                                        <th>Expected Salary</th>
                                         <th>Resume</th>
                                     </tr>
                                 </thead>
@@ -170,27 +174,87 @@
                                             <td>
                                                 @(i+1)
                                                 @Html.HiddenFor(model => Model.ApplicationList[i].ApplicationID)
-                                                
+
                                             </td>
                                             <td class="chkdiv">
-                                                <input type="checkbox" class="" id="@Html.IdFor(m => m.ApplicationList[i].IsChecked)" name="@Html.NameFor(m => m.ApplicationList[i].IsChecked)" @(Model.ApplicationList[i].Approved==1?"checked":"") />
-                                                <label for="@Html.IdFor(m => m.ApplicationList[i].IsChecked)"></label>
-                                                @Html.ValidationMessageFor(m => m.ApplicationList[i].IsChecked, "", new { @class = "text-danger" })
+                                                @if (Model.ApplicationList[i].Approved != 0)
+                                                {
+
+                                                    @(Model.ApplicationList[i].Approved == 1 ? "Approved" : "Rejected")
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" class="" id="@Html.IdFor(m => m.ApplicationList[i].IsChecked)" name="@Html.NameFor(m => m.ApplicationList[i].IsChecked)" @(Model.ApplicationList[i].Approved == 1 ? "checked" : "") />
+                                                    <label for="@Html.IdFor(m => m.ApplicationList[i].IsChecked)"></label>
+                                                    @Html.ValidationMessageFor(m => m.ApplicationList[i].IsChecked, "", new { @class = "text-danger" })
+                                                }
+
                                             </td>
                                             <td>
-                                                @Html.TextBoxFor(model => Model.ApplicationList[i].ApprovedRemarks, new { @class = "form-control" })
-                                                @Html.ValidationMessageFor(model => Model.ApplicationList[i].ApprovedRemarks, "", new { @class = "text-danger" })
+                                                @if (Model.ApplicationList[i].Approved != 0)
+                                                {
+
+                                                    @Model.ApplicationList[i].ApprovedRemarks;
+                                                }
+                                                else
+                                                {
+                                                    @Html.TextBoxFor(model => Model.ApplicationList[i].ApprovedRemarks, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => Model.ApplicationList[i].ApprovedRemarks, "", new { @class = "text-danger" })
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (Model.ApplicationList[i].Approved != 0)
+                                                {
+                                                    @Html.HiddenFor(model => Model.ApplicationList[i].Phone)
+                                                    @Model.ApplicationList[i].Phone;
+                                                }
+                                                else
+                                                {
+                                                    @Html.TextBoxFor(model => Model.ApplicationList[i].Phone, new { @class = "form-control" })
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (Model.ApplicationList[i].Approved != 0)
+                                                {
+                                                    @Html.HiddenFor(model => Model.ApplicationList[i].EmailID)
+                                                    @Model.ApplicationList[i].EmailID;
+                                                }
+                                                else
+                                                {
+                                                    @Html.TextBoxFor(model => Model.ApplicationList[i].EmailID, new { @class = "form-control" })
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (Model.ApplicationList[i].Approved != 0)
+                                                {
+                                                    @Html.HiddenFor(model => Model.ApplicationList[i].NetPay)
+                                                    @Model.ApplicationList[i].NetPay;
+                                                }
+                                                else
+                                                {
+                                                    @Html.TextBoxFor(model => Model.ApplicationList[i].NetPay, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => Model.ApplicationList[i].NetPay, "", new { @class = "text-danger" })
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (Model.ApplicationList[i].Approved != 0)
+                                                {
+
+                                                    @Model.ApplicationList[i].DOJ;
+                                                }
+                                                else
+                                                {
+                                                    @Html.TextBoxFor(model => Model.ApplicationList[i].DOJ, new { @class = "form-control", @type = "date" })
+                                                }
                                             </td>
                                             <td>@Model.ApplicationList[i].Name </td>
-                                            <td>@Model.ApplicationList[i].Phone</td>
-                                            <td>@Model.ApplicationList[i].EmailID</td>
-                                            <td>@Model.ApplicationList[i].Qualification</td>
                                             <td>@Model.ApplicationList[i].Experience</td>
                                             <td>@Model.ApplicationList[i].Salary</td>
+                                            <td>@Model.ApplicationList[i].ExpectedSalary</td>
                                             <td>
-                                                @if (!string.IsNullOrEmpty(Model.ApplicationList[i].AttachmentURL))
+                                                @if (!string.IsNullOrEmpty(Model.ApplicationList[i].FilePath))
                                                 {
-                                                    <a target="_blank" href="@Model.ApplicationList[i].AttachmentURL">Resume</a>
+                                                    <a target="_blank" href="@Model.ApplicationList[i].FilePath">Resume</a>
                                                 }
                                             </td>
                                         </tr>
@@ -207,18 +271,29 @@
                     @Html.ValidationMessageFor(model => model.ApprovedRemarks, "", new { @class = "text-danger" })
                 </div>
                 <div class="d-flex justify-content-end my-3">
-                    <button type="submit" class="btn apr-btn btnProcess pull-right" name="Command" value="FinalSubmit">
+
+                    <button type="submit" class="btn btn-warning pull-right" name="Command" value="Update">
                         <i class="fa fa-check" aria-hidden="true"></i>
-                        Submit and Close
+                        Update
                     </button>
 
-                    <button type="submit" class="btn btn-primary pull-right" name="Command" value="submit">
+                    <button type="submit" class="btn apr-btn btnProcess pull-right" name="Command" value="FinalSubmit">
+                        <i class="fa fa-save" aria-hidden="true"></i>
+                        Request Close
+                    </button>
+
+                    <button type="submit" class="btn btnSuccess pull-right" name="Command" value="Approve" style="background: #00bcd4;color: #fff;">
                         <i class="fa fa-check" aria-hidden="true"></i>
-                        Submit
+                        Approve
+                    </button>
+
+                    <button type="submit" class="btn btnDanger pull-right" name="Command" value="Reject" style="background: red;color: #fff;">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                        Reject
                     </button>
 
                     <div class="">
-                        <a href="/" type="button" class="btn-default client-save btn  px-5">Back </a>
+                        <a href="/" type="button" class="btn btn-default px-5"><i class="fa fa-rotate-back" aria-hidden="true"></i>Back </a>
                     </div>
                 </div>
             }
@@ -234,13 +309,14 @@
         function OnSuccess(obj) {
             if (obj.Status) {
                 SuccessToaster(obj.SuccessMessage);
-                window.location.href = obj.RedirectURL;
+                window.location.reload();
             }
             else {
-                CloseLoadingDialog();
+                
                 FailToaster(obj.SuccessMessage);
 
             }
+            CloseLoadingDialog();
         }
 
 

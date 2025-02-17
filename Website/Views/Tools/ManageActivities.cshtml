@@ -43,6 +43,42 @@
                 </div>
             </div>
         </div>
+        <div class="col-xl-6 col-lg-3 col-md-3">
+            <div class="manage-atten">
+                <div class="d-flex justify-content-center">
+                    <a href="@Url.Action("ImportLeaveBalance",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Tools/ImportLeaveBalance") })" title="Import Leave Balance" class="d-flex  flex-column align-items-center justify-content-center">
+                        <span>
+                            <i class="fa fa-user"></i>
+                        </span>
+                        <h2>Import Leave Balance</h2>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-lg-3 col-md-3">
+            <div class="manage-atten">
+                <div class="d-flex justify-content-center">
+                    <a href="@Url.Action("PendingLeave",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Tools/PendingLeave") })" title="To Pending Leave" class="d-flex  flex-column align-items-center justify-content-center">
+                        <span>
+                            <i class="fa fa-user"></i>
+                        </span>
+                        <h2>To Pending Leave</h2>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-lg-3 col-md-3">
+            <div class="manage-atten">
+                <div class="d-flex justify-content-center">
+                    <a href="@Url.Action("ManageAssignTo","Tools",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*"+"/Tools/ManageAssignTo") })" title="Assign To" class="d-flex  flex-column align-items-center justify-content-center">
+                        <span>
+                            <i class="fa fa-user"></i>
+                        </span>
+                        <h2>Manage Assign To</h2>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @section scripts    {

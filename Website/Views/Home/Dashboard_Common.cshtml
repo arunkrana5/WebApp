@@ -1,10 +1,10 @@
-﻿
+﻿@model ProductSalesGraph
 @section style{
     @System.Web.Optimization.Styles.Render("~/bundle/dataTablecss")
 
     @Html.IncludeVersionedCss(Url.Content("~/assets/design/css/dashboardComman.css"))
 }
-
+<div id="MarqueeDiv"></div>
 <div class="row count-main">
     <div class="order-1 col-xl-12">
         <div class="count-main">
@@ -17,22 +17,141 @@
     </div>
 </div>
 
-<div class="birthday-section">
-    <section class="p-4">
-        <div>
-            <div class="row ">
-                <div class="col-xl-9 col-md-6 col-sm-6">
-                </div>
-                <div class="col-xl-3 col-md-6 col-sm-6  box-bday">
-                    <h5 class="text-center hpBday">Happy Birthday</h5>
-                    <div id="BirthdayHTML"></div>
+<div id="BannerDiv"></div>
+
+<div class="row clearfix">
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="card">
+            <div class="header">
+                <h2>Product Wise Sales</h2>
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-sm-6 form-group">
+                        <label>Region</label>
+                        @Html.DropDownList("DropdownItems", (IEnumerable<SelectListItem>)ViewBag.RegionList, "--Select--", new { @class = "form-control applyselect" })
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 form-group">
+                        <label>Branch</label>
+                        <select class="form-control applyselect" id="BranchID">
+                            <option value="0">--Select--</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+                        <label>Month</label>
+                        <input type="month" id="InputDate" value="@ViewBag.InputDate" class="form-control" />
+                    </div>
                 </div>
             </div>
+            <div class="body" id="ProductWiseSaleGraph">
+            </div>
         </div>
-    </section>
+    </div>
+    <div class="col-lg-8 col-md-6 col-sm-12">
+        <div class="card">
+            <div class="header">
+                <h2>Sales Growth</h2>
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-sm-6 form-group">
+                        <label>Region</label>
+                        @Html.DropDownList("Region_ID", (IEnumerable<SelectListItem>)ViewBag.RegionList, "--Select--", new { @class = "form-control applyselect" })
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 form-group">
+                        <label>Branch</label>
+                        <select class="form-control applyselect" id="Branch_ID">
+                            <option value="0">--Select--</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+                        <label>Month</label>
+                        <input type="month" id="Input_Date" value="@ViewBag.InputDate" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="body" id="SalesGrowth_graph">
+            </div>
+        </div>
+    </div>
 </div>
 
+<div class="row clearfix" style="display:none">
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="card">
+            <div class="header">
+                <h2>Sales This Week</h2>
+            </div>
+            <div class="body">
+                <div id="chart-pie" style="height: 300px"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8 col-md-6 col-sm-12">
+        <div class="card">
+            <div class="header">
+                <h2>Employment Growth</h2>
+            </div>
+            <div class="body">
+                <div id="chart-employment" style="height: 300px"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12">
+        <div class="card user_statistics">
+            <div class="header">
+                <h2>Sales Report</h2>
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-sm-6 form-group">
+                        <label>Region</label>
+                        @Html.DropDownList("Region_IDs", (IEnumerable<SelectListItem>)ViewBag.RegionList, "--Select--", new { @class = "form-control applyselect" })
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 form-group">
+                        <label>Branch</label>
+                        <select class="form-control applyselect" id="Branch_IDs">
+                            <option value="0">--Select--</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+                        <label>Month</label>
+                        <input type="month" id="Input_Dates" value="@ViewBag.InputDate" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="body" id="BranchWiseSales_graph">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12">
+        <div class="card user_statistics">
+            <div class="header">
+                <h2>ISD Count Report</h2>
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-sm-6 form-group">
+                        <label>Region</label>
+                        @Html.DropDownList("Region_IDss", (IEnumerable<SelectListItem>)ViewBag.RegionList, "--Select--", new { @class = "form-control applyselect" })
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 form-group">
+                        <label>Branch</label>
+                        <select class="form-control applyselect" id="Branch_IDss">
+                            <option value="0">--Select--</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 form-group">
+                        <label>Month</label>
+                        <input type="month" id="Input_Datess" value="@ViewBag.InputDate" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="body" id="ISDCount_Graph">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="BirthdayHTML"></div>
 
 <div class="modal fade pop-dgn" id="ViewModal">
     <div class="modal-dialog modal-lg">
@@ -74,13 +193,61 @@
 
     @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
     @System.Web.Optimization.Scripts.Render("~/bundle/dataTablesjs")
-    <script src="https://cdn.datatables.net/fixedcolumns/5.0.0/js/dataTables.fixedColumns.js" ></script>
-    <script src="https://cdn.datatables.net/fixedcolumns/5.0.0/js/fixedColumns.dataTables.js"></script>
     <script>
         $(document).ready(function () {
             GetDashboardCount();
             GetMyAnnouncement();
             GetBirthdayList();
+            GetBanners();
+            GetMarquee();
+            GetProductWiseSalesGraph();
+            GetSalesGrowthGraph();
+            GetBranchWiseSalesGraph();
+            GetISDCountGraph();
+            $('#DropdownItems').on('change', function () {
+                GetBranchbyRegion($('#DropdownItems').val(), "BranchID");
+                GetProductWiseSalesGraph($('#DropdownItems').val());
+            });
+            $('#BranchID').on('change', function () {
+                GetProductWiseSalesGraph($('#DropdownItems').val());
+            });
+
+            $('#InputDate').on('change', function () {
+                GetProductWiseSalesGraph($('#DropdownItems').val());
+            });
+            $('#Region_ID').on('change', function () {
+                GetBranchbyRegion($('#Region_ID').val(), "Branch_ID");
+                GetSalesGrowthGraph($('#Region_ID').val());
+            });
+            $('#Branch_ID').on('change', function () {
+                GetSalesGrowthGraph($('#Region_ID').val());
+            });
+
+            $('#Input_Date').on('change', function () {
+                GetSalesGrowthGraph($('#Region_ID').val());
+            });
+            $('#Region_IDs').on('change', function () {
+                GetBranchbyRegion($('#Region_IDs').val(), "Branch_IDs");
+                GetBranchWiseSalesGraph($('#Region_IDs').val());
+            });
+            $('#Branch_IDs').on('change', function () {
+                GetBranchWiseSalesGraph($('#Region_IDs').val());
+            });
+
+            $('#Input_Dates').on('change', function () {
+                GetBranchWiseSalesGraph($('#Region_IDs').val());
+            });
+            $('#Region_IDss').on('change', function () {
+                GetBranchbyRegion($('#Region_IDss').val(), "Branch_IDss");
+                GetISDCountGraph($('#Region_IDss').val());
+            });
+            $('#Branch_IDss').on('change', function () {
+                GetISDCountGraph($('#Region_IDss').val());
+            });
+
+            $('#Input_Datess').on('change', function () {
+                GetISDCountGraph($('#Region_IDss').val());
+            });
         });
 
         function ShowSSRList(obj, doctype) {
@@ -163,8 +330,173 @@
                 }
             });
         }
+        function GetBanners() {
+            $.ajax({
+                url: "/Home/_Banners",
+                type: "Get",
+                success: function (data) {
+                    $("#BannerDiv").empty();
+                    $("#BannerDiv").html(data);
+                    $('#BannerCarousel').carousel({
+                        interval: 3000,
+                        pause: 'hover'
+                    });
 
+                },
+                error: function (er) {
+                    alert(er);
 
+                }
+            });
+        }
+
+        function GetMarquee() {
+            $.ajax({
+                url: "/Home/_Marquee",
+                type: "Get",
+                success: function (data) {
+                    $("#MarqueeDiv").empty();
+                    $("#MarqueeDiv").html(data);
+                },
+                error: function (er) {
+                    alert(er);
+
+                }
+            });
+        }
+        function GetProductWiseSalesGraph(regionid = 0) {
+            ShowLoadingDialog();
+            var dataObject = {
+                'RegionID': regionid,
+                'BranchID': $('#BranchID').val(),
+                'InputDate': $('#InputDate').val()
+            };
+            $.ajax({
+                url: "/Home/_ProductSalesGraph",
+                type: "Post",
+                data: { getGraphResponse: dataObject },
+                beforeSend: function () {
+                    ShowLoadingDialog();
+                },
+                success: function (data) {
+                    $('#ProductWiseSaleGraph').empty();
+                    $('#ProductWiseSaleGraph').html(data);
+                    DrawPieChart();
+                    CloseLoadingDialog();
+                },
+                error: function (er) {
+                    alert(er);
+
+                }
+            });
+        }
+
+        function GetSalesGrowthGraph(regionid = 0) {
+            ShowLoadingDialog();
+            var dataObject = {
+                'RegionID': regionid,
+                'BranchID': $('#Branch_ID').val(),
+                'InputDate': $('#Input_Date').val()
+            };
+            $.ajax({
+                url: "/Home/_SalesGrowthGraph",
+                type: "Post",
+                data: { getGraphResponse: dataObject },
+                beforeSend: function () {
+                    ShowLoadingDialog();
+                },
+                success: function (data) {
+                    $('#SalesGrowth_graph').empty();
+                    $('#SalesGrowth_graph').html(data);
+                    DrawSalesGrowthChart();
+                    CloseLoadingDialog();
+                },
+                error: function (er) {
+                    alert(er);
+
+                }
+            });
+        }
+
+        function GetBranchWiseSalesGraph(regionid = 0) {
+            ShowLoadingDialog()
+            var dataObject = {
+                'RegionID': regionid,
+                'BranchID': $('#Branch_IDs').val(),
+                'InputDate': $('#Input_Dates').val()
+            };
+            $.ajax({
+                url: "/Home/_BranchWiseSalesGraph",
+                type: "Post",
+                data: { getGraphResponse: dataObject },
+                beforeSend: function () {
+                    ShowLoadingDialog();
+                },
+                success: function (data) {
+                    $('#BranchWiseSales_graph').empty();
+                    $('#BranchWiseSales_graph').html(data);
+                    DrawBranchWiseSalesChart();
+                    CloseLoadingDialog();
+                },
+                error: function (er) {
+                    alert(er);
+
+                }
+            });
+        }
+        function GetISDCountGraph(regionid = 0) {
+            ShowLoadingDialog()
+            var dataObject = {
+                'RegionID': regionid,
+                'BranchID': $('#Branch_IDss').val(),
+                'InputDate': $('#Input_Datess').val()
+            };
+            $.ajax({
+                url: "/Home/_ISDCountGraph",
+                type: "Post",
+                data: { getGraphResponse: dataObject },
+                beforeSend: function () {
+                    ShowLoadingDialog();
+                },
+                success: function (data) {
+                    $('#ISDCount_Graph').empty();
+                    $('#ISDCount_Graph').html(data);
+                    DrawISDCountGraphChart();
+                    CloseLoadingDialog();
+                },
+                error: function (er) {
+                    alert(er);
+
+                }
+            });
+        }
+
+        function GetBranchbyRegion(regionid, br_id = "") {
+            ShowLoadingDialog();
+            let html = ``;
+            var dataObject = JSON.stringify({
+                'Values': regionid,
+                'Doctype': "GraphFilterBranch"
+            });
+            $.ajax({
+                url: '/Home/GetRegionWiseBranchListJson',
+                dataType: "json",
+                contentType: 'application/json',
+                type: "Post",
+                data: dataObject,
+                beforeSend: function () {
+                    ShowLoadingDialog();
+                },
+                success: function (res) {
+                    html = `<option value="0">--Select--</option>`;
+                    $.each(res, function (k, v) {
+                        html += `<option value="` + v.ID + `">` + v.Name + `</option>`;
+                    })
+                    $('#' + br_id).html(html);
+                    CloseLoadingDialog();
+                }
+            });
+        }
     </script>
 
 

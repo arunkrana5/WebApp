@@ -2,7 +2,7 @@
 @model Requirement.FullView
 @{
     bool Status = false;
-    if (Model.ApplicationList.Any(x => x.Approved == 1))
+    if (Model != null && Model.ApplicationList != null && Model.ApplicationList.Any(x => x.Approved == 1))
     {
         Status = true;
     }
@@ -15,8 +15,7 @@
                     <span class="is-complete"></span>
                     <p>Request Raised<br><span>@Model.RequestDate</span></p>
                 </div>
-
-                <div class="order-tracking @(Model.ApplicationOffered>0?"completed":"")">
+                <div class="order-tracking @(Model.ApplicationOffered > 0 ? "completed" : "")">
                     <span class="is-complete"></span>
                     <p>
                         Resume Shared @Model.ApplicationOffered<br>
@@ -26,23 +25,36 @@
                         }
                     </p>
                 </div>
-                <div class="order-tracking @(Status?"completed":"")">
+                <div class="order-tracking @(Status ? "completed" : "")">
                     <span class="is-complete"></span>
-                    <p>
-                        Candidate Selected<br>
-                        @if (Status)
-                        {
-                            <span>@Model.ApplicationList.Select(x => x.ApprovedDate).FirstOrDefault()</span>
-                        }
-                    </p>
+                    @if (Model.SelectedCount > 0)
+                    {
+                        <p>
+                            Candidate Selected
+
+                            <span>@Model.SelectedCount</span>
+
+                        </p><br>
+                    }
+                    @if (Model.NotInterviewedCount > 0)
+                    {
+                        <p>
+                            Candidate Not Interviewed
+
+                            <span>@Model.NotInterviewedCount</span>
+
+                        </p><br>
+                    }
+                    @if (Model.RejectedCount > 0)
+                    {
+                        <p>
+                            Candidate Rejected
+
+                            <span>@Model.RejectedCount</span>
+
+                        </p>
+                    }
                 </div>
-
-                <div class="order-tracking @(Status?"completed":"")">
-                    <span class="is-complete"></span>
-                    <p>Onboarded<br><span></span></p>
-                </div>
-
-
             </div>
         </div>
     </div>

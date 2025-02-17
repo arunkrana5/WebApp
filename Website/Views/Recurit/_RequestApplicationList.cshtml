@@ -6,12 +6,13 @@
                 <thead>
                     <tr>
                         <th>SNo.</th>
+                        <th>Action</th>
                         <th>Name</th>
                         <th>Phone</th>
-                        <th>EmailID</th>
-                        <th>Qualification</th>
                         <th>Experience</th>
-                        <th>Salary</th>
+                        <th>Current Salary</th>
+                        <th>Expected Salary</th>
+                        <th>Current Company</th>
                         <th>Resume</th>
                     </tr>
                 </thead>
@@ -20,23 +21,34 @@
                     @foreach (var item in Model)
                     {
                         count++;
-        <tr>
-            <td>@count</td>
-            <td>@item.Name</td>
-            <td>@item.Phone</td>
-            <td>@item.EmailID</td>
-            <td>@item.Qualification</td>
-            <td>@item.Experience</td>
-            <td>@item.Salary</td>
-            <td>
-                @if (!string.IsNullOrEmpty(@item.AttachmentURL))
-                {
-                    <a target="_blank" href="@item.AttachmentURL">Resume</a>
-                }
-            </td>
+                        <tr>
+                            <td>
+                                <input type="hidden" name="ApplicationID" value="@item.ApplicationID" />
+                                <input type="hidden" name="Name" value="@item.Name" />
+                                @count
+                            </td>
+                            <td>
+                                @if (item.Approved == 0)
+                                {
 
-        </tr>
-}
+                                    <a onclick="DeleteRequest(this)" title="Delete Request" data-toggle='tooltip' data-original-title="Delete Request" class="remove"><i class="fa fa-trash red-clr" aria-hidden="true"></i></a>
+                                }
+                            </td>
+                            <td>@item.Name</td>
+                            <td>@item.Phone</td>
+                            <td>@item.Experience</td>
+                            <td>@item.Salary</td>
+                            <td>@item.ExpectedSalary</td>
+                            <td>@item.CurrentCompany</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(@item.FilePath))
+                                {
+                                    <a class="btn btn-dark" target="_blank" href="@item.FilePath">Resume</a>
+                                }
+                            </td>
+
+                        </tr>
+                    }
 
                 </tbody>
             </table>

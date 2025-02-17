@@ -1,6 +1,7 @@
 ﻿using DataModal.Models;
 using System.Collections.Generic;
 using System.Data;
+using System.Web;
 
 namespace DataModal.ModelsMasterHelper
 {
@@ -32,5 +33,11 @@ namespace DataModal.ModelsMasterHelper
         PostResponse fnSet_Sales_Manage(ManageActivities.Sale modal);
         PostResponse fnSet_Attendance_Manage(ManageActivities.Attendance modal);
         PostResponse fnSet_EMPDOL(ManageActivities.EMPDOL model);
+        List<ManageActivities.ImportLeaveBalance> GetLeaveBalanceImportList(GetResponse modal);
+        PostResponse LeaveBalanceImport_UploadData(HttpPostedFileBase file, GetResponse getResponse);
+        PostResponse ClearLeaveBalanceImportTemp(GetResponse getResponse);
+        PostResponse UpdateLeaveBalanceData(GetResponse getResponse);
+        PostResponse fnSet_PendingLeave(ManageActivities.PendingLeave model);
+        PostResponse fnSet_AssignTo(ManageActivities.AssignTo model);
     }
 }

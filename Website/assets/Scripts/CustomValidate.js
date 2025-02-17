@@ -112,3 +112,20 @@ function GetDealerSearchJSON(dataObject) {
     return data;
 
 }
+
+function GetDropDownListByCode(Code, Doctype) {
+    var dataObject = JSON.stringify({
+        'Values': Code,
+        'Doctype': Doctype
+    });
+    var data = $.parseJSON($.ajax({
+        url: '/CommonAjax/GetDropDownListJson',
+        dataType: "json",
+        contentType: 'application/json',
+        type: "Post",
+        data: dataObject,
+        async: false
+    }).responseText);
+    return data;
+
+}

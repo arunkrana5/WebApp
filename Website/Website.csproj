@@ -50,7 +50,7 @@
       <HintPath>..\packages\Portable.BouncyCastle.1.9.0\lib\net40\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
-      <HintPath>..\packages\BouncyCastle.Cryptography.2.3.0\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
+      <HintPath>..\packages\BouncyCastle.Cryptography.2.4.0\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
     </Reference>
     <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <HintPath>..\packages\CrystalReports.Engine.13.0.4003\lib\net40\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
@@ -162,9 +162,6 @@
     </Reference>
     <Reference Include="Renci.SshNet, Version=2024.0.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
       <HintPath>..\packages\SSH.NET.2024.0.0\lib\net462\Renci.SshNet.dll</HintPath>
-    </Reference>
-    <Reference Include="RestSharp">
-      <HintPath>..\Web\bin\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="Rotativa, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Rotativa.1.7.3\lib\net461\Rotativa.dll</HintPath>
@@ -332,6 +329,7 @@
     <Compile Include="Controllers\ExportController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LeaveController.cs" />
+    <Compile Include="Controllers\MailActionController.cs" />
     <Compile Include="Controllers\OperationsController.cs" />
     <Compile Include="Controllers\MastersController.cs" />
     <Compile Include="Controllers\OnboardingController.cs" />
@@ -342,6 +340,7 @@
     <Compile Include="Controllers\ToolsController.cs" />
     <Compile Include="Controllers\TransactionController.cs" />
     <Compile Include="Controllers\TravelController.cs" />
+    <Compile Include="Controllers\WorkForceController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -366,6 +365,7 @@
     <Content Include="Areas\Jobs\assets\js\jquery.validate.min.js" />
     <Content Include="Areas\Jobs\assets\js\jquery.validate.unobtrusive.min.js" />
     <Content Include="assets\design\css\animate.css" />
+    <Content Include="assets\design\css\mitsubishi.css" />
     <Content Include="assets\design\css\mystylesheet.css" />
     <Content Include="assets\design\css\mystylesheet_resposive.css" />
     <Content Include="assets\design\css\recurit.css" />
@@ -5063,16 +5063,9 @@
     <Content Include="ckeditor\skins\v2\skin.js" />
     <Content Include="ckeditor\skins\v2\templates.css" />
     <Content Include="ckeditor\themes\default\theme.js" />
-    <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="assets\design\css\trashCSS\boxed.css.map" />
     <Content Include="assets\design\css\trashCSS\boxed.scss" />
     <Content Include="assets\design\css\trashCSS\closed-sidemenu.css.map" />
@@ -5282,6 +5275,39 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\ChangePassword.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Dashboard.cshtml" />
+    <Content Include="Views\Home\Dashboard_Common.cshtml" />
+    <Content Include="Views\Home\Dashboard_NSM.cshtml" />
+    <Content Include="Views\Home\Dashboard_SSR.cshtml" />
+    <Content Include="Views\Home\Dashboard_TL.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\MarkAttendence - Copy.cshtml" />
+    <Content Include="Views\Home\MarkAttendence.cshtml" />
+    <Content Include="Views\Home\MyDoc.cshtml" />
+    <Content Include="Views\Home\MyProfile.cshtml" />
+    <Content Include="Views\Home\NewDashboard.cshtml" />
+    <Content Include="Views\Home\ReleaseLog.cshtml" />
+    <Content Include="Views\Home\SalarySlip.cshtml" />
+    <Content Include="Views\Home\TakePhoto.cshtml" />
+    <Content Include="Views\Home\YTDGraph.cshtml" />
+    <Content Include="Views\Home\_Banners.cshtml" />
+    <Content Include="Views\Home\_BirthdayList.cshtml" />
+    <Content Include="Views\Home\_BranchWiseSalesGraph.cshtml" />
+    <Content Include="Views\Home\_ContactUs.cshtml" />
+    <Content Include="Views\Home\_DailySales.cshtml" />
+    <Content Include="Views\Home\_DashboardCount.cshtml" />
+    <Content Include="Views\Home\_FlagMismatchedReason.cshtml" />
+    <Content Include="Views\Home\_ISDCountGraph.cshtml" />
+    <Content Include="Views\Home\_MyAnnouncementList.cshtml" />
+    <Content Include="Views\Home\_ProductSalesGraph.cshtml" />
+    <Content Include="Views\Home\_PunchTime_DateWise.cshtml" />
+    <Content Include="Views\Home\_SalesGrowthGraph.cshtml" />
+    <Content Include="Views\Home\_SSRListToday.cshtml" />
+    <Content Include="Views\Home\_TargetAchievedList.cshtml" />
+    <Content Include="Views\Home\_TargetAchieved_MonthWise.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -5293,16 +5319,8 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Accounts\Login.cshtml" />
     <Content Include="Views\Accounts\PageNotFound.cshtml" />
-    <Content Include="Views\Home\Dashboard.cshtml" />
-    <Content Include="Views\Home\Dashboard_Common.cshtml" />
-    <Content Include="Views\Home\Dashboard_SSR.cshtml" />
-    <Content Include="Views\Home\MarkAttendence.cshtml" />
-    <Content Include="Views\Home\MyProfile.cshtml" />
     <Content Include="Views\Leave\AppliedLeaveList.cshtml" />
     <Content Include="Views\Leave\ApplyLeave.cshtml" />
     <Content Include="Views\Leave\ApproverLeaveList.cshtml" />
@@ -5416,7 +5434,6 @@
     <Content Include="Views\Masters\EMPTalentPoolImport.cshtml" />
     <Content Include="Views\Transaction\TargetImport.cshtml" />
     <Content Include="Views\Masters\UserHierarchyImport.cshtml" />
-    <Content Include="Views\Home\Dashboard_TL.cshtml" />
     <Content Include="Views\Transaction\MyPJPPlanList.cshtml" />
     <Content Include="Views\Transaction\_MyPJPPlanList.cshtml" />
     <Content Include="Views\Transaction\PlanWisePJPEntryList.cshtml" />
@@ -5425,12 +5442,9 @@
     <Content Include="Views\Transaction\SaleEntry_Import.cshtml" />
     <Content Include="Views\Reports\_TAReport.cshtml" />
     <Content Include="Views\Reports\TAReport.cshtml" />
-    <Content Include="Views\Home\_ContactUs.cshtml" />
     <Content Include="Views\Tools\ContactQueryList.cshtml" />
     <Content Include="Views\Tools\_ContactQueryList.cshtml" />
-    <Content Include="Views\Home\ChangePassword.cshtml" />
     <Content Include="Views\Tools\ExecuteAction.cshtml" />
-    <Content Include="Views\Home\NewDashboard.cshtml" />
     <Content Include="Views\Transaction\PJPPlan_Import.cshtml" />
     <Content Include="Views\Reports\SummaryReport.cshtml" />
     <Content Include="Views\Reports\_SummaryReport_RegionWise.cshtml" />
@@ -5443,8 +5457,6 @@
     <Content Include="Views\Transaction\_MyPJPEntryList.cshtml" />
     <Content Include="Views\Reports\_PJPEntryReport.cshtml" />
     <Content Include="Views\Reports\PJPEntryReport.cshtml" />
-    <Content Include="Views\Home\_SSRListToday.cshtml" />
-    <Content Include="Views\Home\_TargetAchieved_MonthWise.cshtml" />
     <Content Include="Views\Reports\_CustomerList.cshtml" />
     <Content Include="Views\Reports\CustomerList.cshtml" />
     <Content Include="Views\Reports\_SaleEntryWithCustomer.cshtml" />
@@ -5454,7 +5466,6 @@
     <Content Include="Views\Approvals\_AttendenceApproval.cshtml" />
     <Content Include="Views\Travel\MyTravelRequestsList.cshtml" />
     <Content Include="Views\Travel\MyApprovedTravelRequestsList.cshtml" />
-    <Content Include="Views\Home\TakePhoto.cshtml" />
     <Content Include="Views\Reports\PJPEntryExpense.cshtml" />
     <Content Include="Views\Reports\_PJPEntryExpense.cshtml" />
     <Content Include="Views\Travel\AddRequest.cshtml" />
@@ -5480,9 +5491,7 @@
     <Content Include="Views\Travel\_AddMoreTravelDealer.cshtml" />
     <Content Include="Views\Reports\AttendanceLog_Day.cshtml" />
     <Content Include="Views\Reports\_AttendanceLog_Day.cshtml" />
-    <Content Include="Views\Home\_PunchTime_DateWise.cshtml" />
     <Content Include="Views\Approvals\_Attendance_HTML.cshtml" />
-    <Content Include="Views\Home\_FlagMismatchedReason.cshtml" />
     <Content Include="Views\Reports\_AttendanceLog_Monthly.cshtml" />
     <Content Include="Views\Reports\AttendanceLog_Monthly.cshtml" />
     <Content Include="Views\Reports\_AttendanceLog_Monthly_InOut.cshtml" />
@@ -5500,16 +5509,12 @@
     <Content Include="Views\Transaction\TargetTranList.cshtml" />
     <Content Include="Views\Reports\TLTrackerList.cshtml" />
     <Content Include="Views\Reports\_TLTrackerList.cshtml" />
-    <Content Include="Views\Home\SalarySlip.cshtml" />
     <Content Include="Views\Masters\DealerCategoryList.cshtml" />
     <Content Include="Views\Masters\_DealerCategoryAdd.cshtml" />
     <Content Include="Views\Masters\DealerTypeList.cshtml" />
     <Content Include="Views\Masters\_DealerTypeAdd.cshtml" />
-    <Content Include="Views\Home\MarkAttendence - Copy.cshtml" />
     <Content Include="Views\Reports\CompetitionSummaryList.cshtml" />
     <Content Include="Views\Reports\_CompetitionSummaryList.cshtml" />
-    <Content Include="Views\Home\_DashboardCount.cshtml" />
-    <Content Include="Views\Home\_DailySales.cshtml" />
     <Content Include="Views\Masters\TravelModeList.cshtml" />
     <Content Include="Views\Masters\_TravelModeAdd.cshtml" />
     <Content Include="Views\Tools\DateConfigrationList.cshtml" />
@@ -5520,7 +5525,6 @@
     <Content Include="Views\Tools\_UserCurrentLocationList.cshtml" />
     <Content Include="Views\Tools\AnnouncementList.cshtml" />
     <Content Include="Views\Tools\_AddAnnouncement.cshtml" />
-    <Content Include="Views\Home\_MyAnnouncementList.cshtml" />
     <Content Include="Views\Masters\_EmployeeList.cshtml" />
     <Content Include="Views\Reports\_TravelExpenseList.cshtml" />
     <Content Include="Views\Reports\TravelExpenseList.cshtml" />
@@ -5559,8 +5563,6 @@
     <Content Include="Views\Recurit\_RequestApplicationList.cshtml" />
     <Content Include="Views\Recurit\AddApplication.cshtml" />
     <Content Include="Views\Recurit\ViewCompleteRequirement.cshtml" />
-    <Content Include="Views\Home\YTDGraph.cshtml" />
-    <Content Include="Views\Home\_BirthdayList.cshtml" />
     <Content Include="Views\Recurit\ApprovedApplication.cshtml" />
     <Content Include="Views\Masters\_DealerList.cshtml" />
     <Content Include="Views\Onboarding\OnboardingList.cshtml" />
@@ -5573,7 +5575,6 @@
     <Content Include="Views\Reports\_EMPWiseMonthly.cshtml" />
     <Content Include="Views\Schedular\_TradeWiseData.cshtml" />
     <Content Include="Views\Masters\_EmployeeDocuments.cshtml" />
-    <Content Include="Views\Home\MyDoc.cshtml" />
     <Content Include="Views\Masters\EMPDocumentsList.cshtml" />
     <Content Include="Views\CommonAjax\_MasterDetails.cshtml" />
     <Content Include="Views\CommonAjax\_MasterDetails_Dealer.cshtml" />
@@ -5589,7 +5590,6 @@
     <Content Include="Views\Transaction\_BrandDisplayList.cshtml" />
     <Content Include="Views\Transaction\_AddBrandDisplay.cshtml" />
     <Content Include="Views\Transaction\BrandDisplayList.cshtml" />
-    <Content Include="Views\Home\ReleaseLog.cshtml" />
     <Content Include="Views\CommonAjax\_MasterDetails_Onboarding_Applications.cshtml" />
     <Content Include="Views\Recurit\_BranchWiseEMP_Dashboard.cshtml" />
     <Content Include="Views\Recurit\_RequestStatus.cshtml" />
@@ -5630,8 +5630,27 @@
     <Content Include="Views\Reports\PJPReports.cshtml" />
     <Content Include="Views\Reports\PJPExpReport.cshtml" />
     <Content Include="Views\Reports\PJPEntriesReport.cshtml" />
-    <Content Include="Views\Home\_TargetAchievedList.cshtml" />
-    <Content Include="Views\Home\Dashboard_NSM.cshtml" />
+    <Content Include="Views\Shared\_PublicLayout.cshtml" />
+    <Content Include="Views\Masters\BannerList.cshtml" />
+    <Content Include="Views\Masters\_BannerAdd.cshtml" />
+    <Content Include="Views\Shared\_ProjectColors.cshtml" />
+    <Content Include="Views\Home\_Marquee.cshtml" />
+    <Content Include="Views\Approvals\_PJPExpApprovalList.cshtml" />
+    <Content Include="Views\Approvals\_PJPPlanApprovalList.cshtml" />
+    <Content Include="Views\Approvals\PJPExpApproval.cshtml" />
+    <Content Include="Views\Approvals\PJPPlanApproval.cshtml" />
+    <Content Include="Views\Recurit\_RequirementDashboard.cshtml" />
+    <Content Include="Views\Reports\_ResumeReport.cshtml" />
+    <Content Include="Views\Reports\ResumeReport.cshtml" />
+    <Content Include="Views\Tools\ImportLeaveBalance.cshtml" />
+    <Content Include="Views\Tools\PendingLeave.cshtml" />
+    <Content Include="Views\MailAction\Approval.cshtml" />
+    <Content Include="Views\WorkForce\RequestForm.cshtml" />
+    <Content Include="Views\WorkForce\RequestList.cshtml" />
+    <Content Include="Views\CommonAjax\_MasterDetails_WorkForce.cshtml" />
+    <Content Include="Views\WorkForce\_WorkForceMail.cshtml" />
+    <Content Include="Views\MailAction\Thanks.cshtml" />
+    <Content Include="Views\Tools\ManageAssignTo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -5644,14 +5663,6 @@
     <Folder Include="Views\SetupSetting\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-theme.min.css.map" />
-    <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

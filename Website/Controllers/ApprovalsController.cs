@@ -60,9 +60,13 @@ namespace Website.Controllers
             getRes.Doctype = "EMPList_Linked";
             getRes.LoginID = LoginID;
             ViewBag.EMPList = Common_SPU.GetDropDownList(getRes);
+
+            getRes.Doctype = "RoleList_Filter";
+            ViewBag.RoleDropdownList = Common_SPU.GetDropDownList(getRes);
             return View(Modal);
         }
 
+        [HttpPost]
         public ActionResult _RFCApprovalsList(string src, Tab.Approval Modal)
         {
             ViewBag.src = src;

@@ -918,5 +918,24 @@ namespace Website.Controllers
             ViewBag.Approved = Modal.Approved;
             return PartialView(Common_SPU.GetPJPEntries_Expense(Modal));
         }
+        public ActionResult ResumeReport(string src)
+        {
+            ViewBag.src = src;
+            string[] GetQueryString = ClsApplicationSetting.DecryptQueryString(src);
+            ViewBag.GetQueryString = GetQueryString;
+            ViewBag.MenuID = GetQueryString[0];
+            Tab.Approval Modal = new Tab.Approval();
+            Modal.Month = DateTime.Now.ToString("yyyy-MM");
+            return View(Modal);
+        }
+        public ActionResult _ResumeReport(string src, Tab.Approval Modal)
+        {
+            ViewBag.src = src;
+            string[] GetQueryString = ClsApplicationSetting.DecryptQueryString(src);
+            ViewBag.GetQueryString = GetQueryString;
+            ViewBag.MenuID = GetQueryString[0];
+            Modal.LoginID = LoginID;
+            return PartialView(Common_SPU.GetResumeReport(Modal));
+        }
     }
 }

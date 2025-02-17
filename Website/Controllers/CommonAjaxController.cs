@@ -166,6 +166,8 @@ namespace Website.Controllers
                     return PartialView("_MasterDetails_EMPTalentPool", Result);
                 case "dealerchangerequest":
                     return PartialView("_MasterDetails_DealerChangeRequest", Result);
+                case "workforce":
+                    return PartialView("_MasterDetails_WorkForce", Result);
                 default:
                     return PartialView(Result);
             }
@@ -191,6 +193,23 @@ namespace Website.Controllers
             Modal.IPAddress = IPAddress;
             Result = Common_SPU.GetDealerByRouteNumber(Modal);
             return Json(Result, JsonRequestBehavior.AllowGet);
+        }
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult GetEMPTalentByDoc(string src)
+        { 
+            GetResponse Modal = new GetResponse();
+            Requirement.Application.List Result = new Requirement.Application.List();
+            string[] GetQueryString = ClsApplicationSetting.DecryptQueryString(src);
+            ViewBag.MenuID = GetQueryString[0];
+            Modal.Doctype = GetQueryString[2];
+            Modal.LoginID = LoginID;
+            Modal.IPAddress = IPAddress;
+            Result = Common_SPU.GetEMPTalentByDoc(Modal);
+            return Json(Result, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetDealerDetailsByCodeJson(string DealerCode)
+        {
+            return Json(Common_SPU.GetDealerByCode(DealerCode), JsonRequestBehavior.AllowGet);
         }
     }
 }

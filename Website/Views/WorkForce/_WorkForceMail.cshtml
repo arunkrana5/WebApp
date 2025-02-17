@@ -1,0 +1,226 @@
+﻿@using System.Data
+@model  WorkForce_View
+
+<table role="presentation" width="100%" style="border-collapse: collapse; font-family: Arial, sans-serif;">
+    <tr>
+        <td align="center" style="padding: 20px;">
+            <a href="#ActionBtn#"
+               style="background-color: #007BFF;
+                      color: #ffffff;
+                      padding: 12px 24px;
+                      text-decoration: none;
+                      font-size: 16px;
+                      border-radius: 5px;
+                      display: inline-block;">
+                Action Button
+            </a>
+        </td>
+    </tr>
+</table>
+<table role="presentation" width="100%" style="border-collapse: collapse; border: 1px solid #ddd; font-family: Arial, sans-serif;">
+    <tr>
+        <td colspan="10" style="background-color: #004085; color: #ffffff; padding: 10px; font-size: 16px; text-align: center; font-weight: bold;">
+            Approval History
+        </td>
+    </tr>
+    <tr style="background-color: #e9ecef; font-weight: bold;">
+        <th colspan="2" style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">Level</th>
+        <th colspan="2" style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">Status</th>
+        <th colspan="2" style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">Remarks</th>
+        <th colspan="2" style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">Date</th>
+        <th colspan="2" style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">Name</th>
+    </tr>
+    @foreach (var item in Model.approvals)
+    {
+        <tr style="background-color: #f8f9fa;">
+            <td colspan="2" style="font-size: 14px; padding: 8px; border: 1px solid #ddd; text-align: center;">@item.ApprovedLevel</td>
+            <td colspan="2" style="font-size: 14px; padding: 8px; border: 1px solid #ddd; text-align: center;">@item.Status</td>
+            <td colspan="2" style="font-size: 14px; padding: 8px; border: 1px solid #ddd; text-align: center;">@item.ApprovedRemarks</td>
+            <td colspan="2" style="font-size: 14px; padding: 8px; border: 1px solid #ddd; text-align: center;">@item.CreatedDate</td>
+            <td colspan="2" style="font-size: 14px; padding: 8px; border: 1px solid #ddd; text-align: center;">@item.CreatedBy</td>
+        </tr>
+    }
+    <tr>
+        <td colspan="10" style="background-color: #004085; color: #ffffff; padding: 10px; font-size: 16px; text-align: center; font-weight: bold;">
+            Candidate Personal Data Field
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Doc No</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.DocNo</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Doc Date</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.DocDate.ToString("dd-MM-yyyy")</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Branch Code</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.BranchCode</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Project Code</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.ProjectCode</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Title</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.Title</td>
+    </tr>
+    <tr>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Name</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.Name</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Phone</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.Phone</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Email</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.EmailID</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Gender</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.Gender</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Marital Status</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.MaritalStatus</td>
+    </tr>
+    <tr>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Date of Birth</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@(Model.request.DOB.HasValue ? Model.request.DOB.Value.ToString("dd-MM-yyyy") : "N/A")</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Aadhar No</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.AadharNo</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Joining Date</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@(Model.request.DOJ.HasValue ? Model.request.DOJ.Value.ToString("dd-MM-yyyy") : "N/A")</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Last Company</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.LastCompany</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">State Code</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.StateCode</td>
+    </tr>
+    <tr>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Region</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.Region</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">City</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.City</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Expected Salary</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.ExpectedSalary</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Inhand Salary</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.InhandSalary</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Previous Salary (Inhand)</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.PreviousSalary_Inhand</td>
+    </tr>
+    <tr>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">T-Shirt Size</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.TshirtSize</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Total Experience</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.TotalExperience years</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Qualification</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.Qualification</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Last Company Designation</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.LastCompany_Designation</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Designation</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.Designation</td>
+    </tr>
+    <tr>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Department</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.Department</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Recruitment Type</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.RecruitementType</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Interview Date</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@(Model.request.InterviewDate.HasValue ? Model.request.InterviewDate.Value.ToString("dd-MM-yyyy") : "N/A")</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">ASM Name</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.ASMName</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">ASM Phone</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.ASM_Phone</td>
+    </tr>
+    <tr>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">MW Category</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.MWCategory</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Grade</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.Grade</td>
+    </tr>
+    <tr>
+        <td colspan="10" style="background-color: #004085; color: #ffffff; padding: 10px; font-size: 16px; text-align: center; font-weight: bold;">
+            Store Details
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Store Code</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.StoreCode</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Store Name</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.StoreName</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Store Contact</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.StoreContact</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Store Address</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.StoreAddress</td>
+    </tr>
+
+    <tr>
+        <td colspan="10" style="background-color: #004085; color: #ffffff; padding: 10px; font-size: 16px; text-align: center; font-weight: bold;">
+            Category
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Counter Sales Qty</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.TotalCounterSales_Qty</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Current Sales Qty</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.ClientCurrentSales_Qty</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Proposed Sales Qty</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.ProposedSales_Qty</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Product Display Qty</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.ClientProductDisplay_Qty</td>
+    </tr>
+    <tr>
+        <td colspan="10" style="background-color: #004085; color: #ffffff; padding: 10px; font-size: 16px; text-align: center; font-weight: bold;">
+            Primary Details
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Sales (Last 2nd Month)</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.Sales_Last2ndMonth</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Sales (Last 1st Month)</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.Sales_Last1stMonth</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Sales (Current Month)</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.Sales_CurrentMonth</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Sales (Current Inventory)</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.Sales_CurrentInventory</td>
+    </tr>
+    <tr>
+        <td colspan="10" style="background-color: #004085; color: #ffffff; padding: 10px; font-size: 16px; text-align: center; font-weight: bold;">
+            Sell out Plan for next 6 months
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Branch Name</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.SOP_BranchName</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Outlet Name</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.SOP_OutletName</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Outlet Location</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.SOP_OutletLocation</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">Current SOP Month</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.SOP_CurrentMonth</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">CMI Connect Code</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.CMIConnectCode</td>
+    </tr>
+    <tr>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">SOP Next Month 1</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.SOP_NextMonth1</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">SOP Next Month 2</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.SOP_NextMonth2</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">SOP Next Month 3</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.SOP_NextMonth3</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">SOP Next Month 4</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.SOP_NextMonth4</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">SOP Next Month 5</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.SOP_NextMonth5</td>
+    </tr>
+    <tr>        
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">SOP Next Month 6</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.SOP_NextMonth6</td>
+    </tr>
+    <tr>
+        <td colspan="10" style="background-color: #004085; color: #ffffff; padding: 10px; font-size: 16px; text-align: center; font-weight: bold;">
+            Sell out Report
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">SOR Target 1</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.SOR_Target1</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">SOR Target 2</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.SOR_Target2</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">SOR Target 3</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.SOR_Target3</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">SOR Target 4</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.SOR_Target4</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">SOR Target 5</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.SOR_Target5</td>
+    </tr>
+    <tr style="background-color: #ffffff;">        
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd; font-weight: bold; background-color: #e9ecef;">SOR Target 6</td>
+        <td style="font-size: 14px; padding: 8px; border: 1px solid #ddd;">@Model.request.SOR_Target6</td>
+    </tr>
+</table>

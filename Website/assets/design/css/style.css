@@ -5371,7 +5371,7 @@ a.card-tabs-item.active {
 
 .dropdown-item.user {
     font-size: 16px;
-    padding: 5px;
+    padding: 0px;
 }
 
 .user-semi-title {
@@ -5386,7 +5386,7 @@ a.card-tabs-item.active {
 .dropdown-item {
     display: block;
     width: 100%;
-/*    padding: 0.5rem 1.5rem;*/
+    padding: 0.25rem 1rem;
     clear: both;
     font-weight: 400;
     color: #212529;
@@ -13689,7 +13689,7 @@ video {
 /* ###### custom ####### */
 body *::-webkit-scrollbar {
     width: 5px;
-    height: 5px;
+    height: 10px;
     transition: .3s background;
 }
 
@@ -36870,13 +36870,16 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
 /*    color: #475b74 !important;*/
 }
 
-/*---------------------
-
-
-
-
-
-*/
+.counter-section {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 5px 5px 5px 5px;
+    background-image: linear-gradient(128.87deg, var(--lightshade) 14.05%, var(--darkshade) 89.3%);
+    margin-bottom: 20px;
+}
+.counter-section .mat-cards {
+    margin: 0;
+}
 
 
 /*---------------------------------------------------Trash--------------------------------------*/

@@ -123,8 +123,10 @@ namespace DataModal.Models
 
             public List<DropDownlist> InhouseList { get; set; }
             public List<DropDownlist> OtherList { get; set; }
+            [RegularExpression("^[0-9]+$", ErrorMessage = "Route Number must be numeric.")]
             public string RouteNumber { get; set; }
             public string VisitType { get; set; }
+            public bool IsHiringOpen { get; set; }
             public List<DropDownlist> VisitTypeList { get; set; }
         }
     }

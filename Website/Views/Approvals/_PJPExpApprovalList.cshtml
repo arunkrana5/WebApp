@@ -1,51 +1,51 @@
 ﻿@model IList<PJPExpenses.List>
 
-    <div class="table-responsive">
-        <table id="example" class="table table-bordered text-nowrap key-buttons">
-            <thead>
-                <tr>
-                    <th>S.No.</th>
-                    @if (ViewBag.Approved == 0)
-                    {
+<div class="table-responsive">
+    <table id="example" class="table table-bordered text-nowrap key-buttons">
+        <thead>
+            <tr>
+                <th>S.No.</th>
+                @if (ViewBag.Approved == 0)
+                {
                     <th>
                         <input type="checkbox" class="newwidth" id="checkAll" onclick="chkAll();" name="ChkAll" value="All" />
                         <label for="checkAll" style="color:white;">All&nbsp;&nbsp;&nbsp;</label>
                     </th>
-                    }
-                    <th>Visit_Date</th>
-                    <th>Image</th>
-                    <th>Exp Image</th>
-                    <th>BT_Code</th>
-                    <th>BT_Name</th>
-                    <th>Dealer_Name</th>
-                    <th>Dealer_Code</th>
-                    <th>Dealer_Type</th>
-                    <th>SSR_Name</th>
-                    <th>SSR_Code</th>
-                    <th>Region</th>
-                    <th>State</th>
-                    <th>City</th>
-                    <th>Area</th>
-                    <th>Purpose_Visit </th>
-                    <th>Expense Type</th>
-                    <th>Visit Type</th>
-                    <th>Amount</th>
-                    <th>Remarks</th>
-                    <th>Contact_Person_Name</th>
-                    <th>Contact_Person_Phone</th>
-                    @if (ViewBag.Approved > 0)
-                    {
+                }
+                <th>Visit_Date</th>
+                <th>Image</th>
+                <th>Exp Image</th>
+                <th>BT_Code</th>
+                <th>BT_Name</th>
+                <th>Dealer_Name</th>
+                <th>Dealer_Code</th>
+                <th>Dealer_Type</th>
+                <th>SSR_Name</th>
+                <th>SSR_Code</th>
+                <th>Region</th>
+                <th>State</th>
+                <th>City</th>
+                <th>Area</th>
+                <th>Purpose_Visit </th>
+                <th>Expense Type</th>
+                <th>Visit Type</th>
+                <th>Amount</th>
+                <th>Remarks</th>
+                <th>Contact_Person_Name</th>
+                <th>Contact_Person_Phone</th>
+                @if (ViewBag.Approved > 0)
+                {
                     <th>Approved_Status</th>
                     <th>Approved_Remarks</th>
                     <th>Approved_by</th>
                     <th>Approved_Date</th>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                @{ int Count = 0;}
-                @foreach (PJPExpenses.List item in Model)
-                {
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @{ int Count = 0;}
+            @foreach (PJPExpenses.List item in Model)
+            {
                 Count++;
                 <tr>
                     <td>
@@ -54,42 +54,42 @@
                     </td>
 
                     @*@if (ViewBag.Approved == 0 && ClsApplicationSetting.GetSessionValue("Modify") == "True")
-                    {*@
+                        {*@
                     @if (ViewBag.Approved == 0)
                     {
-                    <td>
+                        <td>
 
-                        <input type="hidden" name="PJPEntryID" value="@item.PJPEntryID" />
-                        <input type="hidden" name="PJPExpID" value="@item.PJPExpensesID" />
+                            <input type="hidden" name="PJPEntryID" value="@item.PJPEntryID" />
+                            <input type="hidden" name="PJPExpID" value="@item.PJPExpensesID" />
 
-                        <input type="checkbox" class="newwidth Chksingle" id="checkAll_@item.PJPExpensesID" name="Chksingle" value="@item.PJPExpensesID" />
-                        <label for="checkAll_@item.PJPExpensesID"></label>
-                    </td>
+                            <input type="checkbox" class="newwidth Chksingle" id="checkAll_@item.PJPExpensesID" name="Chksingle" value="@item.PJPExpensesID" />
+                            <label for="checkAll_@item.PJPExpensesID"></label>
+                        </td>
                     }
                     @*}*@
                     <td>
                         @*<a title="View" onclick="ViewPJPEntry(this);" data-toggle='tooltip'>
-                            *@
-                            @item.VisitDate
-                            @*
-                        </a>*@
+                        *@
+                        @item.VisitDate
+                        @*
+                            </a>*@
 
 
                     </td>
                     <td>
                         @if (!string.IsNullOrEmpty(item.Image))
                         {
-                        <a href="@item.Image" target="_blank">
-                            <img class="img-responsive listimage" src="@item.Image" />
-                        </a>
+                            <a href="@item.Image" target="_blank">
+                                <img class="img-responsive listimage" src="@item.Image" />
+                            </a>
                         }
                     </td>
                     <td>
                         @if (!string.IsNullOrEmpty(item.ExpImage))
                         {
-                        <a href="@item.Image" target="_blank">
-                            <img class="img-responsive listimage" src="@item.ExpImage" />
-                        </a>
+                            <a href="@item.ExpImage" target="_blank">
+                                <img class="img-responsive listimage" src="@item.ExpImage" />
+                            </a>
                         }
                     </td>
                     <td>@item.BTCode</td>
@@ -112,24 +112,24 @@
                     <td>@item.ContactPerson_Phone</td>
                     @if (ViewBag.Approved > 0)
                     {
-                    <td>@item.ApprovedStatus</td>
-                    <td>@item.ApprovedRemarks</td>
-                    <td>@item.Approvedby</td>
-                    <td>@item.ApprovedDate</td>
+                        <td>@item.ApprovedStatus</td>
+                        <td>@item.ApprovedRemarks</td>
+                        <td>@item.Approvedby</td>
+                        <td>@item.ApprovedDate</td>
 
                     }
                 </tr>
-                }
-            </tbody>
-        </table>
-        <div class="col-md-12 d-flex justify-content-end  my-3">
-            <button type="button" class="btn apr-btn btnProcess pull-right" onclick="ShowApprovalBox(this)" name="Command" value="1">
-                <i class="fa fa-check" aria-hidden="true"></i>
-                Approve
-            </button>
-            <button type="button" class="btn rct-btn btnProcess pull-right" onclick="ShowApprovalBox(this)" name="Command" value="2">
-                <i class="fa fa-ban" aria-hidden="true"></i>
-                Reject
-            </button>
-        </div>
+            }
+        </tbody>
+    </table>
+    <div class="col-md-12 d-flex justify-content-end  my-3">
+        <button type="button" class="btn apr-btn btnProcess pull-right" onclick="ShowApprovalBox(this)" name="Command" value="1">
+            <i class="fa fa-check" aria-hidden="true"></i>
+            Approve
+        </button>
+        <button type="button" class="btn rct-btn btnProcess pull-right" onclick="ShowApprovalBox(this)" name="Command" value="2">
+            <i class="fa fa-ban" aria-hidden="true"></i>
+            Reject
+        </button>
     </div>
+</div>

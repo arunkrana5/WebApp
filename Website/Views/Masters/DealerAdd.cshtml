@@ -164,6 +164,14 @@
 new { @class = "form-control mb-0  applyselect" })
                                 @Html.ValidationMessageFor(model => model.VisitType, "", new { @class = "text-danger" })
                             </div>
+                            <div class="col-lg-3 form-group">
+                                <label>Hiring Open  <sup>*</sup></label>
+                                @Html.HiddenFor(model => model.IsHiringOpen)
+                                <div class="can-toggle">
+                                    <input type="checkbox" onclick="fnIsHiringOpen();" id="chk_IsHiringOpen" @(Model.IsHiringOpen ? "checked" : "")>
+                                    <label for="chk_IsHiringOpen"></label>
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-3 form-group">
@@ -395,7 +403,15 @@ new { @class = "form-control mb-0  applyselect" })
 @section scripts    {
     @System.Web.Optimization.Scripts.Render("~/bundle/unobtrusivejs")
     <script>
-
+        function fnIsHiringOpen() {
+            var checkAll = $("#chk_IsHiringOpen").is(":checked");
+            if (checkAll) {
+                $("#IsHiringOpen").val(true);
+            }
+            else {
+                $("#IsHiringOpen").val(false);
+            }
+        }
         function FillState() {
             var ID = $("#RegionID").find("option:selected").val();
             if (ID != '') {

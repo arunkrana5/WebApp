@@ -1,11 +1,11 @@
 ﻿@model List<Attendance_Log.Daily>
 <div class="table-responsive">
-    <table id="ExportTable" class="table table-bordered text-nowrap table-responsive key-buttons inoutrpt" style="height:330px; overflow-y:scroll">
+    <table id="example" class="table table-bordered text-nowrap table-responsive key-buttons inoutrpt" style="height:330px; overflow-y:scroll">
         <thead>
             <tr class="doubleH">
                 <th colspan="20"></th>
-                <th colspan="4">IN</th>
-                <th colspan="4">OUT</th>
+                <th colspan="6" style="color:white;">IN</th>
+                <th colspan="6" style="color:white;">OUT</th>
             </tr>
             <tr>
                 <th>S No.</th>
@@ -34,9 +34,13 @@
                 <th>Time</th>
                 <th>Image</th>
                 <th>Distance</th>
+                <th>Lattidute</th>
+                <th>Longitude</th>
                 <th>Time</th>
                 <th>Image</th>
                 <th>Distance</th>
+                <th>Lattidute</th>
+                <th>Longitude</th>
             </tr>
         </thead>
         <tbody>
@@ -53,6 +57,7 @@
                             <img class="img-responsive listimage" src="@item.EMPImageURL" />
                         </a>
                     }
+
 
                 </td>
                 <td>@item.EMPCode</td>
@@ -87,6 +92,8 @@
                 </td>
                 <td>@item.In_PunchDistance</td>
 
+                <td>@item.In_Lat</td>
+                <td>@item.In_Long</td>
                 <td>@item.Out_Time</td>
                 <td>
                     @if (!string.IsNullOrEmpty(item.Out_Image))
@@ -97,6 +104,8 @@
                     }
                 </td>
                 <td>@item.Out_PunchDistance</td>
+                <td>@item.Out_Lat</td>
+                <td>@item.Out_Long</td>
             </tr>
             }
         </tbody>

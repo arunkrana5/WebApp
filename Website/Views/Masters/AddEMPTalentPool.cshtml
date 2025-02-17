@@ -85,7 +85,8 @@
                     </div>
                     <div class="col-lg-2 form-group">
                         <label>Qualification   </label>
-                        @Html.TextBoxFor(model => model.Qualification, new { @class = "form-control" })
+                        @Html.DropDownListFor(n => n.Qualification, new SelectList(Model.QualficationList, "Name", "Name", Model.Qualification), "Select",
+                   new { @class = "form-control  applyselect" })
                         @Html.ValidationMessageFor(model => model.Qualification, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -101,8 +102,9 @@
 
 
                     <div class="col-lg-2 form-group">
-                        <label>Total Experience   </label>
-                        @Html.TextBoxFor(model => model.TotalExperience, new { @class = "form-control" })
+                        <label>Total Experience(In Months)   </label>
+                        @Html.DropDownListFor(n => n.TotalExperience, new SelectList(Model.ExperienceList, "Name", "Name", Model.TotalExperience), "Select",
+new { @class = "form-control  applyselect" })
                         @Html.ValidationMessageFor(model => model.TotalExperience, "", new { @class = "text-danger" })
                     </div>
 

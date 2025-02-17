@@ -604,8 +604,18 @@ namespace Website.Controllers
             Modal.ID = ID;
             Modal.LoginID = LoginID;
             Modal.IPAddress = IPAddress;
-            DataTable dt = Common_SPU.GetMiscellaneousReports(Modal).Tables[0];
-            var workbook = export.GetDataTable_Workbook(dt, ViewBag.Name);
+            DataSet Data = Common_SPU.GetMiscellaneousReports(Modal);
+            IWorkbook workbook = new XSSFWorkbook();
+            if (Data != null)
+            {
+                if (Data.Tables.Count > 0)
+                {
+                    for (int i = 0; i < Data.Tables.Count; i++)
+                    {
+                        export.GetWorkbookSheet_Common(workbook, Data.Tables[i], i.ToString());
+                    }
+                }
+            }
             using (var exportData = new MemoryStream())
             {
                 Response.Clear();
@@ -839,8 +849,8 @@ namespace Website.Controllers
             string[] GetQueryString = ClsApplicationSetting.DecryptQueryString(src);
             ViewBag.GetQueryString = GetQueryString;
             ViewBag.MenuID = GetQueryString[0];
-            DataSet ds= export.GetLogin_Users_Export(getResponse);
-            var workbook = export.GetDataTable_Workbook_Common(ds.Tables[0],"LoginUsers");
+            DataSet ds = export.GetLogin_Users_Export(getResponse);
+            var workbook = export.GetDataTable_Workbook_Common(ds.Tables[0], "LoginUsers");
             using (var exportData = new MemoryStream())
             {
                 Response.Clear();
@@ -891,7 +901,7 @@ namespace Website.Controllers
             ViewBag.Month = GetQueryString[2];
             Tab.Approval Modal = new Tab.Approval();
             Modal.LoginID = LoginID;
-            Modal.IPAddress = IPAddress; 
+            Modal.IPAddress = IPAddress;
             Modal.StartDate = ViewBag.Month;
             IWorkbook workbook = new XSSFWorkbook();
             DataSet Data = Common_SPU.GetPJPReport_Export(Modal);
@@ -918,7 +928,7 @@ namespace Website.Controllers
             ViewBag.Month = GetQueryString[2];
             Tab.Approval Modal = new Tab.Approval();
             Modal.LoginID = LoginID;
-            Modal.IPAddress = IPAddress; 
+            Modal.IPAddress = IPAddress;
             Modal.StartDate = ViewBag.Month;
             IWorkbook workbook = new XSSFWorkbook();
             DataSet Data = Common_SPU.GetMyPJPPlanLists_Export(Modal);
@@ -1046,6 +1056,52 @@ namespace Website.Controllers
                 Response.End();
             }
 
+        }
+        public void RequirementList_Export(string src)
+        {
+            ViewBag.src = src;
+            string[] GetQueryString = ClsApplicationSetting.DecryptQueryString(src);
+            ViewBag.GetQueryString = GetQueryString;
+            Tab.Approval Modal = new Tab.Approval();
+            Modal.LoginID = LoginID;
+            Modal.IPAddress = IPAddress;
+            IWorkbook workbook = new XSSFWorkbook();
+            DataSet Data = Common_SPU.GetRequirementRequest_Export(Modal);
+            export.GetCommonSheet(workbook, Data.Tables[0], "RequirementRequest");
+
+            using (var exportData = new MemoryStream())
+            {
+                Response.Clear();
+                workbook.Write(exportData);
+                string docName = "RequirementRequest_" + DateTime.Now.ToString("dd-MMM-yyyy");
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("Content-Disposition", string.Format("attachment;filename={0}", docName + ".xlsx"));
+                Response.BinaryWrite(exportData.ToArray());
+                Response.End();
+            }
+
+        }
+        public void ResumeReport_Export(string src)
+        {
+            ViewBag.src = src;
+            string[] GetQueryString = ClsApplicationSetting.DecryptQueryString(src);
+            ViewBag.GetQueryString = GetQueryString;
+            Tab.Approval Modal = new Tab.Approval();
+            Modal.LoginID = LoginID;
+            Modal.IPAddress = IPAddress;
+            IWorkbook workbook = new XSSFWorkbook();
+            DataSet Data = Common_SPU.GetResumeReport_Export(Modal);
+            export.GetCommonSheet(workbook, Data.Tables[0], "ResumeReport");
+            using (var exportData = new MemoryStream())
+            {
+                Response.Clear();
+                workbook.Write(exportData);
+                string docName = "ResumeReport_" + DateTime.Now.ToString("dd-MMM-yyyy");
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("Content-Disposition", string.Format("attachment;filename={0}", docName + ".xlsx"));
+                Response.BinaryWrite(exportData.ToArray());
+                Response.End();
+            }
         }
     }
 }

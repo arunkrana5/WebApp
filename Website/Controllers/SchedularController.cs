@@ -188,24 +188,47 @@ namespace Website.Controllers
                     {
                         if (Data.Tables[7] != null && Data.Tables[7].Rows.Count > 0)
                         {
-                            export.GetTLTrackerSheet(workbook, Data.Tables[7], "TL Tracker");
+                            export.GetWorkbookSheet_Shorted(workbook, Data.Tables[7], "TL Tracker");
                         }
                     }
                     if (Data.Tables.Count > 8 && Data.Tables[0].Rows[0]["CompanyCode"].ToString().ToLower() == "blue star")
                     {
                         if (Data.Tables[8] != null && Data.Tables[8].Rows.Count > 0)
                         {
-                            export.GetWorkbookSheet(workbook, Data.Tables[8], "PJP Entry Reports");
+                            export.GetWorkbookSheet_Shorted(workbook, Data.Tables[8], "PJP Entry Reports");
                         }
                     }
+                    //new pjp plan
+
                     if (Data.Tables.Count > 9 && Data.Tables[0].Rows[0]["CompanyCode"].ToString().ToLower() == "blue star")
                     {
                         if (Data.Tables[9] != null && Data.Tables[9].Rows.Count > 0)
                         {
-                            export.GetWorkbookSheet(workbook, Data.Tables[9], "Team Mapping Report");
+                            export.GetWorkbookSheet_Shorted(workbook, Data.Tables[9], "PJP Plan Report");
                         }
                     }
-                    
+
+                    if (Data.Tables.Count > 10 && Data.Tables[0].Rows[0]["CompanyCode"].ToString().ToLower() == "blue star")
+                    {
+                        if (Data.Tables[10] != null && Data.Tables[10].Rows.Count > 0)
+                        {
+                            export.GetWorkbookSheet(workbook, Data.Tables[10], "Team Mapping Report");
+                        }
+                    }
+
+                    if (Data.Tables[0].Rows[0]["CompanyCode"].ToString().ToLower() == "ogeneral" && Usermodal.UserType == "NSM")
+                    {
+                        var saleSummary = report.spu_GetSalesSummary(GetModal);
+                        if (saleSummary != null && saleSummary.Tables.Count > 0)
+                        {
+                            if (saleSummary.Tables[0] != null)
+                                export.GetWorkbookSheet(workbook, saleSummary.Tables[0], "ISD Sales Summary Product Wise");
+
+                            if (saleSummary.Tables[1] != null)
+                                export.GetWorkbookSheet(workbook, saleSummary.Tables[1], "ISD Sales Summary Region Wise");
+                        }
+                    }
+
                     string FileName = "AutoReports_" + Usermodal.UserID.Replace(" ", "_") + ".xlsx";
                     if (System.IO.File.Exists(Path.Combine(PhysicalPath, FileName)))
                     {
@@ -288,9 +311,13 @@ namespace Website.Controllers
                         {
                             export.GetWorkbookSheet(workbook, Data.Tables[5], "Employee Master");
                         }
-                        if (Data.Tables[6] != null && Data.Tables[5].Rows.Count > 0)
+                        if (Data.Tables[6] != null && Data.Tables[6].Rows.Count > 0)
                         {
                             export.GetWorkbookSheet(workbook, Data.Tables[6], "Dealer Master");
+                        }
+                        if (Data.Tables[7] != null && Data.Tables[7].Rows.Count > 0)
+                        {
+                            export.GetWorkbookSheet(workbook, Data.Tables[7], "Employees Target");
                         }
                     }
                     string PhysicalPath = ClsApplicationSetting.GetPhysicalPath("ISDSummaryReports");
@@ -305,7 +332,7 @@ namespace Website.Controllers
                         workbook.Write(stream);
                         stream.Close();
                     }
-                   
+
                     smtpMail.AttachmenPath = FilePath;
                     foreach (DataRow item in Data.Tables[1].Rows)
                     {
@@ -448,5 +475,7 @@ namespace Website.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.NotFound);
 
         }
+
+       
     }
 }

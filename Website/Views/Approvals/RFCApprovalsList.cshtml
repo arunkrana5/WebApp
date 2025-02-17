@@ -27,19 +27,17 @@
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-12 form-group">
                                     <label>EMP List</label>
-                                   
-                                        @Html.DropDownListFor(model => model.EMPID, new SelectList(ViewBag.EMPList, "ID", "Name"), "Select All",
-                                                 new { @class = "form-control applyselect" })
 
-                                   
+                                    @Html.DropDownListFor(model => model.EMPID, new SelectList(ViewBag.EMPList, "ID", "Name"), "Select All",
+                                             new { @class = "form-control applyselect" })
+
+
                                     @Html.ValidationMessageFor(model => model.EMPID, "", new { @class = "text-danger" })
                                 </div>
-                                <div class="col-sm-2 form-group SSr-fC">
+                                <div class="col-sm-2 form-group SSr-fC roleuserdropdown">
                                     <label>User Type <sup>*</sup></label>
-                                    <select id="@Html.IdFor(x=>x.Doctype)" name="@Html.NameFor(x=>x.Doctype)" class="applyselect form-control">
-                                        <option value="SSR">SSR</option>
-                                        <option value="TL">TL</option>
-                                    </select>
+                                    @Html.DropDownListFor(x => Model.Doctype, new SelectList(ViewBag.RoleDropdownList, "Name", "Name", Model.Doctype),
+new { @class = "form-control  applyselect" })
                                 </div>
 
                                 <div class="col-sm-2 form-group d-flex align-items-end">

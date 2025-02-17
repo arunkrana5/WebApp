@@ -106,5 +106,13 @@ namespace DataModal.ModelsMasterHelper
         DealerRequest.Add GetDealerRequests(GetResponse Modal);
         PostResponse fnSetDealerRequests(DealerRequest.Add model);
         DealerSearch GetDealerSearchFilter(GetResponse modal);
+        List<Banner.List> GetBannerList(GetResponse Modal);
+        Banner.Add GetBanner(GetResponse Modal);
+        PostResponse fnSetBanner(Banner.Add modal);
+        ProductSalesGraph GetSalesGraphData(GetGraphResponse Modal);
+        ProductSalesGraph GetSalesGrowthData(GetGraphResponse Modal);
+        ProductSalesGraph GetBranchWiseSales(GetGraphResponse Modal);
+        ProductSalesGraph GetISDCountGraph(GetGraphResponse Modal);
+        ProductSalesGraph GetGraphFilterData(GetDropDownResponse Modal);
     }
 }

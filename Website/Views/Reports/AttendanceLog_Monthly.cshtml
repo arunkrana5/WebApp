@@ -26,14 +26,14 @@
                         @Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })
                     </div>
 
-                    <div class="col-sm-3 form-group">
+                    <div class="col-sm-3 form-group roleuserdropdown">
                         <label>User Type <sup>*</sup></label>
-                        @Html.DropDownListFor(x => Model.RoleID, new SelectList(ViewBag.RoleDropdownList, "ID", "Name", Model.RoleID), "Select",
- new { @class = "form-control  applyselect  ddleaveType" })
+                        @Html.DropDownListFor(x => Model.RoleID, new SelectList(ViewBag.RoleDropdownList, "ID", "Name", Model.RoleID),
+ new { @class = "form-control  applyselect " })
                     </div>
                     <div class="col-sm-2 form-group d-flex align-items-end pt-1">
                         <label class="small">&nbsp;</label>
-                        <button type="submit" id="btnSubmit" name="Command" value="Add" class="button ">
+                        <button type="submit" id="btnSearch" name="Command" value="Add" class="button ">
                             <span><img src="~/assets/design/images/png/magnifying-glass.png" /></span>
                         </button>
                     </div>
@@ -62,9 +62,11 @@
 
         <script>
 
+            $(document).ready(function () {
+                $("#btnSearch").click();
+            });
 
             function ListHeaderExport() {
-                ShowLoadingDialog();
             var RoleID = $("#RoleID").find("option:selected").val();
             var url = "/Export/AttendanceLog_Monthly_Export";
             var src = EncryptJSON(@ViewBag.MenuID+"*" + "/Export/AttendanceLog_Monthly_Export*" + $('#Month').val() + "*" + RoleID)
@@ -80,7 +82,7 @@
 
             $("#TargetDiv").empty();
             $("#TargetDiv").html(args);
-            ExportTableDatatableScripts();
+            DatatableScripts();
 
         }
 
@@ -88,7 +90,7 @@
             $("#btnSearch").click();
         });
 
-        $('#Doctype').bind("change", function () {
+            $('#RoleID').bind("change", function () {
             $("#btnSearch").click();
         });
         </script>

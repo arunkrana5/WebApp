@@ -39,8 +39,9 @@ namespace DataModal.ModelsMasterHelper
         List<AttendenceChangeLog> GetAttendanceChangeLog(JqueryDatatableParam Modal);
         List<PJPEntry.List> GetPJPReport(JqueryDatatableParam Modal);
 
-        List<PJPEntry.List> GetPJPReports(JqueryDatatableParam Modal);
+        List<PJPEntries.List> GetPJPReports(JqueryDatatableParam Modal);
 
         DataSet GetPJPEntriesReport(Tab.Approval Modal);
+        DataSet spu_GetSalesSummary(Tab.Approval Modal);
     }
 }

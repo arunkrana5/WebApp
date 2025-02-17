@@ -40,7 +40,7 @@ namespace DataModal.ModelsMaster
             }
             return result;
         }
-        public List<Requirement.RequestList> GetRequirement_MyRequest(Tab.Approval Modal)
+        public List<Requirement.RequestList> GetRequirement_MyRequest(JqueryDatatableParam Modal)
         {
 
             List<Requirement.RequestList> result = new List<Requirement.RequestList>();
@@ -50,6 +50,11 @@ namespace DataModal.ModelsMaster
                 {
                     int commandTimeout = 0;
                     var param = new DynamicParameters();
+                    param.Add("@start", dbType: DbType.Int32, value: Modal.start);
+                    param.Add("@length ", dbType: DbType.Int32, value: Modal.length);
+                    param.Add("@SearchText", dbType: DbType.String, value: Modal.SearchText);
+                    param.Add("@sortColumn", dbType: DbType.Int32, value: Modal.sortColumn);
+                    param.Add("@sortOrder", dbType: DbType.String, value: Modal.sortOrder);
                     param.Add("@Approved", dbType: DbType.Int64, value: Modal.Approved, direction: ParameterDirection.Input);
                     param.Add("@LoginID", dbType: DbType.Int64, value: Modal.LoginID, direction: ParameterDirection.Input);
                     DBContext.Open();
@@ -57,7 +62,6 @@ namespace DataModal.ModelsMaster
                     {
                         result = reader.Read<Requirement.RequestList>().ToList();
                     }
-
                     DBContext.Close();
                 }
             }
@@ -90,19 +94,20 @@ namespace DataModal.ModelsMaster
                         }
                         if (!reader.IsConsumed)
                         {
-                            result.RegionList = reader.Read<DropDownlist>().ToList();
-                        }
-                        if (!reader.IsConsumed)
-                        {
                             result.ProductTypeList = reader.Read<DropDownlist>().ToList();
                         }
                         if (!reader.IsConsumed)
                         {
                             result.REC_TargetList = reader.Read<Requirement.REC_Target>().ToList();
                         }
-                        result.StateList = new List<DropDownlist>();
-                        result.CityList = new List<DropDownlist>();
-                        result.BranchList = new List<DropDownlist>();
+                        if (!reader.IsConsumed)
+                        {
+                            result.HiredForList = reader.Read<DropDownlist>().ToList();
+                        }
+                        if (!reader.IsConsumed)
+                        {
+                            result.AssignToList = reader.Read<DropDownlist>().ToList();
+                        }
                         result.DealerList = new List<DropDownlist>();
                         if (result.ProductTypeList.Count > 0 && result.REC_TargetList.Count == 0)
                         {
@@ -139,21 +144,15 @@ namespace DataModal.ModelsMaster
                         SqlDataAdapter da = new SqlDataAdapter();
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.Add("@ReqID", SqlDbType.Int).Value = modal.ReqID ?? 0;
+                        command.Parameters.Add("@HiredFor", SqlDbType.VarChar).Value = modal.HiredFor ?? "";
                         command.Parameters.Add("@HiredBy", SqlDbType.VarChar).Value = modal.HiredBy ?? "";
                         command.Parameters.Add("@RequirementType", SqlDbType.VarChar).Value = modal.RequirementType ?? "";
-                        command.Parameters.Add("@RegionID", SqlDbType.Int).Value = modal.RegionID ?? 0;
-                        command.Parameters.Add("@StateID", SqlDbType.Int).Value = modal.StateID ?? 0;
-                        command.Parameters.Add("@CityID", SqlDbType.Int).Value = modal.CityID ?? 0;
-                        command.Parameters.Add("@BranchID", SqlDbType.Int).Value = modal.BranchID ?? 0;
-                        command.Parameters.Add("@DealerID", SqlDbType.Int).Value = modal.DealerID ?? 0;
-                        command.Parameters.Add("@Potential", SqlDbType.Int).Value = modal.Potential ?? 0;
-                        command.Parameters.Add("@CandidateName", SqlDbType.VarChar).Value = modal.CandidateName ?? "";
-                        command.Parameters.Add("@CandidatePhone", SqlDbType.VarChar).Value = modal.CandidatePhone ?? "";
-                        command.Parameters.Add("@CandidateEmail", SqlDbType.VarChar).Value = modal.CandidateEmail ?? "";
+                        command.Parameters.Add("@BranchCode", SqlDbType.VarChar).Value = modal.BranchCode ?? "";
+                        command.Parameters.Add("@DealerCode", SqlDbType.VarChar).Value = modal.DealerCode ?? "";
+                        command.Parameters.Add("@AssignToID", SqlDbType.VarChar).Value = modal.AssignToID ?? 0;
                         command.Parameters.Add("@EntrySource", SqlDbType.VarChar).Value = EntrySource;
                         command.Parameters.Add("@createdby", SqlDbType.Int).Value = modal.LoginID;
                         command.Parameters.Add("@IPAddress", SqlDbType.VarChar).Value = modal.IPAddress;
-
                         string[] RemoveColomn = { "ProductType" };
                         command.Parameters.Add("@RequirementTarget", SqlDbType.Structured).Value = ClsCommon.ToDataTable(modal.REC_TargetList, RemoveColomn);
                         command.CommandTimeout = 0;
@@ -185,7 +184,7 @@ namespace DataModal.ModelsMaster
         }
 
 
-        public List<Requirement.RequestList> GetRequirement_RequestList(Tab.Approval Modal)
+        public List<Requirement.RequestList> GetRequirement_RequestList(JqueryDatatableParam Modal)
         {
 
             List<Requirement.RequestList> result = new List<Requirement.RequestList>();
@@ -195,6 +194,11 @@ namespace DataModal.ModelsMaster
                 {
                     int commandTimeout = 0;
                     var param = new DynamicParameters();
+                    param.Add("@start", dbType: DbType.Int32, value: Modal.start);
+                    param.Add("@length ", dbType: DbType.Int32, value: Modal.length);
+                    param.Add("@SearchText", dbType: DbType.String, value: Modal.SearchText);
+                    param.Add("@sortColumn", dbType: DbType.Int32, value: Modal.sortColumn);
+                    param.Add("@sortOrder", dbType: DbType.String, value: Modal.sortOrder);
                     param.Add("@Approved", dbType: DbType.Int64, value: Modal.Approved, direction: ParameterDirection.Input);
                     param.Add("@LoginID", dbType: DbType.Int64, value: Modal.LoginID, direction: ParameterDirection.Input);
                     DBContext.Open();
@@ -230,15 +234,14 @@ namespace DataModal.ModelsMaster
                         command.Parameters.Add("@ReqID", SqlDbType.Int).Value = modal.ReqID;
                         command.Parameters.Add("@Name", SqlDbType.VarChar).Value = modal.Name ?? "";
                         command.Parameters.Add("@Phone", SqlDbType.VarChar).Value = modal.Phone ?? "";
-                        command.Parameters.Add("@EmailID", SqlDbType.VarChar).Value = modal.EmailID ?? "";
-                        command.Parameters.Add("@Qualification", SqlDbType.VarChar).Value = modal.Qualification ?? "";
                         command.Parameters.Add("@PreviousCompany", SqlDbType.VarChar).Value = modal.PreviousCompany ?? "";
                         command.Parameters.Add("@Experience", SqlDbType.VarChar).Value = modal.Experience ?? "";
                         command.Parameters.Add("@Salary", SqlDbType.Decimal).Value = modal.Salary ?? 0;
-                        command.Parameters.Add("@AttachID", SqlDbType.Int).Value = modal.AttachID;
+                        command.Parameters.Add("@FileName", SqlDbType.VarChar).Value = modal.FileName ?? "";
                         command.Parameters.Add("@EntrySource", SqlDbType.VarChar).Value = EntrySource;
                         command.Parameters.Add("@createdby", SqlDbType.Int).Value = modal.LoginID;
                         command.Parameters.Add("@IPAddress", SqlDbType.VarChar).Value = modal.IPAddress;
+                        command.Parameters.Add("@ExpectedSalary", SqlDbType.Decimal).Value = modal.ExpectedSalary;
                         command.CommandTimeout = 0;
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -328,7 +331,7 @@ namespace DataModal.ModelsMaster
             return result;
         }
 
-        public PostResponse fnSetRequirementApplication_Approved(long ReqID, long ApplicationID, int Approved, string ApprovedRemarks, string FinalRemarks, int IsFinalSubmit, long LoginID, string IPAddress)
+        public PostResponse fnSetRequirementApplication_Approved(long ReqID, long ApplicationID, int Approved, string ApprovedRemarks,string Phone,string EmailID,decimal NetPay, string DOJ, string FinalRemarks, int IsFinalSubmit, long LoginID, string IPAddress)
         {
             PostResponse Result = new PostResponse();
             using (SqlConnection con = new SqlConnection(ClsCommon.ConnectionString()))
@@ -344,6 +347,10 @@ namespace DataModal.ModelsMaster
                         command.Parameters.Add("@ApplicationID", SqlDbType.VarChar).Value = @ApplicationID;
                         command.Parameters.Add("@Approved", SqlDbType.Int).Value = Approved;
                         command.Parameters.Add("@ApprovedRemarks", SqlDbType.VarChar).Value = ApprovedRemarks ?? "";
+                        command.Parameters.Add("@Phone", SqlDbType.VarChar).Value = Phone ?? "";
+                        command.Parameters.Add("@EmailID", SqlDbType.VarChar).Value = EmailID ?? "";
+                        command.Parameters.Add("@NetPay", SqlDbType.Decimal).Value = NetPay;
+                        command.Parameters.Add("@DOJ", SqlDbType.VarChar).Value = DOJ ?? "";
                         command.Parameters.Add("@FinalRemarks", SqlDbType.VarChar).Value = FinalRemarks ?? "";
                         command.Parameters.Add("@IsFinalSubmit", SqlDbType.Int).Value = IsFinalSubmit;
                         command.Parameters.Add("@createdby", SqlDbType.Int).Value = LoginID;
@@ -377,7 +384,7 @@ namespace DataModal.ModelsMaster
         }
 
 
-       
+
 
     }
 }

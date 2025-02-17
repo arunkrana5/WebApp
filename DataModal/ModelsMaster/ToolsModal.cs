@@ -2,13 +2,15 @@
 using DataModal.CommanClass;
 using DataModal.Models;
 using DataModal.ModelsMasterHelper;
-
+using ExcelDataReader;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
+using System.Web;
 
 namespace DataModal.ModelsMaster
 {
@@ -905,9 +907,284 @@ namespace DataModal.ModelsMaster
             }
             return Result;
         }
+        public List<ManageActivities.ImportLeaveBalance> GetLeaveBalanceImportList(GetResponse modal)
+        {
+            List<ManageActivities.ImportLeaveBalance> result = new List<ManageActivities.ImportLeaveBalance>();
+            try
+            {
+                using (IDbConnection DBContext = new SqlConnection(ConnectionStrings))
+                {
+                    var param = new DynamicParameters();
+                    DBContext.Open();
+                    param.Add("@Date", dbType: DbType.String, value: modal.Date, direction: ParameterDirection.Input);
+                    param.Add("@LoginID", dbType: DbType.Int32, value: modal.LoginID, direction: ParameterDirection.Input);
+                    using (var reader = DBContext.QueryMultiple("spu_GetLeaveBalanceImportList", param: param, commandType: CommandType.StoredProcedure))
+                    {
+                        result = reader.Read<ManageActivities.ImportLeaveBalance>().ToList();
+                    }
+                    DBContext.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Common_SPU.LogError("Error during spu_GetLeaveBalanceImportList. The query was executed :", ex.ToString(), "spu_GetLeaveBalanceImportList()", "ToolsModal", "ToolsModal", modal.LoginID, modal.IPAddress);
+
+            }
+            return result;
+        }
+        public PostResponse LeaveBalanceImport_UploadData(HttpPostedFileBase file, GetResponse getResponse)
+        {
+            PostResponse Response = new PostResponse();
+            DataSet ResultDataSet = default(DataSet);
+            try
+            {
+                Stream stream = file.InputStream;
+                IExcelDataReader reader = null;
+                if (file.FileName.EndsWith(".xls"))
+                {
+                    reader = ExcelReaderFactory.CreateBinaryReader(stream);
+                }
+                else if (file.FileName.EndsWith(".xlsx"))
+                {
+                    reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+                }
+                else if (file.FileName.EndsWith(".csv"))
+                {
+                    reader = ExcelReaderFactory.CreateCsvReader(stream);
+                }
+                ResultDataSet = reader.AsDataSet(new ExcelDataSetConfiguration()
+                {
+                    ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                    {
+                        UseHeaderRow = true
+                    }
+                });
+                reader.Close();
+
+                if (ResultDataSet != null)
+                {
+                    DataTable dtCloned = ResultDataSet.Tables[0].Clone();
+                    DataColumnCollection columns = ResultDataSet.Tables[0].Columns; 
+                    for (int i = 0; i < dtCloned.Columns.Count; i++)
+                    {
+                        if (CONSTANT.LeaveBalanceImport_Column[i].ToLower() != dtCloned.Columns[i].ColumnName.ToLower())
+                        {
+                            Response.Status = false;
+                            Response.SuccessMessage = "we need " + CONSTANT.DealerImport_Column.Count + " column must be same as given template. Found error in " + dtCloned.Columns[i].ColumnName + "!";
+                            return Response;
+                        }
+                    }
+                    foreach (DataRow row in ResultDataSet.Tables[0].Rows)
+                    { 
+                        dtCloned.ImportRow(row);
+                    }
+                    if (dtCloned != null)
+                    {
+                        dtCloned.Columns.Add("Remarks", typeof(string)).Expression = "'Draft'";
+                        dtCloned.Columns.Add("CreatedBy", typeof(string)).Expression = "'" + getResponse.LoginID + "'";
+                        dtCloned.Columns.Add("CreatedDate", typeof(string)).Expression = "'" + DateTime.Now + "'";
+                        dtCloned.Columns.Add("IPAddress", typeof(string)).Expression = "'" + getResponse.IPAddress + "'";
+                        dtCloned.AcceptChanges();
+                        using (SqlConnection con = new SqlConnection(ClsCommon.ConnectionString()))
+                        {
+                            using (SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con))
+                            {
+                                try
+                                {
+                                    sqlBulkCopy.DestinationTableName = "dbo.LeaveBalance_Import";
+                                    foreach (var item in CONSTANT.LeaveBalanceImport_Column)
+                                    {
+                                        sqlBulkCopy.ColumnMappings.Add(item.ToString(), item.ToString());
+                                    }
+                                    sqlBulkCopy.ColumnMappings.Add("Remarks", "Remarks");
+                                    sqlBulkCopy.ColumnMappings.Add("CreatedBy", "CreatedBy");
+                                    sqlBulkCopy.ColumnMappings.Add("CreatedDate", "CreatedDate");
+                                    sqlBulkCopy.ColumnMappings.Add("IPAddress", "IPAddress");
+
+                                    con.Open();
+                                    sqlBulkCopy.BatchSize = 50;
+                                    sqlBulkCopy.BulkCopyTimeout = 1000;
+                                    sqlBulkCopy.WriteToServer(dtCloned);
+                                    con.Close();
+                                    Response.ID = 1;
+                                    Response.StatusCode = 1;
+                                    Response.SuccessMessage = "Uploded Successfully";
+                                    Response.Status = true;
+                                }
+                                catch (Exception ex)
+                                {
+                                    con.Close();
+                                    Response.Status = false;
+                                    Response.SuccessMessage = "data not found, please check excel column";
+
+                                }
+                                finally
+                                {
+                                    con.Close();
+                                }
 
 
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Response.Status = false;
+                        Response.SuccessMessage = "data not found, please check excel colomn";
+                        return Response;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Response.StatusCode = -1;
+                Response.SuccessMessage = ex.Message.ToString();
+            }
+            return Response;
+        }
+        public PostResponse ClearLeaveBalanceImportTemp(GetResponse getResponse)
+        {
+            PostResponse Result = new PostResponse();
+            try
+            {
+                string SQL = "Truncate table LeaveBalance_Import";
+                clsDataBaseHelper.ExecuteNonQuery(SQL);
+                Result.Status = true;
+                Result.SuccessMessage = "data cleared";
+            }
+            catch (Exception ex)
+            {
+                Result.StatusCode = -1;
+                Result.SuccessMessage = ex.ToString();
+            }
+            return Result;
+        }
+        public PostResponse UpdateLeaveBalanceData(GetResponse getResponse)
+        {
+            PostResponse Result = new PostResponse();
+            using (SqlConnection con = new SqlConnection(ConnectionStrings))
+            {
+                try
+                {
+                    con.Open();
+                    using (SqlCommand command = new SqlCommand("spu_SetLeaveBalanceFromImport", con))
+                    {
+                        SqlDataAdapter da = new SqlDataAdapter();
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.Add("@LoginID", SqlDbType.Int).Value = getResponse.LoginID;
+                        command.Parameters.Add("@IPAddress", SqlDbType.VarChar).Value = getResponse.IPAddress;
+                        command.CommandTimeout = 0;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Result.ID = Convert.ToInt64(reader["RET_ID"]);
+                                Result.StatusCode = Convert.ToInt32(reader["STATUS"]);
+                                Result.SuccessMessage = reader["MESSAGE"].ToString();
+                                if (Result.StatusCode > 0)
+                                {
+                                    Result.Status = true;
+                                }
+                            }
+                        }
 
+                    }
+                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    con.Close();
+                    Result.StatusCode = -1;
+                    Result.SuccessMessage = ex.Message.ToString();
+                }
+            }
+            return Result;
+        }
+        public PostResponse fnSet_PendingLeave(ManageActivities.PendingLeave model)
+        {
+            PostResponse Result = new PostResponse();
+            using (SqlConnection con = new SqlConnection(ConnectionStrings))
+            {
+                try
+                { 
+                    con.Open();
+                    using (SqlCommand command = new SqlCommand("spu_SetPendingLeaves", con))
+                    {
+                        SqlDataAdapter da = new SqlDataAdapter();
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.Add("@DocNo", SqlDbType.VarChar).Value = model.DocNo;
+                        command.Parameters.Add("@Reason", SqlDbType.NVarChar).Value = model.Reason ?? "";
+                        command.Parameters.Add("@LoginID", SqlDbType.Int).Value = model.LoginID;
+                        command.Parameters.Add("@IPAddress", SqlDbType.VarChar).Value = model.IPAddress;
+                        command.CommandTimeout = 0;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Result.ID = Convert.ToInt64(reader["RET_ID"]);
+                                Result.StatusCode = Convert.ToInt32(reader["STATUS"]);
+                                Result.SuccessMessage = reader["MESSAGE"].ToString();
+                                if (Result.StatusCode > 0)
+                                {
+                                    Result.Status = true;
+                                }
+                            }
+                        }
 
+                    }
+                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    con.Close();
+                    Result.StatusCode = -1;
+                    Result.SuccessMessage = ex.Message.ToString();
+                }
+            }
+            return Result;
+        }
+        public PostResponse fnSet_AssignTo(ManageActivities.AssignTo model)
+        {
+            PostResponse Result = new PostResponse();
+            using (SqlConnection con = new SqlConnection(ConnectionStrings))
+            {
+                try
+                {
+                    con.Open();
+                    using (SqlCommand command = new SqlCommand("spu_SetAssignTo", con))
+                    {
+                        SqlDataAdapter da = new SqlDataAdapter();
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.Add("@RequestNos", SqlDbType.VarChar).Value = model.RequestNos;
+                        command.Parameters.Add("@AssignToID", SqlDbType.Int).Value = model.AssignToID;
+                        command.Parameters.Add("@LoginID", SqlDbType.Int).Value = model.LoginID;
+                        command.Parameters.Add("@IPAddress", SqlDbType.VarChar).Value = model.IPAddress;
+                        command.CommandTimeout = 0;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Result.ID = Convert.ToInt64(reader["RET_ID"]);
+                                Result.StatusCode = Convert.ToInt32(reader["STATUS"]);
+                                Result.SuccessMessage = reader["MESSAGE"].ToString();
+                                if (Result.StatusCode > 0)
+                                {
+                                    Result.Status = true;
+                                }
+                            }
+                        }
+
+                    }
+                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    con.Close();
+                    Result.StatusCode = -1;
+                    Result.SuccessMessage = ex.Message.ToString();
+                }
+            }
+            return Result;
+        }
     }
 }

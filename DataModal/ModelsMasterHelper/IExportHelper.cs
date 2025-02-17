@@ -9,6 +9,7 @@ namespace DataModal.ModelsMasterHelper
         ISheet GetWorkbookSheet(IWorkbook workbook, DataTable result, string Doctype);
         ISheet GetWorkbookSheet_ISDSummary(IWorkbook workbook, DataTable result, string Doctype);
         IWorkbook GetDataTable_Workbook_Common(DataTable result, string Doctype);
+        ISheet GetWorkbookSheet_Common(IWorkbook workbook, DataTable result, string Doctype);
         IWorkbook GetDataTable_Workbook(DataTable result, string Doctype);
         IWorkbook GetSaleEntry_Workbook(Tab.Approval modal);
         IWorkbook GetTargetVsAchievement_Workbook(Tab.Approval modal);
@@ -36,6 +37,7 @@ namespace DataModal.ModelsMasterHelper
         ISheet GetOnboardingSheet(IWorkbook workbook, DataTable result, string Doctype);
         DataSet GetEMP_TalentPool_Export(GetResponse Modal);
         DataSet GetLogin_Users_Export(GetResponse Modal);
+        ISheet GetWorkbookSheet_Shorted(IWorkbook workbook, DataTable result, string Doctype);
 
     }
 

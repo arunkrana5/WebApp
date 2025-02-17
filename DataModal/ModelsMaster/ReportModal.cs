@@ -814,10 +814,10 @@ namespace DataModal.ModelsMaster
             }
             return result;
         }
-        public List<PJPEntry.List> GetPJPReports(JqueryDatatableParam Modal)
+        public List<PJPEntries.List> GetPJPReports(JqueryDatatableParam Modal)
         {
 
-            List<PJPEntry.List> result = new List<PJPEntry.List>();
+            List<PJPEntries.List> result = new List<PJPEntries.List>();
             try
             {
                 using (IDbConnection DBContext = new SqlConnection(ConnectionStrings))
@@ -834,7 +834,7 @@ namespace DataModal.ModelsMaster
                     DBContext.Open();
                     using (var reader = DBContext.QueryMultiple("spu_GetPJPReports", param: param, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout))
                     {
-                        result = reader.Read<PJPEntry.List>().ToList();
+                        result = reader.Read<PJPEntries.List>().ToList();
                     }
 
                     DBContext.Close();
@@ -857,6 +857,24 @@ namespace DataModal.ModelsMaster
                 oparam[0] = new SqlParameter("@Date", dt.ToString("dd-MMM-yyyy"));
                 oparam[1] = new SqlParameter("@LoginID", Modal.LoginID);
                 ds = clsDataBaseHelper.ExecuteDataSet("spu_GetPJPEntries_Report", oparam);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return ds;
+        }
+        public DataSet spu_GetSalesSummary(Tab.Approval Modal)
+        {
+            DataSet ds = new DataSet();
+            try
+            {
+                DateTime dt;
+                DateTime.TryParse(Modal.Month, out dt);
+                SqlParameter[] oparam = new SqlParameter[2];
+                oparam[0] = new SqlParameter("@InputDate", dt.ToString("dd-MMM-yyyy"));
+                oparam[1] = new SqlParameter("@LoginID", Modal.LoginID);
+                ds = clsDataBaseHelper.ExecuteDataSet("spu_GetSalesSummary", oparam);
             }
             catch (Exception ex)
             {

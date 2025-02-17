@@ -1108,6 +1108,7 @@ namespace DataModal.ModelsMaster
                         command.Parameters.Add("@IPAddress", SqlDbType.VarChar).Value = model.IPAddress;
                         command.Parameters.Add("@RouteNumber", SqlDbType.VarChar).Value = model.RouteNumber ?? "";
                         command.Parameters.Add("@VisitType", SqlDbType.VarChar).Value = model.VisitType ?? "";
+                        command.Parameters.Add("@IsHiringOpen", SqlDbType.Int).Value = model.IsHiringOpen;
                         command.CommandTimeout = 0;
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -1890,19 +1891,19 @@ namespace DataModal.ModelsMaster
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.Add("@TPID", SqlDbType.Int).Value = model.TPID ?? 0;
                         command.Parameters.Add("@Name", SqlDbType.VarChar).Value = model.Name ?? "";
-                        command.Parameters.Add("@Age", SqlDbType.Int).Value = model.Age;
+                        command.Parameters.Add("@Age", SqlDbType.Int).Value = model.Age??0;
                         command.Parameters.Add("@CounterName", SqlDbType.VarChar).Value = model.CounterName ?? "";
                         command.Parameters.Add("@Location", SqlDbType.VarChar).Value = model.Location ?? "";
                         command.Parameters.Add("@TotalExperience", SqlDbType.VarChar).Value = model.TotalExperience ?? "";
                         command.Parameters.Add("@CurrentCompany", SqlDbType.VarChar).Value = model.CurrentCompany ?? "";
                         command.Parameters.Add("@TenureWithCompany", SqlDbType.VarChar).Value = model.TenureWithCompany ?? "";
-                        command.Parameters.Add("@CurrentSalary", SqlDbType.Decimal).Value = model.CurrentSalary;
-                        command.Parameters.Add("@ExpectedSalary", SqlDbType.Decimal).Value = model.ExpectedSalary;
-                        command.Parameters.Add("@Pincode", SqlDbType.VarChar).Value = model.Pincode;
-                        command.Parameters.Add("@Mobile", SqlDbType.VarChar).Value = model.Mobile;
-                        command.Parameters.Add("@Email", SqlDbType.VarChar).Value = model.Email;
-                        command.Parameters.Add("@DOB", SqlDbType.VarChar).Value = model.DOB;
-                        command.Parameters.Add("@WorkProfile", SqlDbType.VarChar).Value = model.WorkProfile;
+                        command.Parameters.Add("@CurrentSalary", SqlDbType.Decimal).Value = model.CurrentSalary??0;
+                        command.Parameters.Add("@ExpectedSalary", SqlDbType.Decimal).Value = model.ExpectedSalary ?? 0;
+                        command.Parameters.Add("@Pincode", SqlDbType.VarChar).Value = model.Pincode ?? "";
+                        command.Parameters.Add("@Mobile", SqlDbType.VarChar).Value = model.Mobile ?? "";
+                        command.Parameters.Add("@Email", SqlDbType.VarChar).Value = model.Email ?? "";
+                        command.Parameters.Add("@DOB", SqlDbType.VarChar).Value = model.DOB ?? "";
+                        command.Parameters.Add("@WorkProfile", SqlDbType.VarChar).Value = model.WorkProfile ?? "";
                         command.Parameters.Add("@DealerID", SqlDbType.Int).Value = model.DealerID ?? 0;
                         command.Parameters.Add("@BranchID", SqlDbType.Int).Value = model.BranchID ?? 0;
                         command.Parameters.Add("@Address", SqlDbType.VarChar).Value = model.Address ?? "";
@@ -3203,6 +3204,14 @@ namespace DataModal.ModelsMaster
                         {
                             result.CityList = reader.Read<DropDownlist>().ToList();
                         }
+                        if (!reader.IsConsumed)
+                        {
+                            result.ExperienceList = reader.Read<DropDownlist>().ToList();
+                        }
+                        if (!reader.IsConsumed)
+                        {
+                            result.QualficationList = reader.Read<DropDownlist>().ToList();
+                        }
                     }
 
                     DBContext.Close();
@@ -3243,6 +3252,10 @@ namespace DataModal.ModelsMaster
                                 result.AttachmentsList.Add(new Attachments { Attach_ID = 0, AttachPath = "", Doctype = "Resume", Upload = null });
                                 result.AttachmentsList.Add(new Attachments { Attach_ID = 0, AttachPath = "", Doctype = "Photo", Upload = null });
                             }
+                        }
+                        if (!reader.IsConsumed)
+                        {
+                            result.ExperienceList = reader.Read<DropDownlist>().ToList();
                         }
                     }
 
@@ -3317,17 +3330,17 @@ namespace DataModal.ModelsMaster
                         SqlDataAdapter da = new SqlDataAdapter();
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.Add("@TPID", SqlDbType.Int).Value = model.TPID ?? 0;
-                        command.Parameters.Add("@Age", SqlDbType.Int).Value = model.Age;
-                        command.Parameters.Add("@CurrentSalary", SqlDbType.Decimal).Value = model.CurrentSalary;
-                        command.Parameters.Add("@ExpectedSalary", SqlDbType.Decimal).Value = model.ExpectedSalary;
+                        command.Parameters.Add("@Age", SqlDbType.Int).Value = model.Age ?? 0;
+                        command.Parameters.Add("@CurrentSalary", SqlDbType.Decimal).Value = model.CurrentSalary ?? 0;
+                        command.Parameters.Add("@ExpectedSalary", SqlDbType.Decimal).Value = model.ExpectedSalary ?? 0;
                         command.Parameters.Add("@Name", SqlDbType.VarChar, 50).Value = model.Name ?? "";
                         command.Parameters.Add("@CounterName", SqlDbType.VarChar, 50).Value = model.CounterName ?? "";
                         command.Parameters.Add("@Location", SqlDbType.VarChar, 50).Value = model.Location ?? "";
                         command.Parameters.Add("@TotalExperience", SqlDbType.VarChar, 50).Value = model.TotalExperience ?? "";
                         command.Parameters.Add("@CurrentCompany", SqlDbType.VarChar, 50).Value = model.CurrentCompany ?? "";
                         command.Parameters.Add("@TenureWithCompany", SqlDbType.VarChar).Value = model.TenureWithCompany ?? "";
-                        command.Parameters.Add("@Mobile", SqlDbType.VarChar).Value = model.Mobile;
-                        command.Parameters.Add("@Pincode", SqlDbType.VarChar).Value = model.Pincode;
+                        command.Parameters.Add("@Mobile", SqlDbType.VarChar).Value = model.Mobile ?? "";
+                        command.Parameters.Add("@Pincode", SqlDbType.VarChar).Value = model.Pincode ?? "";
                         command.Parameters.Add("@EntrySource", SqlDbType.VarChar, 50).Value = EntrySource;
                         command.Parameters.Add("@Latitude", SqlDbType.Float).Value = Latitude;
                         command.Parameters.Add("@Longitude", SqlDbType.Float).Value = Longitude;
@@ -3526,6 +3539,11 @@ namespace DataModal.ModelsMaster
 
                             result.DealerTypeList = reader.Read<DropDownlist>().ToList();
                         }
+                        if (!reader.IsConsumed)
+                        {
+
+                            result.VisitTypeList = reader.Read<DropDownlist>().ToList();
+                        }
                     }
 
                     DBContext.Close();
@@ -3568,6 +3586,8 @@ namespace DataModal.ModelsMaster
                         command.Parameters.Add("@Longitude", SqlDbType.VarChar).Value = model.Longitude ?? "";
                         command.Parameters.Add("@BillingCode", SqlDbType.VarChar).Value = model.BillingCode ?? "";
                         command.Parameters.Add("@BillingName", SqlDbType.VarChar).Value = model.BillingName ?? "";
+                        command.Parameters.Add("@RouteNumber", SqlDbType.VarChar).Value = model.RouteNumber ?? "";
+                        command.Parameters.Add("@VisitType", SqlDbType.VarChar).Value = model.VisitType ?? "";
                         command.Parameters.Add("@IsActive", SqlDbType.Int).Value = 1;
                         command.Parameters.Add("@Priority", SqlDbType.Int).Value = model.Priority;
                         command.Parameters.Add("@createdby", SqlDbType.Int).Value = model.LoginID;
@@ -3640,6 +3660,276 @@ namespace DataModal.ModelsMaster
             {
                 Common_SPU.LogError("Error during GetDropDownList. The query was executed :", ex.ToString(), "spu_GetDropDownList()", "Common_SPU", "Common_SPU", modal.LoginID, modal.IPAddress);
 
+            }
+            return result;
+        }
+
+
+        public List<Banner.List> GetBannerList(GetResponse Modal)
+        {
+
+            List<Banner.List> result = new List<Banner.List>();
+            try
+            {
+                using (IDbConnection DBContext = new SqlConnection(ConnectionStrings))
+                {
+                    int commandTimeout = 0;
+                    var param = new DynamicParameters();
+                    param.Add("@RoleID", dbType: DbType.Int64, value: Modal.RoleID, direction: ParameterDirection.Input);
+                    param.Add("@LoginID", dbType: DbType.Int64, value: Modal.LoginID, direction: ParameterDirection.Input);
+                    param.Add("@Doctype", dbType: DbType.String, value: Modal.Doctype, direction: ParameterDirection.Input);
+                    DBContext.Open();
+                    using (var reader = DBContext.QueryMultiple("spu_GetBannerList", param: param, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout))
+                    {
+                        result = reader.Read<Banner.List>().ToList();
+                    }
+
+                    DBContext.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Common_SPU.LogError(ex.Message.ToString(), ex.ToString(), "GetBannerList", "spu_GetBannerList", "DataModal", Modal.LoginID, Modal.IPAddress);
+            }
+            return result;
+        }
+
+        public Banner.Add GetBanner(GetResponse Modal)
+        {
+
+            Banner.Add result = new Banner.Add();
+            try
+            {
+                using (IDbConnection DBContext = new SqlConnection(ConnectionStrings))
+                {
+                    int commandTimeout = 0;
+                    var param = new DynamicParameters();
+                    param.Add("@BannerID", dbType: DbType.Int64, value: Modal.ID, direction: ParameterDirection.Input);
+                    param.Add("@LoginID", dbType: DbType.Int64, value: Modal.LoginID, direction: ParameterDirection.Input);
+                    DBContext.Open();
+                    using (var reader = DBContext.QueryMultiple("spu_GetBanner", param: param, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout))
+                    {
+                        result = reader.Read<Banner.Add>().FirstOrDefault();
+                        if (result == null)
+                        {
+                            result = new Banner.Add();
+                        }
+                        if (!reader.IsConsumed)
+                        {
+                            result.RoleList = reader.Read<DropDownlist>().ToList();
+                        }
+                        if (!reader.IsConsumed)
+                        {
+                            result.DoctypeList = reader.Read<DropDownlist>().ToList();
+                        }
+                    }
+
+                    DBContext.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Common_SPU.LogError(ex.Message.ToString(), ex.ToString(), "spu_GetBanner", "spu_GetBanner", "DataModal", Modal.LoginID, Modal.IPAddress);
+            }
+            return result;
+        }
+
+
+        public PostResponse fnSetBanner(Banner.Add modal)
+        {
+            PostResponse Result = new PostResponse();
+            using (SqlConnection con = new SqlConnection(ConnectionStrings))
+            {
+                try
+                {
+                    con.Open();
+                    using (SqlCommand command = new SqlCommand("spu_SetBanner", con))
+                    {
+                        SqlDataAdapter da = new SqlDataAdapter();
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.Add("@BannerID", SqlDbType.Int).Value = modal.BannerID;
+                        command.Parameters.Add("@RoleIDs", SqlDbType.VarChar).Value = (modal.RoleIDs == null ? "" : string.Join(",", modal.RoleIDs));
+                        command.Parameters.Add("@Doctype", SqlDbType.VarChar).Value = modal.Doctype;
+                        command.Parameters.Add("@FileName", SqlDbType.VarChar).Value = modal.FileName ?? "";
+                        command.Parameters.Add("@Heading", SqlDbType.VarChar).Value = modal.Heading;
+                        command.Parameters.Add("@SubHeading", SqlDbType.VarChar).Value = modal.SubHeading ?? "";
+                        command.Parameters.Add("@Description", SqlDbType.VarChar).Value = modal.Description ?? "";
+                        command.Parameters.Add("@IsActive", SqlDbType.Int).Value = 1;
+                        command.Parameters.Add("@Priority", SqlDbType.Int).Value = modal.Priority ?? 0;
+                        command.Parameters.Add("@createdby", SqlDbType.Int).Value = modal.LoginID;
+                        command.Parameters.Add("@IPAddress", SqlDbType.VarChar).Value = modal.IPAddress;
+                        command.CommandTimeout = 0;
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Result.ID = Convert.ToInt64(reader["RET_ID"]);
+                                Result.StatusCode = Convert.ToInt32(reader["STATUS"]);
+                                Result.SuccessMessage = reader["MESSAGE"].ToString();
+                                if (Result.StatusCode > 0)
+                                {
+                                    Result.Status = true;
+                                }
+                            }
+                        }
+
+                    }
+                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    con.Close();
+                    Result.StatusCode = -1;
+                    Result.SuccessMessage = ex.Message.ToString();
+                }
+            }
+            return Result;
+        }
+
+        public ProductSalesGraph GetSalesGraphData(GetGraphResponse Modal)
+        {
+            ProductSalesGraph result = new ProductSalesGraph();
+            try
+            {
+                using (IDbConnection DBContext = new SqlConnection(ConnectionStrings))
+                {
+                    int commandTimeout = 0;
+                    var param = new DynamicParameters();
+                    param.Add("@LoginID", dbType: DbType.Int64, value: Modal.LoginID, direction: ParameterDirection.Input);
+                    param.Add("@RegionID", dbType: DbType.Int64, value: Modal.RegionID, direction: ParameterDirection.Input);
+                    param.Add("@BranchID", dbType: DbType.Int64, value: Modal.BranchID, direction: ParameterDirection.Input);
+                    param.Add("@InputDate", dbType: DbType.String, value: Modal.InputDate, direction: ParameterDirection.Input);
+                    param.Add("@DocType", dbType: DbType.String, value: Modal.Doctype, direction: ParameterDirection.Input);
+                    DBContext.Open();
+                    using (var reader = DBContext.QueryMultiple("spu_GetSalesGraphData", param: param, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout))
+                    {
+                        result.ProductSalesList = reader.Read<ProductSalesGraph>().ToList();
+                    }
+
+                    DBContext.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Common_SPU.LogError(ex.Message.ToString(), ex.ToString(), "spu_GetSalesGraphData", "spu_GetSalesGraphData", "DataModal", Modal.LoginID, Modal.IPAddress);
+            }
+            return result;
+        }
+        public ProductSalesGraph GetSalesGrowthData(GetGraphResponse Modal)
+        {
+            ProductSalesGraph result = new ProductSalesGraph();
+            try
+            {
+                using (IDbConnection DBContext = new SqlConnection(ConnectionStrings))
+                {
+                    int commandTimeout = 0;
+                    var param = new DynamicParameters();
+                    param.Add("@LoginID", dbType: DbType.Int64, value: Modal.LoginID, direction: ParameterDirection.Input);
+                    param.Add("@RegionID", dbType: DbType.Int64, value: Modal.RegionID, direction: ParameterDirection.Input);
+                    param.Add("@BranchID", dbType: DbType.Int64, value: Modal.BranchID, direction: ParameterDirection.Input);
+                    param.Add("@InputDate", dbType: DbType.String, value: Modal.InputDate, direction: ParameterDirection.Input);
+                    param.Add("@DocType", dbType: DbType.String, value: Modal.Doctype, direction: ParameterDirection.Input);
+                    DBContext.Open();
+                    using (var reader = DBContext.QueryMultiple("spu_GetSalesGraphData", param: param, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout))
+                    {
+                        result.SalesGrowthList = reader.Read<SalesGrowthGraph>().ToList();
+                    }
+
+                    DBContext.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Common_SPU.LogError(ex.Message.ToString(), ex.ToString(), "spu_GetSalesGraphData", "spu_GetSalesGraphData", "DataModal", Modal.LoginID, Modal.IPAddress);
+            }
+            return result;
+        }
+        public ProductSalesGraph GetBranchWiseSales(GetGraphResponse Modal)
+        {
+            ProductSalesGraph result = new ProductSalesGraph();
+            try
+            {
+                using (IDbConnection DBContext = new SqlConnection(ConnectionStrings))
+                {
+                    int commandTimeout = 0;
+                    var param = new DynamicParameters();
+                    param.Add("@LoginID", dbType: DbType.Int64, value: Modal.LoginID, direction: ParameterDirection.Input);
+                    param.Add("@RegionID", dbType: DbType.Int64, value: Modal.RegionID, direction: ParameterDirection.Input);
+                    param.Add("@BranchID", dbType: DbType.Int64, value: Modal.BranchID, direction: ParameterDirection.Input);
+                    param.Add("@InputDate", dbType: DbType.String, value: Modal.InputDate, direction: ParameterDirection.Input);
+                    param.Add("@DocType", dbType: DbType.String, value: Modal.Doctype, direction: ParameterDirection.Input);
+                    DBContext.Open();
+                    using (var reader = DBContext.QueryMultiple("spu_GetSalesGraphData", param: param, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout))
+                    {
+                        result.BranchWiseSalesList = reader.Read<BranchWiseSalesGraph>().ToList();
+                    }
+
+                    DBContext.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Common_SPU.LogError(ex.Message.ToString(), ex.ToString(), "spu_GetSalesGraphData", "spu_GetSalesGraphData", "DataModal", Modal.LoginID, Modal.IPAddress);
+            }
+            return result;
+        }
+        public ProductSalesGraph GetISDCountGraph(GetGraphResponse Modal)
+        {
+            ProductSalesGraph result = new ProductSalesGraph();
+            try
+            {
+                using (IDbConnection DBContext = new SqlConnection(ConnectionStrings))
+                {
+                    int commandTimeout = 0;
+                    var param = new DynamicParameters();
+                    param.Add("@LoginID", dbType: DbType.Int64, value: Modal.LoginID, direction: ParameterDirection.Input);
+                    param.Add("@RegionID", dbType: DbType.Int64, value: Modal.RegionID, direction: ParameterDirection.Input);
+                    param.Add("@BranchID", dbType: DbType.Int64, value: Modal.BranchID, direction: ParameterDirection.Input);
+                    param.Add("@InputDate", dbType: DbType.String, value: Modal.InputDate, direction: ParameterDirection.Input);
+                    param.Add("@DocType", dbType: DbType.String, value: Modal.Doctype, direction: ParameterDirection.Input);
+                    DBContext.Open();
+                    using (var reader = DBContext.QueryMultiple("spu_GetSalesGraphData", param: param, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout))
+                    {
+                        result.ISDCountGraphList = reader.Read<ISDCountGraph>().ToList();
+                    }
+
+                    DBContext.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Common_SPU.LogError(ex.Message.ToString(), ex.ToString(), "spu_GetSalesGraphData", "spu_GetSalesGraphData", "DataModal", Modal.LoginID, Modal.IPAddress);
+            }
+            return result;
+        }
+
+        public ProductSalesGraph GetGraphFilterData(GetDropDownResponse Modal)
+        {
+            ProductSalesGraph result = new ProductSalesGraph();
+            try
+            {
+                using (IDbConnection DBContext = new SqlConnection(ConnectionStrings))
+                {
+                    int commandTimeout = 0;
+                    var param = new DynamicParameters();
+                    param.Add("@LoginID", dbType: DbType.Int64, value: Modal.LoginID, direction: ParameterDirection.Input);
+                    param.Add("@DocType", dbType: DbType.String, value: Modal.Doctype, direction: ParameterDirection.Input);
+                    param.Add("@Values", dbType: DbType.String, value: Modal.Values, direction: ParameterDirection.Input);
+                    DBContext.Open();
+                    using (var reader = DBContext.QueryMultiple("spu_GetDropDownList", param: param, commandType: CommandType.StoredProcedure, commandTimeout: commandTimeout))
+                    {
+                        if (!reader.IsConsumed)
+                        {
+                            result.RegionList = reader.Read<DropDownlist>().ToList();
+                        }
+                    }
+
+                    DBContext.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Common_SPU.LogError(ex.Message.ToString(), ex.ToString(), "spu_GetDropDownList", "spu_GetDropDownList", "DataModal", Modal.LoginID, Modal.IPAddress);
             }
             return result;
         }

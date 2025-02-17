@@ -47,8 +47,9 @@
                     </div>
 
                     <div class="col-lg-2 form-group">
-                        <label>Total Experience   </label>
-                        @Html.TextBoxFor(model => model.TotalExperience, new { @class = "form-control" })
+                        <label>Total Experience(In Months)   </label>
+                        @Html.DropDownListFor(n => n.TotalExperience, new SelectList(Model.ExperienceList, "Name", "Name", Model.TotalExperience), "Select",
+new { @class = "form-control  applyselect" })
                         @Html.ValidationMessageFor(model => model.TotalExperience, "", new { @class = "text-danger" })
                     </div>
 
@@ -68,7 +69,7 @@
                         @Html.ValidationMessageFor(model => model.Mobile, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-lg-2 form-group">
-                        <label>CurrentSalary </label>
+                        <label>Current Salary </label>
                         @Html.TextBoxFor(model => model.CurrentSalary, new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.CurrentSalary, "", new { @class = "text-danger" })
                     </div>
@@ -85,7 +86,6 @@
                 </div>
             </div>
         </div>
-
         <div class="card">
             <div class="card-header mb-1">
                 <h4 class="card-title" style="font-weight:500; text-transform:inherit">Documents </h4>

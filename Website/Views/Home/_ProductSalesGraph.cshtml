@@ -1,0 +1,38 @@
+﻿@model  ProductSalesGraph
+<style>
+    select.form-control, select.form-control:focus, select.form-control:hover {
+        border: 1px solid #cccccc;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+</style>
+<div id="chart_pie" style="height: 300px"></div>
+<script>
+    function DrawPieChart() {
+        var itemsList = @Html.Raw(ViewBag.ProductSalesData);
+
+        var columns = itemsList.map(function (item) {
+            return [item.ProductName, item.Qty];
+        });
+
+        var colors = itemsList.map(function (item) {
+            return [item.GraphColor]
+        });
+
+        var chart = c3.generate({
+            bindto: '#chart_pie', // ID of the container
+            data: {
+                columns: columns,
+                type: 'pie',
+                colors: colors
+            },
+            legend: {
+                show: true
+            },
+            padding: {
+                bottom: 0,
+                top: 0
+            }
+        });
+    }
+</script>

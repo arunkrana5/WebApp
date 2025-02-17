@@ -120,7 +120,7 @@
     padding: 0;
 }
 .fc .fc-toolbar.fc-header-toolbar {
-    padding: 1px 7px 1px 7px;
+    padding: 1px 7px 1px 0.75rem;
     margin-bottom: 15px;
 }
 .fc .fc-toolbar-title {

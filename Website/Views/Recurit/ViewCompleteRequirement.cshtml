@@ -139,12 +139,13 @@
                                 <tr>
                                     <th>SNo.</th>
                                     <th>Action</th>
+                                    <th>Remarks</th>
                                     <th>Name</th>
                                     <th>Phone</th>
-                                    <th>EmailID</th>
-                                    <th>Qualification</th>
                                     <th>Experience</th>
-                                    <th>Salary</th>
+                                    <th>Current Salary</th>
+                                    <th>Expected Salary</th>
+                                    <th>Current Company</th>
                                     <th>Resume</th>
                                 </tr>
                             </thead>
@@ -156,18 +157,26 @@
                                     <tr>
                                         <td>@count</td>
                                         <td>
-                                            <span class="@item.ApprovedStatus">@item.ApprovedStatus</span>
+                                            @if (@item.ApprovedStatus.ToLower() == "not interviewed")
+                                            {
+                                                <span class="Pending">@item.ApprovedStatus</span>
+                                            }
+                                            else
+                                            { 
+                                                <span class="@item.ApprovedStatus">@item.ApprovedStatus</span>
+                                            }
                                         </td>
+                                        <td>@item.ApprovedRemarks</td>
                                         <td>@item.Name</td>
                                         <td>@item.Phone</td>
-                                        <td>@item.EmailID</td>
-                                        <td>@item.Qualification</td>
                                         <td>@item.Experience</td>
                                         <td>@item.Salary</td>
+                                        <td>@item.ExpectedSalary</td>
+                                        <td>@item.CurrentCompany</td>
                                         <td>
-                                            @if (!string.IsNullOrEmpty(@item.AttachmentURL))
+                                            @if (!string.IsNullOrEmpty(@item.FilePath))
                                             {
-                                                <a target="_blank" href="@item.AttachmentURL">Resume</a>
+                                                <a class="btn btn-dark" target="_blank" href="@item.FilePath">Resume</a>
                                             }
                                         </td>
                                     </tr>

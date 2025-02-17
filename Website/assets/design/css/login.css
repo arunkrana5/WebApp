@@ -31,14 +31,19 @@ body {
         border-radius: 50%;
     }
 
-.shape-lg:first-child {
+/*.shape-lg:first-child {
     background: linear-gradient( #1845ad, #23a2f6 );
+    left: -80px;
+    top: -80px;
+}*/
+.shape-lg:first-child {
+    background: linear-gradient(var(--btnbg), var(--bglight));
     left: -80px;
     top: -80px;
 }
 
 .shape-lg:last-child {
-    background: linear-gradient( to right, #ff512f, #f09819 );
+    background: linear-gradient(to right, var(--lightredshed), var(--darkredshed));
     right: -30px;
     bottom: -80px;
 }
@@ -104,7 +109,7 @@ button {
     margin-top: 50px;
     width: 100%;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    background: linear-gradient( #1845ad, #23a2f6 );
+    background: linear-gradient( var(--btnbg), var(--bglight) );
     color: #fff !important;
     padding: 15px 0;
     font-size: 18px;

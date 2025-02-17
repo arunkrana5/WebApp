@@ -1,0 +1,66 @@
+﻿@model  ProductSalesGraph
+<style>
+    select.form-control, select.form-control:focus, select.form-control:hover {
+        border: 1px solid #cccccc;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+</style>
+<div id="chart-employment" style="height: 300px"></div>
+<script>
+    function DrawSalesGrowthChart() {
+        var itemsList = @Html.Raw(ViewBag.SalesGrowthData);
+        // Prepare columns and colors for the chart
+        var currentYear = $('#Input_Date').val().split("-")[0];
+        var categories = [parseInt(currentYear) - 2,parseInt(currentYear)-1, currentYear];  // Years for X-axis
+        var chartData = {};  // Object to hold data for each product
+         
+        // Loop through sales data and organize it by product name and year
+        itemsList.forEach(function (row) {
+            if (!chartData[row.ProductName]) {
+                chartData[row.ProductName] = { color: row.GraphColor, data: [0, 0,0] };
+            }
+            if (row.Year === parseInt(currentYear) - 2) {
+                chartData[row.ProductName].data[0] = row.Qty;
+            }
+            if (row.Year === parseInt(currentYear) - 1) {
+                chartData[row.ProductName].data[1] = row.Qty;
+            }
+            if (row.Year === parseInt(currentYear)) {
+                chartData[row.ProductName].data[2] = row.Qty;
+            }
+        });
+
+        // Prepare columns for C3 chart
+        var columns = Object.keys(chartData).map(function (product) {
+            var productData = chartData[product];
+            return [product, ...productData.data];
+        });
+
+        // Generate chart
+        var chart = c3.generate({
+            bindto: '#chart-employment',  // id of chart wrapper
+            data: {
+                columns: columns,  // Data columns for the chart
+                type: 'line',  // Type of chart
+                colors: Object.keys(chartData).reduce(function (acc, product) {
+                    acc[product] = chartData[product].color;  // Set line colors for each product
+                    return acc;
+                }, {}),
+            },
+            axis: {
+                x: {
+                    type: 'category',
+                    categories: categories  // X-axis categories (years)
+                }
+            },
+            legend: {
+                show: true,  // Show legend
+            },
+            padding: {
+                bottom: 0,
+                top: 0
+            },
+        });
+    }
+</script>

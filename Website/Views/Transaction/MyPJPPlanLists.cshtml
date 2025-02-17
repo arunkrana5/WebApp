@@ -175,6 +175,9 @@
                     contentType: 'application/json',
                     type: "Post",
                     data: dataObject,
+                    beforeSend: function () {
+                        ShowLoadingDialog();
+                    },
                     async: false
                 }).responseText);
                 if (data != '') {
@@ -184,12 +187,11 @@
                         $("#NewDealerID").append($("<option />").val(this.ID).text(this.Name));
                         $("#NewDealerID").select2();
 
-                    });
-                    CloseLoadingDialog();
+                    }); 
                 } else {
                     $("#NewDealerID").empty();
                     $("#NewDealerID").append($("<option />").val("").text("Select"));
-                    CloseLoadingDialog();
+                   
 
                 }
             } else {
@@ -197,6 +199,7 @@
                 $("#NewDealerID").append($("<option />").val("").text("Select"));
 
             }
+            CloseLoadingDialog();
         }
         function ListHeaderExport()
         {

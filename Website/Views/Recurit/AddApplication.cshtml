@@ -1,5 +1,7 @@
 ﻿@model Requirement.Application.Add
-
+@{
+    string Role = ClsApplicationSetting.GetSessionValue("RoleName");
+}
 <div class="table-section px-3 py-2 client-form">
     <div class="page-header">
         <div class="page-leftheader">
@@ -19,62 +21,104 @@
             <div class="card-body">
                 <div class="row client-form">
                     <div class="col-lg-2 form-group">
-                        <label>Name</label>
-                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                        <label>Name<span style="color:red">*</span></label>
+                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @readonly = "readonly" })
                         @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                     </div>
-
                     <div class="col-lg-2 form-group">
-                        <label>Mobile Number   </label>
-                        @Html.TextBoxFor(model => model.Phone, new { @class = "form-control" })
+                        <label>Mobile Number<span style="color:red">*</span></label>
+                        @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", @readonly = "readonly" })
                         @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
                     </div>
-
-                    <div class="col-lg-2 form-group">
-                        <label>Email </label>
-                        @Html.TextBoxFor(model => model.EmailID, new { @class = "form-control" })
+                    <div class="col-lg-2 form-group" style="display:none;">
+                        <label>Email<span style="color:red">*</span></label>
+                        @Html.TextBoxFor(model => model.EmailID, new { @class = "form-control", @readonly = "readonly" })
                         @Html.ValidationMessageFor(model => model.EmailID, "", new { @class = "text-danger" })
                     </div>
-
-
-                    <div class="col-lg-2 form-group">
-                        <label>Qualification   </label>
-                        @Html.TextBoxFor(model => model.Qualification, new { @class = "form-control" })
+                    <div class="col-lg-2 form-group" style="display:none;">
+                        <label>Qualification<span style="color:red">*</span></label>
+                        @Html.TextBoxFor(model => model.Qualification, new { @class = "form-control", @readonly = "readonly" })
                         @Html.ValidationMessageFor(model => model.Qualification, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-lg-2 form-group">
-                        <label>Experience   </label>
-                        @Html.TextBoxFor(model => model.Experience, new { @class = "form-control" })
+                        <label>Experience<span style="color:red">*</span></label>
+                        <input type="hidden" id="hd_Experience" />
+                        @Html.DropDownListFor(n => n.Experience, new SelectList(ViewBag.ExperienceList, "Name", "Name", Model.Experience), "Select Experience",
+new { @class = "form-control applyselect" })
                         @Html.ValidationMessageFor(model => model.Experience, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-lg-2 form-group">
-                        <label>Salary   </label>
-                        @Html.TextBoxFor(model => model.Salary, new { @class = "form-control" })
+                        <label>Current Salary<span style="color:red">*</span></label>
+                        @Html.TextBoxFor(model => model.Salary, new { @class = "form-control", @readonly = "readonly" })
                         @Html.ValidationMessageFor(model => model.Salary, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-lg-2 form-group">
-                        <label>Previous Company   </label>
-                        @Html.TextBoxFor(model => model.PreviousCompany, new { @class = "form-control" })
+                        <label>Expected Salary<span style="color:red">*</span></label>
+                        @Html.TextBoxFor(model => model.ExpectedSalary, new { @class = "form-control", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.ExpectedSalary, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-lg-2 form-group">
+                        <label>Current Company<span style="color:red">*</span></label>
+                        @Html.TextBoxFor(model => model.PreviousCompany, new { @class = "form-control", @readonly = "readonly" })
                         @Html.ValidationMessageFor(model => model.PreviousCompany, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-lg-2 form-group">
-                        <label>Upload  </label>
-                        @Html.HiddenFor(model => model.AttachID)
+                        <label>Upload<span style="color:red">*</span></label>
                         @Html.TextBoxFor(x => x.Upload, new { @type = "file" })
+                        @Html.HiddenFor(model => model.FileName)
+                        @Html.HiddenFor(model => model.FilePath)
+                        <span id="FileUpload">
+
+                        </span>
+                        @Html.ValidationMessageFor(model => model.Upload, "", new { @class = "text-danger" })
                     </div>
                 </div>
-
                 <div class="row">
 
                     <div class="col-lg-12 mt-3 text-right">
+                        @if (!String.IsNullOrEmpty(Role))
+                        {
+                            if (Role.ToLower() == "inhouse" || Role.ToLower() == "tl" || Role.ToLower() == "recruiter")
+                            {
+                                <button id="btn_FetchByDocNumber" class="btn btn-act btn-primary client-save">Fetch</button>
+                            }
+                        }
                         <button type="submit" class="btn btn-act btn-primary client-save">Submit</button>
-                        <a href="@Url.Action("AllRequestsList",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*/Recurit/AllRequestsList") })" type="button" class="btn   client-close ">Cancel</a>
+                        <a href="@Url.Action("AllRequestsList",new { src = ClsCommon.Encrypt(ViewBag.MenuID+"*/Recurit/AllRequestsList") })" type="button" class="btn btn-default btn-act client-save" style="background: gray;">Cancel</a>
                     </div>
                 </div>
             </div>
         </div>
 
     }
+
+    <div class="modal fade" id="ViewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document" style="max-width: 50%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Search By Doc No</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" style="color:#fff;">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row client-form p-2">
+                        <div class="col-xl-9 col-md-9 col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label">Doc No.</label>
+                                <input type="text" id="txtDocNumber" class="form-control" placeholder="Enter Document Number" />
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-3 col-sm-12">
+                            <div class="form-group">
+                                <button class="btn btn-primary client-save" style="margin-top: 20px;" id="btn_SearchByDocNo">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-md-12">
@@ -90,13 +134,33 @@
     <script>
         $(document).ready(function () {
             GetRequestApplicationList();
+            $('#btn_FetchByDocNumber').on('click', function (event) {
+                event.preventDefault();
+                $('#ViewModal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                // Focus on the doc number field when the modal is shown
+                $('#ViewModal').on('shown.bs.modal', function () {
+                    $('#txtDocNumber').focus();
+                });
+            });
+            $('#btn_SearchByDocNo').on('click', function () {
+                GetEmpTalentByDocNo();
+            });
+            $('#txtDocNumber').on('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    $('#btn_SearchByDocNo').click();
+                }
+            });
         });
 
         function OnSuccess(obj) {
             CloseLoadingDialog();
             if (obj.Status) {
                 SuccessToaster(obj.SuccessMessage);
-                GetRequestApplicationList();
+                window.location.reload(true);
                 $('#AddApplicationForm').trigger("reset");
             }
             else {
@@ -106,8 +170,8 @@
         }
 
 
-         function GetRequestApplicationList() {
-             var ReqID = $("#ReqID").val();
+        function GetRequestApplicationList() {
+            var ReqID = $("#ReqID").val();
 			$.ajax({
                 url: "/Recurit/_RequestApplicationList",
                 type: "Get",
@@ -121,8 +185,75 @@
 					alert(er);
 				}
 			});
+        }
+        function GetEmpTalentByDocNo() {
+            if ($('#txtDocNumber').val() == "" || $('#txtDocNumber').val() == null) {
+                FailToaster("Please Enter Doc Number");
+                $('#txtDocNumber').focus();
+                return false;
             }
+            else {
+                $('#FileUpload').html(``);
+                $('#FileName').val(``);
+                $('#FilePath').val(``);
+                $(".applyselect").select2('destroy');
+                let docno = $('#txtDocNumber').val();
+                $.ajax({
+                    url: "/CommonAjax/GetEMPTalentByDoc",
+                    type: "POST",
+                    data: { src: EncryptJSON(@ViewBag.MenuID+"*/CommonAjax/GetEMPTalentByDoc*" + docno) },
+                    beforeSend: function () {
+                        ShowLoadingDialog();
+                    },
+                    success: function (data) {
+                        if (data.Name == null) {
+                            FailToaster("Data Not Found for Doc Number : " + docno);
+                            CloseLoadingDialog();
+                        }
+                        else {
+                            //console.log(data);
+                            $('#ViewModal').modal('hide');
+                            $('#Name').val(data.Name);
+                            $('#Phone').val(data.Phone);
+                            $('#Experience').val(data.Experience);
+                            $('#Salary').val(data.Salary);
+                            $('#ExpectedSalary').val(data.ExpectedSalary);
+                            $('#PreviousCompany').val(data.CurrentCompany);
+                            if (data.FilePath != null) {
+                                $('#FileUpload').html(`<a href="` + data.FilePath + `" target="_blank" id="FileName" style="color: blue;">Resume</a>`);
+                                $('#FileName').val(data.FileName);
+                                $('#FilePath').val(data.FilePath);
+                            }
+                            $('#txtDocNumber').val('');
+                            $('#Experience').val(data.Experience).trigger('change');
+                            CloseLoadingDialog();
+                        }
+                    },
+                    error: function (er) {
+                       	alert(er);
+                    }
+                });
+                $(".applyselect").select2();
+            }
+        }
+        function DeleteRequest(obj) {
+            var ID = $(obj).closest("tr").find("input:hidden[name=ApplicationID]").val();
+            var Name = $(obj).closest("tr").find("input:hidden[name=Name]").val();
+            var Msg = 'Are you sure want to delete ' + Name + ' ?';
+            ConfirmMsgBox(Msg, '', function () {
+                if (ID) {
+                    var myobj = DelRecordJson(ID, 'Requirement_Application_temp');
+                    if (!myobj.Status) {
+                        FailToaster(myobj.SuccessMessage);
 
+                    } else {
+                        SuccessToaster(myobj.SuccessMessage);
+                        window.location.reload(true);
 
+                    }
+                }
+            });
+
+        }
     </script>
 }

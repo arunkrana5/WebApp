@@ -1,0 +1,50 @@
+﻿@using System.Data
+@model  DataSet
+<div class="row px-3 p-2" style="margin-left: -20px;">
+    <div class="count-card1 col-lg-12">
+        <div class="p-0">
+            <div class="cc1 d-flex flex-wrap justify-content-between">
+                @{
+                    int count = 0;
+                }
+                @foreach (DataRow item in Model.Tables[0].Rows)
+                {
+                    count++;
+                    <div class="col-md-3">
+                        <div class="py-2 px-2 count-cards mat-clr-stat-card green" style="margin: 2px; width: 100%;">
+                            <a onclick="ShowSSRList(this,'@item["DocType"].ToString()')">
+                                <div class="  text-center">
+                                    <h5 style="color:white;">@item["Count"].ToString()</h5>
+                                    <p class="text-muted m-b-0 pb-2" style="color:white !important;">@item["Name"].ToString()</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function ShowSSRList(obj, doctype) {
+        $("#spnHead").html(doctype)
+        $.ajax({
+            url: "/Home/_SSRListToday",
+            type: "Get",
+            data: { "Doctype": doctype },
+            success: function (data) {
+                $("#TagetDiv").empty();
+                $("#TagetDiv").html(data);
+                $('#ViewModal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                DatatableScripts_ByID('tblSSRList');
+            },
+            error: function (er) {
+                alert(er);
+
+            }
+        });
+    }
+</script>

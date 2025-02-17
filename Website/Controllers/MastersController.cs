@@ -96,7 +96,7 @@ namespace Website.Controllers
             ViewBag.MenuID = GetQueryString[0];
             ViewBag.TableName = "Country";
             ViewBag.Import = "True";
-            getResponse.Doctype = ViewBag.TableName;           
+            getResponse.Doctype = ViewBag.TableName;
             return View();
         }
 
@@ -933,6 +933,25 @@ namespace Website.Controllers
             Result.SuccessMessage = "Dealer Can't Update";
             if (ModelState.IsValid)
             {
+                if (!String.IsNullOrEmpty(ClsApplicationSetting.GetSessionValue("CompanyCode")))
+                {
+                    if (ClsApplicationSetting.GetSessionValue("CompanyCode").ToLower() == "blue star")
+                    {
+                        if (String.IsNullOrEmpty(Modal.RouteNumber))
+                        {
+                            Result.Status = false;
+                            Result.SuccessMessage = "Please Enter Route Number !";
+                            return Json(Result, JsonRequestBehavior.AllowGet);
+                        }
+                        if (String.IsNullOrEmpty(Modal.VisitType))
+                        {
+                            Result.Status = false;
+                            Result.SuccessMessage = "Please Select Visit Type !";
+                            return Json(Result, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                }
+                
                 Modal.LoginID = LoginID;
                 Modal.IPAddress = IPAddress;
                 Modal.DealerID = DealerID;
@@ -1119,7 +1138,7 @@ namespace Website.Controllers
             }
             foreach (var group in Modal.AttachmentsList)
             {
-                if (group.Upload == null && group.Attach_ID==0)
+                if (group.Upload == null && group.Attach_ID == 0)
                 {
                     Result.SuccessMessage = "Please add document.";
                     return Json(Result, JsonRequestBehavior.AllowGet);
@@ -1128,7 +1147,7 @@ namespace Website.Controllers
 
             if (ModelState.IsValid)
             {
-                Modal.TPID= ID;
+                Modal.TPID = ID;
                 Modal.LoginID = LoginID;
                 Modal.IPAddress = IPAddress;
                 Result = Master.fnSetEMP_TalentPool_MyAdd(Modal);
@@ -1248,12 +1267,12 @@ namespace Website.Controllers
             }
             if (ModelState.IsValid)
             {
-                Modal.TPID= TPID;
+                Modal.TPID = TPID;
                 Modal.LoginID = LoginID;
                 Modal.IPAddress = IPAddress;
                 Result = Master.fnSetEMP_TalentPool(Modal);
 
-                if(Modal.AttachmentsList!=null)
+                if (Modal.AttachmentsList != null)
                 {
                     foreach (var item in Modal.AttachmentsList)
                     {
@@ -1417,8 +1436,8 @@ namespace Website.Controllers
 
 
 
-       
-       
+
+
 
         public ActionResult DealerCategoryList(string src)
         {
@@ -1845,13 +1864,31 @@ namespace Website.Controllers
             long ID = 0;
             long.TryParse(ViewBag.ID, out ID);
             Result.SuccessMessage = "Dealer Can't Update";
-            if (ID>0 && string.IsNullOrEmpty(Modal.DealerCode))
+            if (ID > 0 && string.IsNullOrEmpty(Modal.DealerCode))
             {
                 Result.SuccessMessage = "Dealer Code can't be blank";
                 return Json(Result, JsonRequestBehavior.AllowGet);
             }
             if (ModelState.IsValid)
             {
+                if (!String.IsNullOrEmpty(ClsApplicationSetting.GetSessionValue("CompanyCode")))
+                {
+                    if (ClsApplicationSetting.GetSessionValue("CompanyCode").ToLower() == "blue star")
+                    {
+                        if (String.IsNullOrEmpty(Modal.RouteNumber))
+                        {
+                            Result.Status = false;
+                            Result.SuccessMessage = "Please Enter Route Number !";
+                            return Json(Result, JsonRequestBehavior.AllowGet);
+                        }
+                        if (String.IsNullOrEmpty(Modal.VisitType))
+                        {
+                            Result.Status = false;
+                            Result.SuccessMessage = "Please Select Visit Type !";
+                            return Json(Result, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                }
                 Modal.LoginID = LoginID;
                 Modal.IPAddress = IPAddress;
                 Modal.ID = ID;
@@ -1860,7 +1897,7 @@ namespace Website.Controllers
             }
             if (Result.Status)
             {
-               
+
                 if (ID == 0)
                 {
                     TempData["SuccessMsg"] = Result.SuccessMessage;
@@ -1883,9 +1920,73 @@ namespace Website.Controllers
             string[] GetQueryString = ClsApplicationSetting.DecryptQueryString(src);
             ViewBag.GetQueryString = GetQueryString;
             ViewBag.MenuID = GetQueryString[0];
-            var result=Master.GetDealerSearchFilter(getResponse);
+            var result = Master.GetDealerSearchFilter(getResponse);
             return PartialView(result);
         }
+
+
+        public ActionResult BannerList(string src)
+        {
+            ViewBag.src = src;
+            string[] GetQueryString = ClsApplicationSetting.DecryptQueryString(src);
+            ViewBag.GetQueryString = GetQueryString;
+            ViewBag.MenuID = GetQueryString[0];
+            var result = Master.GetBannerList(getResponse);
+            return View(result);
+        }
+
+        public ActionResult _BannerAdd(string src)
+        {
+            ViewBag.src = src;
+            string[] GetQueryString = ClsApplicationSetting.DecryptQueryString(src);
+            ViewBag.GetQueryString = GetQueryString;
+            ViewBag.MenuID = GetQueryString[0];
+            ViewBag.BannerID = GetQueryString[2];
+            long BannerID = 0;
+            long.TryParse(ViewBag.BannerID, out BannerID);
+            Banner.Add result = new Banner.Add();
+            getResponse.ID = BannerID;
+            result = Master.GetBanner(getResponse);
+            return PartialView(result);
+        }
+
+        [HttpPost]
+        public ActionResult _BannerAdd(string src, Banner.Add Modal, string Command)
+        {
+            PostResponse Result = new PostResponse();
+            ViewBag.src = src;
+            string[] GetQueryString = ClsApplicationSetting.DecryptQueryString(src);
+            ViewBag.GetQueryString = GetQueryString;
+            ViewBag.MenuID = GetQueryString[0];
+            ViewBag.BannerID = GetQueryString[2];
+            long BannerID = 0;
+            long.TryParse(ViewBag.BannerID, out BannerID);
+            Result.SuccessMessage = "Type Can't Update";
+            if (ModelState.IsValid)
+            {
+                Modal.LoginID = LoginID;
+                Modal.IPAddress = IPAddress;
+                if (Modal.Upload != null)
+                {
+                    Result = ClsApplicationSetting.UploadBannerToFolder(Modal.Upload, "Banner");
+                    if (Result.Status)
+                    {
+                        return Json(Result, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                Modal.FileName = Result.AdditionalMessage;
+                Result = Master.fnSetBanner(Modal);
+            }
+            if (Result.Status)
+            {
+                Result.RedirectURL = "/Masters/BannerList?src=" + ClsCommon.Encrypt(ViewBag.MenuID.ToString() + "*/Masters/BannerList");
+            }
+            return Json(Result, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+
 
 
     }
